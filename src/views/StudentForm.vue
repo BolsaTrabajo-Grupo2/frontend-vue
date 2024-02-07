@@ -31,7 +31,7 @@ export default {
         })
         return {
             mySchema,
-            student: {,
+            student: {rol:'STU',
                         cycle: []},
             tittleForm: 'Registrarse',
             cycleFields: [{ selectedCycle: '', date: '' }],
