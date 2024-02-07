@@ -82,9 +82,9 @@ export default {
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="first_name" placeholder="nombre" class="form-control" type="text"
+                            <Field name="name" placeholder="nombre" class="form-control" type="text"
                                 v-model="student.name" />
-                            <ErrorMessage name="first_name" class="error" />
+                            <ErrorMessage name="name" class="error" />
                         </div>
                     </div>
                 </div>
@@ -93,9 +93,8 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="last_name" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname" />
-                            <ErrorMessage name="last_name" class="error" />
+                            <Field name="surname" placeholder="apellido" class="form-control" type="text"
+                                v-model="student.surname"/>
                         </div>
                     </div>
                 </div>
@@ -139,9 +138,9 @@ export default {
                     <label class="col-md-4 control-label">Ciclos</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field as="select" name="ciclos" v-model="student.cycle" class="form-control">
+                            <Field as="select" name="ciclos" class="form-control">
                                 <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id"> {{ cycle.title }}</option>
+                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id"> {{ cycle.title }}</option>
                             </Field>
                             <ErrorMessage name="ciclos" class="error" />
                         </div>
@@ -154,8 +153,7 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address" />
-                                <ErrorMessage name="direccion" class="error" />
+                                v-model="student.address"/>
                         </div>
                     </div>
                 </div>
