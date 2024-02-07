@@ -21,6 +21,7 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style scoped>
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
 header {
   line-height: 1.5;
   max-height: 100vh;
