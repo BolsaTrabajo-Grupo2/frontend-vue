@@ -1,6 +1,8 @@
 <script>
 import { useStore } from '@/stores/store';
 import { mapState } from 'pinia';
+import axios from 'axios'
+const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
 import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
@@ -14,9 +16,28 @@ setLocale({
         max: 'Deebe tener menos de ${max} caracteres'
     },
 })
+extend('url', {
+  validate: (value) => {
+    if (value === null || value === undefined || value === '') {
+      return true;
+    }
+    return yup.string().url().isValidSync(value);
+  },
+  message: 'La URL no es válida',
+});
 export default {
     data() {
+        const mySchema = yup.object({
+
+            name: yup.string().required().max(250),
+            surname: yup.string().required().max(250),
+            email: yup.string().required().email(),
+            password: yup.string().required().min(8),
+            address: yup.string.required(),
+            cv: yup
+        })
         return {
+            mySchema,
             student: {},
             tittleForm: 'Registrarse',
             inputs: [],
@@ -38,6 +59,23 @@ export default {
             this.tittleForm = 'Modificar cuenta'
         }
     },
+    methods: {
+        async addStudent() {
+            if (this.id) {
+                axios.put(SERVER + '/user/profile/update/' + this.id, this.student)
+                    .then()
+                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
+            } else {
+                try {
+                    axios.post(SERVER + '/registerStudent', this.student)
+                        .then()
+                        .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+                } catch (error) {
+                    alert(error)
+                }
+            }
+        }
+    }
 }
 </script>
 
