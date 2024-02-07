@@ -19,7 +19,7 @@ export default {
         return {
             student: {},
             tittleForm: 'Registrarse',
-            repo: new itemsRepository()
+            inputs: [],
         }
     },
     props: ['id'],
@@ -51,8 +51,8 @@ export default {
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input name="first_name" placeholder="nombre" class="form-control" type="text">
+                            <input name="first_name" placeholder="nombre" class="form-control" type="text"
+                                v-model="student.name">
                         </div>
                     </div>
                 </div>
@@ -61,8 +61,8 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input name="last_name" placeholder="apellido" class="form-control" type="text">
+                            <input name="last_name" placeholder="apellido" class="form-control" type="text"
+                                v-model="student.surname">
                         </div>
                     </div>
                 </div>
@@ -71,8 +71,8 @@ export default {
                     <label class="col-md-4 control-label">E-Mail</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                            <input name="email" placeholder="email" class="form-control" type="email">
+                            <input name="email" placeholder="email" class="form-control" type="email"
+                                v-model="student.email">
                         </div>
                     </div>
                 </div>
@@ -82,8 +82,8 @@ export default {
                     <label class="col-md-4 control-label">Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                            <input name="password" placeholder="contraseña" class="form-control" type="password">
+                            <input name="password" placeholder="contraseña" class="form-control" type="password"
+                                v-model="student.password">
                         </div>
                     </div>
                 </div>
@@ -93,56 +93,39 @@ export default {
                     <label class="col-md-4 control-label">Repetir Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                             <input name="repassword" placeholder="repetir password" class="form-control" type="password">
                         </div>
                     </div>
                 </div>
 
                 <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Ciclos</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <Field as="select" name="ciclos" v-model="student.cycle" class="form-control">
+                                <option value="">Seleccionar ciclo</option>
+                                <option v-for="cycle in cycles" :key="cycle.id"> {{ cycle.title }}</option>
+                            </Field>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <div v-for="(input, index) in inputs" :key="index">
+                        <input v-model="input.value" type="text" :placeholder="input.id" />
+                        <input v-model="input.date" type="date" />
+                        <button @click="removeField(index)">Eliminar</button>
+                    </div>
+                </div>
+
+                <!-- Text input-->
                 <div class="form-group">
                     <label class="col-md-4 control-label">Dirección</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                            <input name="direccion" placeholder="direccion" class="form-control" type="text">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Text input-->
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Provincia</label>
-                    <div class="col-md-4 inputGroupContainer">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                            <input name="provincia" placeholder="provincia" class="form-control" type="text">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Select Basic -->
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Población</label>
-                    <div class="col-md-4 selectContainer">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-                            <input name="poblacion" placeholder="poblacion" class="form-control" type="text">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Text input-->
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Codigo postal</label>
-                    <div class="col-md-4 inputGroupContainer">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                            <input name="cp" placeholder="cp" class="form-control" type="text">
+                            <input name="direccion" placeholder="direccion" class="form-control" type="text"
+                                v-model="student.address">
                         </div>
                     </div>
                 </div>
@@ -152,8 +135,7 @@ export default {
                     <label class="col-md-4 control-label">Link Curriculum</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
-                            <input name="cv" placeholder="cv" class="form-control" type="text">
+                            <input name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link">
                         </div>
                     </div>
                 </div>
