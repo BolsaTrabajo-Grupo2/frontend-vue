@@ -1,5 +1,33 @@
 <script>
+import { useStore } from '@/stores/store';
+import { mapState } from 'pinia';
+import * as yup from 'yup'
+import { setLocale } from 'yup'
 
+setLocale({
+    mixed: {
+        required: 'El campo ${path} no puede estar vacio'
+    },
+    string: {
+        min: 'Debe tener al menos ${min} caracteres',
+        max: 'Deebe tener menos de ${max} caracteres'
+    },
+})
+export default {
+    props: ['id'],
+    computed: {
+        ...mapState(useStore, {
+            cycles: 'cycles',
+            student: {},
+            tittleForm: 'Registrarte'
+        })
+    },
+    async mounted() {
+    if (this.id) {
+      this.titulo = 'Modificar cuenta'
+    }
+  },
+}
 </script>
 
 <template>
