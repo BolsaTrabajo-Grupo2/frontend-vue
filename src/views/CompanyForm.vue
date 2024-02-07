@@ -1,10 +1,19 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-import { store } from '../stores'
+import { useCounterStore } from '../stores'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup';
 import JuegosRepository from '@/repositories/juegos.repository';
+extend('url', {
+  validate: (value) => {
+    if (value === null || value === undefined || value === '') {
+      return true;
+    }
+    return yup.string().url().isValidSync(value);
+  },
+  message: 'La URL no es válida',
+});
 
 setLocale({
   mixed: {
@@ -20,15 +29,20 @@ setLocale({
 export default {
   data() {
     const mySchema = yup.object({
-      nombre: yup.string().required().min(4).max(25),
-      categoria: yup.string().required(),
-      plataforma: yup.string().required(),
-      imagen: yup.string().required().test('extension', 'La imagen debe tener una extensión válida: .png, .jpg o .bmp', (value) => {
-        if (!value) {
-          return true;
-        }
-        return /\.(png|jpg|bmp)$/.test(value)
-      })
+      name: yup.string().required(),
+      surname: yup.string().required(),
+      email: yup.string().required().email(),
+      password: yup.string().min(8),
+      CIF: yup.string().lenght(9),
+      CP: yup.number().lenght(5), //Comprobacion
+      street: yup.string().required().max(75),
+      number: yup.number().required().max(15),
+      province: yup.string().required().max(40),
+      poblation: yup.string().required().max(40),
+      datail: yup.string().max(75),
+      phone: yup.number().required().lenght(9),
+      web: yup.string().url().max(100)
+
     })
     return {
       juego: {},
@@ -43,7 +57,7 @@ export default {
     ErrorMessage,
   },
   computed: {
-    ...mapState(store, {
+    ...mapState(useCounterStore, {
       plataformas: 'plataformas',
       categorias: 'categorias',
     })
@@ -82,7 +96,7 @@ export default {
     async cancel() {
       this.$router.push("/")
     },
-    ...mapActions(store, ['getAutorById']),
+    ...mapActions(useCounterStore, ['getAutorById']),
   },
 
 }
