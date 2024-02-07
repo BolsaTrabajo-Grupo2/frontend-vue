@@ -31,11 +31,14 @@ export default {
         })
         return {
             mySchema,
-            student: {rol:'STU',
-                        cycle: [{ selectedCycle: '', date: '' }] },
-            tittleForm: 'Registrarse',
             cycleFields: [{ selectedCycle: '', date: '' }],
+            student: {rol:'STU',
+                        cycle: [] },
+            tittleForm: 'Registrarse',
         }
+    },
+    created() {
+        this.student.cycle = this.cycleFields;
     },
     props: ['id'],
     computed: {
