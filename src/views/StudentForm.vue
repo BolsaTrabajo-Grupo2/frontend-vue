@@ -31,7 +31,7 @@ export default {
         })
         return {
             mySchema,
-            student: {},
+            student: {rol:'STU'},
             tittleForm: 'Registrarse',
             inputs: [],
         }
@@ -74,7 +74,7 @@ export default {
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
+        <Form :initial-values="student" :validation-schema="mySchema">
             <fieldset>
                 <legend>{{ tittleForm }}</legend>
 
@@ -163,7 +163,7 @@ export default {
                     <label class="col-md-4 control-label">Link Curriculum</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
+                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.CVLink" />
                         </div>
                         <ErrorMessage name="cv" class="error" />
                     </div>
@@ -185,7 +185,7 @@ export default {
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-warning">Registrarse <span
+                        <button type="submit" class="btn btn-warning" @click="addStudent()">Registrarse <span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
                 </div>
