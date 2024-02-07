@@ -1,10 +1,9 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-import { store } from '../stores'
+import { useCounterStore } from '../stores/counter.js'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup';
-import JuegosRepository from '@/repositories/juegos.repository';
 
 setLocale({
   mixed: {
@@ -43,7 +42,7 @@ export default {
     ErrorMessage,
   },
   computed: {
-    ...mapState(store, {
+    ...mapState(useCounterStore, {
       plataformas: 'plataformas',
       categorias: 'categorias',
     })
@@ -82,7 +81,7 @@ export default {
     async cancel() {
       this.$router.push("/")
     },
-    ...mapActions(store, ['getAutorById']),
+    ...mapActions(useCounterStore, ['getAutorById']),
   },
 
 }
@@ -94,52 +93,75 @@ export default {
       <fieldset>
         <legend>{{ this.titulo }}</legend>
         <div>
-          <div v-if="this.$route.params.id">
-            <label for="id">Id:</label>
-            <Field name="id" type="text" v-model="juego.id" disabled /><br />
-            <br>
-            <ErrorMessage name="id" class="validate-error" />
+          <div>
+            <Field name="rol" type="text" value="COMP" hidden /><br />
           </div>
 
           <div>
-            <label name="nombre" for="nombre">Nombre:</label><br>
-            <Field name="nombre" type="text" v-model="juego.nombre" /><br />
-            <ErrorMessage name="nombre" class="validate-error" />
+            <label name="name" for="name">Nombre:</label><br>
+            <Field name="name" type="text" v-model="company.name" /><br />
+            <ErrorMessage name="name" class="validate-error" />
           </div>
 
           <div>
-            <label for="descripcion">Descripcion:</label><br>
-            <textarea v-model="juego.descrip"></textarea>
+            <label name="surname" for="surname">Apellidos:</label><br>
+            <Field name="surname" type="text" v-model="company.surname" /><br />
+            <ErrorMessage name="surname" class="validate-error" />
           </div>
 
           <div>
-            <label for="categoria">Categoría:</label>
-            <div class="form-check" v-for="categoria in categorias" :key="categoria.id">
-              <Field type="radio" class="form-check-input" name="categoria" :value="categoria.id"
-                v-model="juego.categoria" />{{
-                  categoria.nombre }}
-            </div>
-            <br>
-            <ErrorMessage name="categoria" class="validate-error" />
+            <label name="email" for="email">Email:</label><br>
+            <Field name="email" type="text" v-model="company.email" /><br />
+            <ErrorMessage name="email" class="validate-error" />
           </div>
 
           <div>
-            <label for="plataforma">Plataforma:</label>
-            <Field name="plataforma" v-model="juego.plataforma" class="form-control" as="select">
-              <option value="" disabled>-- Selecciona una Plataforma --</option>
-              <option v-for="plataforma in plataformas" :key="plataforma.id" :value="plataforma.id">{{ plataforma.nombre
-              }}</option>
-            </Field>
-            <ErrorMessage name="plataforma" class="validate-error" />
+            <label name="password" for="password">Contraseña:</label><br>
+            <Field name="password" type="text" /><br />
+            <ErrorMessage name="password" class="validate-error" />
           </div>
-          <div class="form-group">
-            <label name="imagen" for="imagen">Imagen:</label><br>
-            <Field name="imagen" type="text" class="form-control" v-model="juego.img" /><br />
-            <ErrorMessage name="imagen" class="validate-error" />
+
+          <div>
+            <label name="confirmPassword" for="confirmPassword">Repetir Contraseña:</label><br>
+            <Field name="confirmPassword" type="text" /><br />
+            <ErrorMessage name="confirmPassword" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="CIF" for="CIF">CIF:</label><br>
+            <Field name="CIF" type="text" /><br />
+            <ErrorMessage name="CIF" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="companyName" for="companyName">Nombre Empresa:</label><br>
+            <Field name="companyName" type="text" /><br />
+            <ErrorMessage name="companyName" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="web" for="web">Web:</label><br>
+            <Field name="web" type="text" /><br />
+            <ErrorMessage name="web" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="address" for="address">Dirección:</label><br>
+            <Field name="address" type="text" /><br />
+            <ErrorMessage name="address" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="CP" for="CP">CP:</label><br>
+            <Field name="CP" type="CP" /><br />
+            <ErrorMessage name="CP" class="validate-error" />
+          </div>
+          <div>
+            <input type="checkbox" id="accept" name="accept">
+            <label name="accept" for="accept">Aceptar</label><br>
+            <ErrorMessage name="accept" class="validate-error" />
           </div>
         </div>
-
-
 
         <button type="submit" class="btn btn-default btn-primary">Guardar</button>
         <button type="button" @click="cancel" class="btn btn-danger">Cancelar</button>
