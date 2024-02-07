@@ -19,19 +19,20 @@ setLocale({
 export default {
     data() {
         const mySchema = yup.object({
-
+            repassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
             name: yup.string().required().max(250),
             surname: yup.string().required().max(250),
             email: yup.string().required().email(),
             password: yup.string().required().min(8),
-            address: yup.string().required(),
+            direccion: yup.string().required(),
             cv: yup.string().url({
                 message: 'Por favor, introduce una URL válida para el CV.'
             })
         })
         return {
             mySchema,
-            student: {},
+            student: {,
+                        cycle: []},
             tittleForm: 'Registrarse',
             cycleFields: [{ selectedCycle: '', date: '' }],
         }
@@ -162,7 +163,7 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address" />
+                                v-model="student.address"/>
                         </div>
                     </div>
                 </div>
