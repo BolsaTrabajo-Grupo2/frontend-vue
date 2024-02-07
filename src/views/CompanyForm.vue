@@ -9,11 +9,11 @@ yup.addMethod(yup.string, 'url', function () {
   return this.test({
     name: 'url',
     message: 'La URL no es válida',
-    test: function (value) {
+    test: (value) => {
       if (!value) {
         return true;
       }
-      return yup.string().url().validate(value);
+      return /^(ftp|http|https):\/\/[^ "]+$/.test(value);
     }
   });
 });
@@ -162,7 +162,7 @@ export default {
         <button type="submit" class="btn btn-default btn-primary">Guardar</button>
         <button type="button" @click="cancel" class="btn btn-danger">Cancelar</button>
       </fieldset>
-    </form>
+    </Form>
   </div>
 </template>
 <style scoped>
