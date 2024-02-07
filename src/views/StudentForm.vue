@@ -84,7 +84,7 @@ export default {
                         <div class="input-group">
                             <Field name="name" placeholder="nombre" class="form-control" type="text"
                                 v-model="student.name" />
-                            <ErrorMessage name="first_name" class="error" />
+                            <ErrorMessage name="name" class="error" />
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="last_name" placeholder="apellido" class="form-control" type="text"
+                            <Field name="surname" placeholder="apellido" class="form-control" type="text"
                                 v-model="student.surname"/>
                         </div>
                     </div>
@@ -138,9 +138,9 @@ export default {
                     <label class="col-md-4 control-label">Ciclos</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field as="select" name="ciclos" v-model="student.cycle" class="form-control">
+                            <Field as="select" name="ciclos" class="form-control">
                                 <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id"> {{ cycle.title }}</option>
+                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id"> {{ cycle.title }}</option>
                             </Field>
                             <ErrorMessage name="ciclos" class="error" />
                         </div>
