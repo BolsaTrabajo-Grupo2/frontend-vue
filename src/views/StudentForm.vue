@@ -138,7 +138,7 @@ export default {
                     <label class="col-md-4 control-label">Ciclos</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field as="select" name="ciclos" class="form-control">
+                            <Field as="select" name="ciclos" class="form-control" v-model="student.cycle">
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id"> {{ cycle.title }}</option>
                             </Field>
