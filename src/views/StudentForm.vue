@@ -89,7 +89,7 @@ export default {
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="first_name" placeholder="nombre" class="form-control" type="text"
+                            <Field name="name" placeholder="nombre" class="form-control" type="text"
                                 v-model="student.name"/>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="last_name" placeholder="apellido" class="form-control" type="text"
+                            <Field name="surname" placeholder="apellido" class="form-control" type="text"
                                 v-model="student.surname"/>
                         </div>
                     </div>
@@ -154,7 +154,7 @@ export default {
                     <label class="col-md-4 control-label">Dirección</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="direccion" placeholder="direccion" class="form-control" type="text"
+                            <Field name="address" placeholder="direccion" class="form-control" type="text"
                                 v-model="student.address"/>
                         </div>
                     </div>
