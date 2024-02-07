@@ -3,6 +3,7 @@ import { useStore } from '@/stores/store';
 import { mapState } from 'pinia';
 import * as yup from 'yup'
 import { setLocale } from 'yup'
+import { Form, Field, ErrorMessage } from 'vee-validate'
 
 setLocale({
     mixed: {
@@ -14,31 +15,37 @@ setLocale({
     },
 })
 export default {
+    data() {
+        return {
+            student: {},
+            tittleForm: 'Registrarse',
+            repo: new itemsRepository()
+        }
+    },
     props: ['id'],
     computed: {
         ...mapState(useStore, {
             cycles: 'cycles',
-            student: {},
-            tittleForm: 'Registrarte'
         })
     },
+    components: {
+        Form,
+        Field,
+        ErrorMessage
+    },
     async mounted() {
-    if (this.id) {
-      this.titulo = 'Modificar cuenta'
-    }
-  },
+        if (this.id) {
+            this.tittleForm = 'Modificar cuenta'
+        }
+    },
 }
 </script>
 
 <template>
     <div class="container">
-        <form class="well form-horizontal" action=" " method="post" id="contact_form">
+        <Form class="well form-horizontal" action=" " method="post" id="contact_form">
             <fieldset>
-
-                <!-- Form Name -->
-                <legend>Contact Us Today!</legend>
-
-                <!-- Text input-->
+                <legend>{{ tittleForm }}</legend>
 
                 <div class="form-group">
                     <label class="col-md-4 control-label">Nombre</label>
@@ -50,8 +57,6 @@ export default {
                     </div>
                 </div>
 
-                <!-- Text input-->
-
                 <div class="form-group">
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
@@ -62,7 +67,6 @@ export default {
                     </div>
                 </div>
 
-                <!-- Text input-->
                 <div class="form-group">
                     <label class="col-md-4 control-label">E-Mail</label>
                     <div class="col-md-4 inputGroupContainer">
