@@ -31,9 +31,9 @@ export default {
         })
         return {
             mySchema,
-            student: {rol:'STU'},
+            student: {},
             tittleForm: 'Registrarse',
-            inputs: [],
+            cycleFields: [{ selectedCycle: '', date: '' }],
         }
     },
     props: ['id'],
@@ -67,6 +67,14 @@ export default {
                     alert(error)
                 }
             }
+        },
+        addCycleField(index) {
+            if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
+                this.cycleFields.push({ selectedCycle: '', date: '' }); // Agregar un nuevo campo si el último campo tiene un ciclo seleccionado
+            }
+        },
+        removeCycleField(index) {
+            this.cycleFields.splice(index, 1); // Eliminar el campo seleccionado
         }
     }
 }
@@ -74,7 +82,7 @@ export default {
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="mySchema">
+        <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
             <fieldset>
                 <legend>{{ tittleForm }}</legend>
 
@@ -94,7 +102,7 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="surname" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname"/>
+                                v-model="student.surname" />
                         </div>
                     </div>
                 </div>
@@ -134,15 +142,16 @@ export default {
                 </div>
 
                 <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Ciclos</label>
+                <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
+                    <label class="col-md-4 control-label">Ciclo</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field as="select" name="ciclos" class="form-control" v-model="student.cycle">
+                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
                                 <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id"> {{ cycle.title }}</option>
-                            </Field>
-                            <ErrorMessage name="ciclos" class="error" />
+                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
+                            </select>
+                            <input type="date" v-model="cycleField.date" class="form-control" />
+                            <button @click="removeCycleField(index)">Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -153,7 +162,7 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address"/>
+                                v-model="student.address" />
                         </div>
                     </div>
                 </div>
@@ -163,7 +172,7 @@ export default {
                     <label class="col-md-4 control-label">Link Curriculum</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.CVLink" />
+                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
                         </div>
                         <ErrorMessage name="cv" class="error" />
                     </div>
@@ -185,7 +194,7 @@ export default {
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-warning" @click="addStudent()">Registrarse <span
+                        <button type="submit" class="btn btn-warning">Registrarse <span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
                 </div>
