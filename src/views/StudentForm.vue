@@ -82,8 +82,8 @@ export default {
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="first_name" placeholder="nombre" class="form-control" type="text"
-                                v-model="student.name">
+                            <Field name="first_name" placeholder="nombre" class="form-control" type="text"
+                                v-model="student.name"/>
                         </div>
                     </div>
                 </div>
@@ -92,8 +92,8 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="last_name" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname">
+                            <Field name="last_name" placeholder="apellido" class="form-control" type="text"
+                                v-model="student.surname"/>
                         </div>
                     </div>
                 </div>
@@ -102,8 +102,8 @@ export default {
                     <label class="col-md-4 control-label">E-Mail</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="email" placeholder="email" class="form-control" type="email"
-                                v-model="student.email">
+                            <Field name="email" placeholder="email" class="form-control" type="email"
+                                v-model="student.email"/>
                         </div>
                     </div>
                 </div>
@@ -113,8 +113,8 @@ export default {
                     <label class="col-md-4 control-label">Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="password" placeholder="contraseña" class="form-control" type="password"
-                                v-model="student.password">
+                            <Field name="password" placeholder="contraseña" class="form-control" type="password"
+                                v-model="student.password"/>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@ export default {
                     <label class="col-md-4 control-label">Repetir Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="repassword" placeholder="repetir password" class="form-control" type="password">
+                            <Field name="repassword" placeholder="repetir password" class="form-control" type="password"/>
                         </div>
                     </div>
                 </div>
@@ -142,21 +142,13 @@ export default {
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div v-for="(input, index) in inputs" :key="index">
-                        <input v-model="input.value" type="text" :placeholder="input.id" />
-                        <input v-model="input.date" type="date" />
-                        <button @click="removeField(index)">Eliminar</button>
-                    </div>
-                </div>
-
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-md-4 control-label">Dirección</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address">
+                            <Field name="direccion" placeholder="direccion" class="form-control" type="text"
+                                v-model="student.address"/>
                         </div>
                     </div>
                 </div>
@@ -166,7 +158,7 @@ export default {
                     <label class="col-md-4 control-label">Link Curriculum</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link">
+                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link">
                         </div>
                     </div>
                 </div>
@@ -176,7 +168,7 @@ export default {
                     <label class="col-md-4 control-label">Términos y Condiciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <input class="form-control" name="aceptar" type="checkbox" />
+                            <Field class="form-control" name="aceptar" type="checkbox" />
                             <label for="aceptar">Acepto los términos y condiciones</label>
                         </div>
                     </div>
