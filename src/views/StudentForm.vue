@@ -74,7 +74,7 @@ export default {
 
 <template>
     <div class="container">
-        <Form class="well form-horizontal" action=" " method="post" id="contact_form">
+        <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
             <fieldset>
                 <legend>{{ tittleForm }}</legend>
 
@@ -83,7 +83,8 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="first_name" placeholder="nombre" class="form-control" type="text"
-                                v-model="student.name"/>
+                                v-model="student.name" />
+                            <ErrorMessage name="first_name" class="error" />
                         </div>
                     </div>
                 </div>
@@ -93,7 +94,8 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="last_name" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname"/>
+                                v-model="student.surname" />
+                            <ErrorMessage name="last_name" class="error" />
                         </div>
                     </div>
                 </div>
@@ -103,7 +105,8 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="email" placeholder="email" class="form-control" type="email"
-                                v-model="student.email"/>
+                                v-model="student.email" />
+                            <ErrorMessage name="email" class="error" />
                         </div>
                     </div>
                 </div>
@@ -114,7 +117,8 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="password" placeholder="contraseña" class="form-control" type="password"
-                                v-model="student.password"/>
+                                v-model="student.password" />
+                            <ErrorMessage name="password" class="error" />
                         </div>
                     </div>
                 </div>
@@ -124,7 +128,8 @@ export default {
                     <label class="col-md-4 control-label">Repetir Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="repassword" placeholder="repetir password" class="form-control" type="password"/>
+                            <Field name="repassword" placeholder="repetir password" class="form-control" type="password" />
+                            <ErrorMessage name="repassword" class="error" />
                         </div>
                     </div>
                 </div>
@@ -138,6 +143,7 @@ export default {
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id"> {{ cycle.title }}</option>
                             </Field>
+                            <ErrorMessage name="ciclos" class="error" />
                         </div>
                     </div>
                 </div>
@@ -148,7 +154,8 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address"/>
+                                v-model="student.address" />
+                                <ErrorMessage name="direccion" class="error" />
                         </div>
                     </div>
                 </div>
@@ -158,8 +165,9 @@ export default {
                     <label class="col-md-4 control-label">Link Curriculum</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link">
+                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
                         </div>
+                        <ErrorMessage name="cv" class="error" />
                     </div>
                 </div>
 
@@ -171,6 +179,7 @@ export default {
                             <Field class="form-control" name="aceptar" type="checkbox" />
                             <label for="aceptar">Acepto los términos y condiciones</label>
                         </div>
+                        <ErrorMessage name="aceptar" class="error" />
                     </div>
                 </div>
 
