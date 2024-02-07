@@ -5,28 +5,19 @@ import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup';
 
-yup.addMethod(yup.string, 'url', function() {
+yup.addMethod(yup.string, 'url', function () {
   return this.test({
     name: 'url',
     message: 'La URL no es válida',
-    test: (value) => {
+    test: function (value) {
       if (!value) {
         return true;
       }
-      return yup.string().url().isValidSync(value);
+      return yup.string().url().validate(value);
     }
   });
 });
 
-yup.addMethod(yup.boolean, 'accepted', function() {
-  return this.test({
-    name: 'accepted',
-    message: 'Debe aceptar las condiciones',
-    test: (value) => {
-      return value === true;
-    }
-  });
-});
 
 setLocale({
   mixed: {
@@ -45,20 +36,17 @@ export default {
       name: yup.string().required(),
       surname: yup.string().required(),
       email: yup.string().required().email(),
-      password: yup.string().min(8),
-      CIF: yup.string().lenght(9),
-      CP: yup.number().lenght(5), //Comprobacion
-      street: yup.string().required().max(75),
-      number: yup.number().required().max(15),
-      province: yup.string().required().max(40),
-      poblation: yup.string().required().max(40),
-      datail: yup.string().max(75),
-      phone: yup.number().required().lenght(9),
-      web: yup.string().url().max(100)
-
+      password: yup.string().min(8).required(),
+      confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
+      CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números'),
+      CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
+      address: yup.string().required().max(250),
+      phone: yup.string().required().length(9),
+      web: yup.string().url().max(100),
+      companyName: yup.string().required()
     })
     return {
-      juego: {},
+      company: {},
       titulo: "Añadir Juego",
       boton: "Añadir",
       mySchema,
@@ -70,18 +58,13 @@ export default {
     ErrorMessage,
   },
   computed: {
-    ...mapState(useCounterStore, {
-      plataformas: 'plataformas',
-      categorias: 'categorias',
-    })
   },
   async mounted() {
     try {
-      const repository = new JuegosRepository
       if (this.$route.params.id) {
-        this.juego = await repository.getById(this.$route.params.id)
+        this.company = {}
         this.titulo = "Editar Juego"
-        this.boton = "Editar"
+        this.button = "Editar"
       }
     }
     catch {
@@ -90,26 +73,11 @@ export default {
   },
   methods: {
     async create() {
-      try {
-        const repository = new JuegosRepository()
-        if (this.juego.id) {
-          await repository.change(this.juego)
-          alert('juego editado correctamente')
-        }
-        else {
-          await repository.add(this.juego)
-          alert('juego añadido correctamente')
-        }
-        this.$router.push("/")
-      }
-      catch {
-        alert('Error al crear o añadir el juego')
-      }
+      alert ("creado")
     },
     async cancel() {
       this.$router.push("/")
     },
-    ...mapActions(useCounterStore, ['getAutorById']),
   },
 
 }
@@ -181,11 +149,11 @@ export default {
 
           <div>
             <label name="CP" for="CP">CP:</label><br>
-            <Field name="CP" type="CP" /><br />
+            <Field name="CP" type="text" /><br />
             <ErrorMessage name="CP" class="validate-error" />
           </div>
           <div>
-            <input type="checkbox" id="accept" name="accept">
+            <input type="checkbox" id="accept" name="accept" required>
             <label name="accept" for="accept">Aceptar</label><br>
             <ErrorMessage name="accept" class="validate-error" />
           </div>
