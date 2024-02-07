@@ -32,8 +32,10 @@ export default {
         return {
             mySchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
-            student: {rol:'STU',
-                        cycle: [] },
+            student: {
+                rol: 'STU',
+                cycle: []
+            },
             tittleForm: 'Registrarse',
         }
     },
@@ -54,6 +56,18 @@ export default {
     async mounted() {
         if (this.id) {
             this.tittleForm = 'Modificar cuenta'
+            await axios.get(SERVER + '/student/' + this.id)
+                .then(response => this.student = response.data)
+                .catch(response => {
+                    alert('Error: ' + response.message)
+                })
+            await axios.get(SERVER + '/studentCicles/' + this.id)
+                .then(response => this.student.cycle = response.data)
+                .catch(response => {
+                    alert('Error: ' + response.message)
+                })
+            this.student.password = ''
+            this.cycleFields = this.student.cycle
         }
     },
     methods: {
@@ -150,7 +164,7 @@ export default {
                     <label class="col-md-4 control-label">Ciclo</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
+                            <select v-model="cycleField.id_cycle" class="form-control" @change="addCycleField(index)">
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
                             </select>
@@ -166,7 +180,7 @@ export default {
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address"/>
+                                v-model="student.address" />
                         </div>
                     </div>
                 </div>

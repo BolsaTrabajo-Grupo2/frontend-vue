@@ -9,6 +9,12 @@ const router = createRouter({
       name: 'home',
       component: StudentForm
     },
+    {
+      path: '/edit/:id',
+      name: 'editar',
+      component: StudentForm,
+      props: true
+    },
   ]
 })
 
