@@ -1,6 +1,18 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useStore } from './stores/store';
+import { mapActions } from 'pinia';
+
+export default {
+  methods: {
+    ...mapActions(useStore, ['loadCycles'])
+  },
+  mounted() {
+    this.loadCycles()
+  }
+
+}
 </script>
 
 <template>
