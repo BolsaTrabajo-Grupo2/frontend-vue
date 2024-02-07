@@ -31,7 +31,8 @@ export default {
         })
         return {
             mySchema,
-            student: {rol:'STU'},
+            student: {rol:'STU',
+                        cycle: []},
             tittleForm: 'Registrarse',
             inputs: [],
         }
