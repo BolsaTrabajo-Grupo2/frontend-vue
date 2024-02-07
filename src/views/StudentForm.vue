@@ -16,15 +16,6 @@ setLocale({
         max: 'Deebe tener menos de ${max} caracteres'
     },
 })
-extend('url', {
-  validate: (value) => {
-    if (value === null || value === undefined || value === '') {
-      return true;
-    }
-    return yup.string().url().isValidSync(value);
-  },
-  message: 'La URL no es válida',
-});
 export default {
     data() {
         const mySchema = yup.object({
@@ -33,8 +24,10 @@ export default {
             surname: yup.string().required().max(250),
             email: yup.string().required().email(),
             password: yup.string().required().min(8),
-            address: yup.string.required(),
-            cv: yup
+            address: yup.string().required(),
+            cv: yup.string().url({
+                message: 'Por favor, introduce una URL válida para el CV.'
+            })
         })
         return {
             mySchema,
@@ -198,7 +191,7 @@ export default {
                     </div>
                 </div>
             </fieldset>
-        </form>
+        </Form>
     </div>
 </template>
 
