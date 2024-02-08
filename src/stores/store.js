@@ -19,7 +19,7 @@ export const useStore = defineStore('store', {
         })
     },
     loadUser(){
-      const storedCart = localStorage.getItem('usuario')
+      const storedCart = localStorage.getItem('user')
       if (storedCart) {
         this.user = JSON.parse(storedCart)
       } else {
