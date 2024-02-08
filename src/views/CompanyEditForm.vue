@@ -47,8 +47,8 @@ export default {
     })
     return {
       company: {},
-      titulo: "Añadir Empresa",
-      boton: "Añadir",
+      titulo: "Editar Empresa",
+      boton: "Editar",
       mySchema,
     }
   },
@@ -58,12 +58,12 @@ export default {
     ErrorMessage,
   },
   methods: {
-    async addCompany() {
+    async editCompany() {
             this.company.rol = "COMP"
             try {
-                axios.post(SERVER + '/registerCompany', this.company)
+                axios.post(SERVER + '/user/company/update/', this.company.CIF)
                     .then()
-                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+                    .catch(response => alert('Error: no se ha editado el registro. ' + response.message))
             } catch (error) {
                 alert(error)
             }
@@ -75,7 +75,7 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit="addCompany()" :validation-schema="mySchema">
+    <Form @submit="aditCompany()" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ titulo }}</legend>
         <div>
