@@ -46,10 +46,20 @@ export default {
                 $('.social').stop().slideToggle();
             });
         })
+        })
     },
     methods: {
         logIng(){
             try {
+                await axios.post(SERVER + '/login', this.user)
+                    .then(
+                        // response => this.addUser(response.data),
+                        response => {
+                        localStorage.setItem('user', JSON.stringify(response.data))
+                        },
+            this.$router.push('/student-mod/44')
+            )
+                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
                 axios.put(SERVER + '/login' + this.user.email, this.user.password)
                     .then(response => localStorage.setItem('usuario', JSON.stringify(response.data)))
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))

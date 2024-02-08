@@ -17,9 +17,10 @@ export const useStore = defineStore('store', {
         .catch(response => {
           alert('Error: ' + response.message)
         })
+        localStorage.clear()
     },
     loadUser(){
-      const storedCart = localStorage.getItem('usuario')
+      const storedCart = localStorage.getItem('user')
       if (storedCart) {
         this.user = JSON.parse(storedCart)
       } else {
