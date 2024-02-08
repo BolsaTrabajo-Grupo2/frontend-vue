@@ -86,7 +86,7 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit="submitForm" :validation-schema="mySchema">
+    <Form @submit.prevent="submitForm" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ this.titulo }}</legend>
         <div>
