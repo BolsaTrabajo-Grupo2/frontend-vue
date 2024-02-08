@@ -18,25 +18,51 @@ setLocale({
 })
 export default {
     data() {
-        const mySchema = yup.object({
-            repassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
+        const createSchema = yup.object({
+            repetirContraseña: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
+            nombre: yup.string().required().max(250),
+            apellidos: yup.string().required().max(250),
+            email: yup.string()
+                .required()
+                .email()
+                .test('unique-email', 'Este email ya está registrado', async function (value) {
+                    if (!value) return true;
+                    try {
+                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+                        return !response.data; // Devuelve true si el email no está registrado
+                    } catch (error) {
+                        console.error('Error al verificar el email:', error);
+                        return true; // Tratar el error como email existente por precaución
+                    }
+                }),
+            contraseña: yup.string().required().min(8),
+            direccion: yup.string().required(),
+            cv: yup.string().matches(
+                /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
+                'Por favor, introduce una URL válida para el CV.'
+            ),
+            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
+        });
+        const editSchema = yup.object({
             name: yup.string().required().max(250),
             surname: yup.string().required().max(250),
             email: yup.string().required().email(),
-            password: yup.string().required().min(8),
             direccion: yup.string().required(),
             cv: yup.string().url({
                 message: 'Por favor, introduce una URL válida para el CV.'
             })
-        })
+        });
         return {
-            mySchema,
+            createSchema,
+            editSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
             student: {
                 rol: 'STU',
                 cycle: []
             },
             tittleForm: 'Registrarse',
+            buttonForm: 'Registrarse',
+            validateForm: createSchema,
         }
     },
     created() {
@@ -56,11 +82,13 @@ export default {
     async mounted() {
         if (this.id) {
             this.tittleForm = 'Modificar cuenta'
-            await axios.get(SERVER + '/student/' + this.id)
-                .then(response => this.student = response.data)
-                .catch(response => {
-                    alert('Error: ' + response.message)
-                })
+            this.buttonForm = 'Modificar'
+            validateForm: editSchema,
+                await axios.get(SERVER + '/student/' + this.id)
+                    .then(response => this.student = response.data)
+                    .catch(response => {
+                        alert('Error: ' + response.message)
+                    })
             await axios.get(SERVER + '/studentCicles/' + this.id)
                 .then(response => this.student.cycle = response.data)
                 .catch(response => {
@@ -88,11 +116,11 @@ export default {
         },
         addCycleField(index) {
             if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
-                this.cycleFields.push({ selectedCycle: '', date: '' }); // Agregar un nuevo campo si el último campo tiene un ciclo seleccionado
+                this.cycleFields.push({ selectedCycle: '', date: '' });
             }
         },
         removeCycleField(index) {
-            this.cycleFields.splice(index, 1); // Eliminar el campo seleccionado
+            this.cycleFields.splice(index, 1);
         }
     }
 }
@@ -100,7 +128,7 @@ export default {
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
+        <Form :initial-values="student" :validation-schema="validateForm" @submit="addStudent()">
             <fieldset>
                 <legend>{{ tittleForm }}</legend>
 
@@ -108,9 +136,9 @@ export default {
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="name" placeholder="nombre" class="form-control" type="text"
+                            <Field name="nombre" placeholder="nombre" class="form-control" type="text"
                                 v-model="student.name" />
-                            <ErrorMessage name="name" class="error" />
+                            <ErrorMessage name="nombre" class="error" />
                         </div>
                     </div>
                 </div>
@@ -119,8 +147,9 @@ export default {
                     <label class="col-md-4 control-label">Apellido</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="surname" placeholder="apellido" class="form-control" type="text"
+                            <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
                                 v-model="student.surname" />
+                            <ErrorMessage name="apellidos" class="error" />
                         </div>
                     </div>
                 </div>
@@ -141,9 +170,9 @@ export default {
                     <label class="col-md-4 control-label">Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="password" placeholder="contraseña" class="form-control" type="password"
+                            <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
                                 v-model="student.password" />
-                            <ErrorMessage name="password" class="error" />
+                            <ErrorMessage name="contraseña" class="error" />
                         </div>
                     </div>
                 </div>
@@ -153,8 +182,9 @@ export default {
                     <label class="col-md-4 control-label">Repetir Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="repassword" placeholder="repetir password" class="form-control" type="password" />
-                            <ErrorMessage name="repassword" class="error" />
+                            <Field name="repetirContraseña" placeholder="repetir password" class="form-control"
+                                type="password" />
+                            <ErrorMessage name="repetirContraseña" class="error" />
                         </div>
                     </div>
                 </div>
@@ -164,7 +194,7 @@ export default {
                     <label class="col-md-4 control-label">Ciclo</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <select v-model="cycleField.id_cycle" class="form-control" @change="addCycleField(index)">
+                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
                             </select>
@@ -181,6 +211,7 @@ export default {
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
                                 v-model="student.address" />
+                            <ErrorMessage name="direccion" class="error" />
                         </div>
                     </div>
                 </div>
@@ -201,8 +232,8 @@ export default {
                     <label class="col-md-4 control-label">Términos y Condiciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field class="form-control" name="aceptar" type="checkbox" />
-                            <label for="aceptar">Acepto los términos y condiciones</label>
+                            <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
+                            <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
                         </div>
                         <ErrorMessage name="aceptar" class="error" />
                     </div>
@@ -212,7 +243,7 @@ export default {
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-warning">Registrarse <span
+                        <button type="submit" class="btn btn-warning">{{ buttonForm }} <span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
                 </div>
