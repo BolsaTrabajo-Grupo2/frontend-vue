@@ -106,11 +106,37 @@ export default {
   },
   methods: {
     async editCompany() {
+<<<<<<< HEAD
       axios
         .post(SERVER + '/user/company/update/', this.id)
         .then()
         .catch((response) => alert('Error: no se ha editado el registro. ' + response.message))
     },
+=======
+        axios.post(SERVER + '/user/company/update/', this.id)
+          .then()
+          .catch(response => alert('Error: no se ha editado el registro. ' + response.message))
+    },
+
+    async reset() {
+      try {
+        const response = await axios.get(SERVER + '/company/' + this.id);
+        this.company = response.data;
+      } catch (error) {
+        console.error('Error al obtener la información de la empresa:', error);
+      }
+    },
+  },
+  props: ['id'],
+  async mounted() {
+    await axios.get(SERVER + '/company/' + this.id)
+      .then(response => this.company = response.data)
+      .catch(response => {
+        alert('Error: ' + response.message)
+      });
+    this.company.password = ''
+  }
+>>>>>>> refs/remotes/origin/companyForm
 
     async reset() {
         try {
