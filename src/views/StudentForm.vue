@@ -29,10 +29,10 @@ export default {
                     if (!value) return true;
                     try {
                         const response = await axios.get(`${SERVER}/checkEmail/${value}`);
-                        return !response.data; // Devuelve true si el email no está registrado
+                        return !response.data;
                     } catch (error) {
                         console.error('Error al verificar el email:', error);
-                        return true; // Tratar el error como email existente por precaución
+                        return true;
                     }
                 }),
             contraseña: yup.string().required().min(8),
@@ -42,7 +42,7 @@ export default {
                 'Por favor, introduce una URL válida para el CV.'
             ),
             aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
-        });
+        })
         const editSchema = yup.object({
             name: yup.string().required().max(250),
             surname: yup.string().required().max(250),
@@ -51,10 +51,10 @@ export default {
             cv: yup.string().url({
                 message: 'Por favor, introduce una URL válida para el CV.'
             })
-        });
+        })
         return {
-            createSchema,
             editSchema,
+            createSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
             student: {
                 rol: 'STU',
@@ -62,11 +62,8 @@ export default {
             },
             tittleForm: 'Registrarse',
             buttonForm: 'Registrarse',
-            validateForm: createSchema,
+            validateForm: null,
         }
-    },
-    created() {
-        this.student.cycle = this.cycleFields;
     },
     props: ['id'],
     computed: {
@@ -80,10 +77,10 @@ export default {
         ErrorMessage
     },
     async mounted() {
+        this.validateForm = this.id ? this.editSchema : this.createSchema;
         if (this.id) {
             this.tittleForm = 'Modificar cuenta'
             this.buttonForm = 'Modificar'
-            validateForm: editSchema,
                 await axios.get(SERVER + '/student/' + this.id)
                     .then(response => this.student = response.data)
                     .catch(response => {
@@ -100,7 +97,9 @@ export default {
     },
     methods: {
         async addStudent() {
+            this.student.cycle = this.cycleFields
             if (this.id) {
+                alert('entra')
                 axios.put(SERVER + '/user/profile/update/' + this.id, this.student)
                     .then()
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
@@ -121,14 +120,14 @@ export default {
         },
         removeCycleField(index) {
             this.cycleFields.splice(index, 1);
-        }
+        },
     }
 }
 </script>
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="validateForm" @submit="addStudent()">
+        <Form :initial-values="student" :validation-schema="this.validateForm" @submit="addStudent()">
             <fieldset>
                 <legend>{{ tittleForm }}</legend>
 
@@ -228,7 +227,7 @@ export default {
                 </div>
 
                 <!-- Text area -->
-                <div class="form-group">
+                <div class="form-group" :hidden="this.id">
                     <label class="col-md-4 control-label">Términos y Condiciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
