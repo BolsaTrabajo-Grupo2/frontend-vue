@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const token = localStorage.getItem('usuario');
+const token = localStorage.getItem('user');
 
 console.log(token)
 const apiClient = axios.create({
