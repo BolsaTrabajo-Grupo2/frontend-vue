@@ -8,7 +8,7 @@ import $ from 'jquery';
 export default {
     data() {
         return {
-            user: {email: '', password: ''}
+            user: { email: '', password: '' }
         }
     },
     async mounted() {
@@ -17,19 +17,17 @@ export default {
                 $('.social').stop().slideToggle();
             });
         }),
-        localStorage.clear()
+            localStorage.clear()
     },
     methods: {
         ...mapActions(useStore, ['addUser']),
-        async logIng(){
+        async logIng() {
             try {
-                await axios.post(SERVER + '/login', this.user)
-                    .then(
-                        response => this.addUser(response.data),
-                        response => localStorage.setItem('usuario', JSON.stringify(response.data)),
-                        this.$router.push('/student-mod/45'),
-                        )
-                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
+                const response = await axios.post(SERVER + '/login', this.user)
+                console.log(response)
+                this.addUser(response.data)
+                localStorage.setItem('usuario', JSON.stringify(response.data))
+                this.$router.push('/student-mod/45')
             } catch (error) {
                 alert('No existe ese usuario, vuelva a intentarlo')
             }
@@ -41,8 +39,8 @@ export default {
 <template>
     <form>
         <h1><span>Iniciar</span> Sesion</h1>
-        <input placeholder="Email" type="text" v-model="user.email"/>
-        <input placeholder="Password" type="password" v-model="user.password"/>
+        <input placeholder="Email" type="text" v-model="user.email" />
+        <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
         <h6>Más opciones</h6>
         <div class="social">
