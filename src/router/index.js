@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import CompanyForm from '../views/CompanyForm.vue'
 
 const router = createRouter({
@@ -8,13 +7,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: CompanyForm
     },
     {
-      path: '/companyForm',
-      name: 'companyForm',
-      component: CompanyForm
-    }
+      path: '/edit/:id',
+      name: 'editar',
+      component: CompanyForm,
+      props: true
+    },
   ]
 })
 
