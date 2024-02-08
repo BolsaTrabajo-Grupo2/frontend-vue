@@ -106,7 +106,7 @@ export default {
 
           <div>
             <label name="password" for="password">Contraseña:</label><br>
-            <Field name="password" type="text" /><br />
+            <Field name="password" type="text" v-model="company.password" /><br />
             <ErrorMessage name="password" class="validate-error" />
           </div>
 
@@ -118,31 +118,31 @@ export default {
 
           <div>
             <label name="CIF" for="CIF">CIF:</label><br>
-            <Field name="CIF" type="text" /><br />
+            <Field name="CIF" type="text" v-model="company.CIF" /><br />
             <ErrorMessage name="CIF" class="validate-error" />
           </div>
 
           <div>
             <label name="companyName" for="companyName">Nombre Empresa:</label><br>
-            <Field name="companyName" type="text" /><br />
+            <Field name="companyName" type="text" v-model="company.company_name" /><br />
             <ErrorMessage name="companyName" class="validate-error" />
           </div>
 
           <div>
             <label name="web" for="web">Web:</label><br>
-            <Field name="web" type="text" /><br />
+            <Field name="web" type="text" v-model="company.web" /><br />
             <ErrorMessage name="web" class="validate-error" />
           </div>
 
           <div>
             <label name="address" for="address">Dirección:</label><br>
-            <Field name="address" type="text" /><br />
+            <Field name="address" type="text" v-model="company.address" /><br />
             <ErrorMessage name="address" class="validate-error" />
           </div>
 
           <div>
             <label name="CP" for="CP">CP:</label><br>
-            <Field name="CP" type="text" /><br />
+            <Field name="CP" type="text" v-model="company.CP" /><br />
             <ErrorMessage name="CP" class="validate-error" />
           </div>
 
