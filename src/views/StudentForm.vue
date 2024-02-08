@@ -13,12 +13,14 @@ setLocale({
     },
     string: {
         min: 'Debe tener al menos ${min} caracteres',
-        max: 'Deebe tener menos de ${max} caracteres'
+        max: 'Deebe tener menos de ${max} caracteres',
+        email: 'El campo ${path} debe ser un correo electrónico válido'
     },
+
 })
 export default {
     data() {
-        const createSchema = yup.object({
+        let validationSchema = yup.object({
             repetirContraseña: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
             nombre: yup.string().required().max(250),
             apellidos: yup.string().required().max(250),
@@ -42,30 +44,16 @@ export default {
                 'Por favor, introduce una URL válida para el CV.'
             ),
             aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
-        })
-        const editSchema = yup.object({
-            name: yup.string().required().max(250),
-            surname: yup.string().required().max(250),
-            email: yup.string().required().email(),
-            direccion: yup.string().required(),
-            cv: yup.string().url({
-                message: 'Por favor, introduce una URL válida para el CV.'
-            })
-        })
+        });
         return {
-            editSchema,
-            createSchema,
+            validationSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
             student: {
                 rol: 'STU',
                 cycle: []
             },
-            tittleForm: 'Registrarse',
-            buttonForm: 'Registrarse',
-            validateForm: null,
         }
     },
-    props: ['id'],
     computed: {
         ...mapState(useStore, {
             cycles: 'cycles',
@@ -76,41 +64,15 @@ export default {
         Field,
         ErrorMessage
     },
-    async mounted() {
-        this.validateForm = this.id ? this.editSchema : this.createSchema;
-        if (this.id) {
-            this.tittleForm = 'Modificar cuenta'
-            this.buttonForm = 'Modificar'
-                await axios.get(SERVER + '/student/' + this.id)
-                    .then(response => this.student = response.data)
-                    .catch(response => {
-                        alert('Error: ' + response.message)
-                    })
-            await axios.get(SERVER + '/studentCicles/' + this.id)
-                .then(response => this.student.cycle = response.data)
-                .catch(response => {
-                    alert('Error: ' + response.message)
-                })
-            this.student.password = ''
-            this.cycleFields = this.student.cycle
-        }
-    },
     methods: {
         async addStudent() {
             this.student.cycle = this.cycleFields
-            if (this.id) {
-                alert('entra')
-                axios.put(SERVER + '/user/profile/update/' + this.id, this.student)
+            try {
+                axios.post(SERVER + '/registerStudent', this.student)
                     .then()
-                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-            } else {
-                try {
-                    axios.post(SERVER + '/registerStudent', this.student)
-                        .then()
-                        .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
-                } catch (error) {
-                    alert(error)
-                }
+                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+            } catch (error) {
+                alert(error)
             }
         },
         addCycleField(index) {
@@ -127,9 +89,9 @@ export default {
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="this.validateForm" @submit="addStudent()">
+        <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
             <fieldset>
-                <legend>{{ tittleForm }}</legend>
+                <legend>Registrarse</legend>
 
                 <div class="form-group">
                     <label class="col-md-4 control-label">Nombre</label>
@@ -227,7 +189,7 @@ export default {
                 </div>
 
                 <!-- Text area -->
-                <div class="form-group" :hidden="this.id">
+                <div class="form-group">
                     <label class="col-md-4 control-label">Términos y Condiciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
@@ -242,7 +204,7 @@ export default {
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-warning">{{ buttonForm }} <span
+                        <button type="submit" class="btn btn-warning">Registrarse <span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
                 </div>
