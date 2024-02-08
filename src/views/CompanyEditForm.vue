@@ -17,7 +17,38 @@ yup.addMethod(yup.string, 'url', function () {
     }
   });
 });
-
+yup.addMethod(yup.string, 'password', function () {
+  return this.test({
+    name: 'password',
+    message: 'La contraseña ha de contener al menos 8 caracteres, entre ellos una mayúscula y un número',
+    test: (value) => {
+      if (value === null || value === undefined || value === '') {
+        return true;
+      }
+      return (
+        value.length >= 8 &&
+        /[A-Z]/.test(value) &&
+        /\d/.test(value)
+      );
+    }
+  });
+});
+yup.addMethod(yup.string, 'uniqueEmail', async function (message = 'Este email ya está registrado') {
+  return this.test({
+    name: 'unique-email',
+    message,
+    test: async function (value) {
+      if (!value) return true;
+      try {
+        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+        return !response.data;
+      } catch (error) {
+        console.error('Error al verificar el email:', error);
+        return true;
+      }
+    },
+  });
+});
 setLocale({
   mixed: {
     default: 'Campo no válido',
@@ -34,8 +65,8 @@ export default {
     const mySchema = yup.object({
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().email(),
-      password: yup.string().min(8).required(),
+      email: yup.string().required().email().uniqueEmail(),
+      password: yup.string().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números'),
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
@@ -43,7 +74,6 @@ export default {
       phone: yup.string().required().length(9),
       web: yup.string().url().max(100),
       companyName: yup.string().required(),
-      aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
     })
     return {
       company: {},
@@ -68,14 +98,26 @@ export default {
                 alert(error)
             }
         },
+     
+async reset() {
+  if (this.company.CIF) {
+    try {
+      const response = await axios.get(SERVER + '/company/' + this.company.CIF);
+      this.company = response.data;
+    } catch (error) {
+      console.error('Error al obtener la información de la empresa:', error);
+    }
+  } else {
+    this.company = {};
+  }
+},
   },
 
 }
 </script>
-
 <template>
   <div class="row">
-    <Form @submit="aditCompany()" :validation-schema="mySchema">
+    <Form @reset="reset" @submit="addCompany" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ titulo }}</legend>
         <div>
@@ -106,7 +148,7 @@ export default {
 
           <div>
             <label name="password" for="password">Contraseña:</label><br>
-            <Field name="password" type="text" /><br />
+            <Field name="password" type="text" v-model="company.password" /><br />
             <ErrorMessage name="password" class="validate-error" />
           </div>
 
@@ -118,43 +160,38 @@ export default {
 
           <div>
             <label name="CIF" for="CIF">CIF:</label><br>
-            <Field name="CIF" type="text" /><br />
+            <Field name="CIF" type="text" v-model="company.CIF" /><br />
             <ErrorMessage name="CIF" class="validate-error" />
           </div>
 
           <div>
             <label name="companyName" for="companyName">Nombre Empresa:</label><br>
-            <Field name="companyName" type="text" /><br />
+            <Field name="companyName" type="text" v-model="company.company_name" /><br />
             <ErrorMessage name="companyName" class="validate-error" />
           </div>
 
           <div>
             <label name="web" for="web">Web:</label><br>
-            <Field name="web" type="text" /><br />
+            <Field name="web" type="text" v-model="company.web" /><br />
             <ErrorMessage name="web" class="validate-error" />
           </div>
 
           <div>
             <label name="address" for="address">Dirección:</label><br>
-            <Field name="address" type="text" /><br />
+            <Field name="address" type="text" v-model="company.address" /><br />
             <ErrorMessage name="address" class="validate-error" />
           </div>
 
           <div>
             <label name="CP" for="CP">CP:</label><br>
-            <Field name="CP" type="text" /><br />
+            <Field name="CP" type="text" v-model="company.CP" /><br />
             <ErrorMessage name="CP" class="validate-error" />
-          </div>
-
-          <div>
-            <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
-            <label class="form-check-label" for="aceptar"> Acepto los términos y condiciones</label>
-            <ErrorMessage name="aceptar" class="validate-error" />
           </div>
 
         </div>
 
         <button type="submit" class="btn btn-default btn-primary">{{ boton }}</button>
+        <button type="reset">reset</button>
       </fieldset>
     </Form>
   </div>
