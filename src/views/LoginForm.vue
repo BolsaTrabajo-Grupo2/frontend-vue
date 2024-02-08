@@ -46,10 +46,9 @@ export default {
                 $('.social').stop().slideToggle();
             });
         })
-        })
     },
     methods: {
-        logIng(){
+        async logIng(){
             try {
                 await axios.post(SERVER + '/login', this.user)
                     .then(
