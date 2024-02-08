@@ -21,39 +21,20 @@ setLocale({
 export default {
     data() {
         let validationSchema = yup.object({
-            repetirContraseña: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
             nombre: yup.string().required().max(250),
             apellidos: yup.string().required().max(250),
-            email: yup.string()
-                .required()
-                .email()
-                .test('unique-email', 'Este email ya está registrado', async function (value) {
-                    if (!value) return true;
-                    try {
-                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
-                        return !response.data;
-                    } catch (error) {
-                        console.error('Error al verificar el email:', error);
-                        return true;
-                    }
-                }),
-            contraseña: yup.string().required().min(8),
             direccion: yup.string().required(),
-            cv: yup.string().matches(
-                /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
-                'Por favor, introduce una URL válida para el CV.'
-            ),
-            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
+            cv: yup.string().url({
+                message: 'Por favor, introduce una URL válida para el CV.'
+            })
         });
         return {
             validationSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
-            student: {
-                rol: 'STU',
-                cycle: []
-            },
+            student: {},
         }
     },
+    props: ['id'],
     computed: {
         ...mapState(useStore, {
             cycles: 'cycles',
@@ -64,13 +45,28 @@ export default {
         Field,
         ErrorMessage
     },
+    async mounted() {
+        await axios.get(SERVER + '/student/' + this.id)
+            .then(response => this.student = response.data)
+            .catch(response => {
+                alert('Error: ' + response.message)
+            });
+        await axios.get(SERVER + '/studentCicles/' + this.id)
+            .then(response => this.student.cycle = response.data)
+            .catch(response => {
+                alert('Error: ' + response.message)
+            });
+        this.cycleFields = this.student.cycle
+        this.student.password = ''
+    },
     methods: {
-        async addStudent() {
-            this.student.cycle = this.cycleFields
+        async editStudent() {
+            alert('entra')
+            this.student.cycle = this.cycleFields;
             try {
-                axios.post(SERVER + '/registerStudent', this.student)
+                axios.put(SERVER + '/user/profile/update/' + this.id, this.student)
                     .then()
-                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
             } catch (error) {
                 alert(error)
             }
@@ -89,9 +85,10 @@ export default {
 
 <template>
     <div class="container">
-        <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
+        <p>Si no deaseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
+        <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
             <fieldset>
-                <legend>Registrarse</legend>
+                <legend>Modificar perfil</legend>
 
                 <div class="form-group">
                     <label class="col-md-4 control-label">Nombre</label>
@@ -111,17 +108,6 @@ export default {
                             <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
                                 v-model="student.surname" />
                             <ErrorMessage name="apellidos" class="error" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label">E-Mail</label>
-                    <div class="col-md-4 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="email" placeholder="email" class="form-control" type="email"
-                                v-model="student.email" />
-                            <ErrorMessage name="email" class="error" />
                         </div>
                     </div>
                 </div>
@@ -188,23 +174,24 @@ export default {
                     </div>
                 </div>
 
-                <!-- Text area -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Términos y Condiciones</label>
+                    <label class="col-md-4 control-label">Observaciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
-                            <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
+                            <Field type="textarea" name="observaciones" placeholder="observaciones" class="form-control"
+                                v-model="student.observation" />
+                            <ErrorMessage name="direccion" class="error" />
                         </div>
-                        <ErrorMessage name="aceptar" class="error" />
                     </div>
                 </div>
+
+                
 
                 <!-- Button -->
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-warning">Registrarse <span
+                        <button type="submit" class="btn btn-warning">Modificar<span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
                 </div>
@@ -212,5 +199,4 @@ export default {
         </Form>
     </div>
 </template>
-
-<style scoped></style>
+<style></style>
