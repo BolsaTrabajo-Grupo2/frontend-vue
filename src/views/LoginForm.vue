@@ -1,44 +1,13 @@
 <script>
-import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import $ from 'jquery';
-import * as yup from 'yup'
-import { setLocale } from 'yup'
-import { Form, Field, ErrorMessage } from 'vee-validate'
 
-setLocale({
-    mixed: {
-        required: 'El campo ${path} no puede estar vacio'
-    },
-    string: {
-        min: 'Debe tener al menos ${min} caracteres',
-        max: 'Deebe tener menos de ${max} caracteres'
-    },
-})
 export default {
     data() {
-        const mySchema = yup.object({
-            repassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
-            name: yup.string().required().max(250),
-            surname: yup.string().required().max(250),
-            email: yup.string().required().email(),
-            password: yup.string().required().min(8),
-            direccion: yup.string().required(),
-            cv: yup.string().url({
-                message: 'Por favor, introduce una URL válida para el CV.'
-            })
-        })
         return {
-            mySchema,
             user: {email: '', password: ''}
         }
-    },
-    components: {
-        Form,
-        Field,
-        ErrorMessage
     },
     async mounted() {
         $(document).ready(function (e) {
@@ -63,17 +32,17 @@ export default {
 </script>
 
 <template>
-    <Form>
+    <form>
         <h1><span>Iniciar</span> Sesion</h1>
-        <Field placeholder="Email" type="text" v-model="user.email"/>
-        <Field placeholder="Password" type="password" v-model="user.password"/>
+        <input placeholder="Email" type="text" v-model="user.email"/>
+        <input placeholder="Password" type="password" v-model="user.password"/>
         <button class="btn" @click="logIng">Log in</button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>
             <button class="google fb btn">Google+</button>
         </div>
-    </Form>
+    </form>
 
     <footer>
         <h5>

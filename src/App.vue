@@ -5,10 +5,11 @@ import { mapActions } from 'pinia';
 
 export default {
   methods: {
-    ...mapActions(useStore, ['loadCycles'])
+    ...mapActions(useStore, ['loadCycles', 'loadUser'])
   },
   mounted() {
     this.loadCycles()
+    this.loadUser()
   }
 
 }
