@@ -1,44 +1,15 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import $ from 'jquery';
-import * as yup from 'yup'
-import { setLocale } from 'yup'
-import { Form, Field, ErrorMessage } from 'vee-validate'
 
-setLocale({
-    mixed: {
-        required: 'El campo ${path} no puede estar vacio'
-    },
-    string: {
-        min: 'Debe tener al menos ${min} caracteres',
-        max: 'Deebe tener menos de ${max} caracteres'
-    },
-})
 export default {
     data() {
-        const mySchema = yup.object({
-            repassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
-            name: yup.string().required().max(250),
-            surname: yup.string().required().max(250),
-            email: yup.string().required().email(),
-            password: yup.string().required().min(8),
-            direccion: yup.string().required(),
-            cv: yup.string().url({
-                message: 'Por favor, introduce una URL válida para el CV.'
-            })
-        })
         return {
-            mySchema,
-            user: {email: '', password: ''}
+            user: { email: '', password: '' }
         }
-    },
-    components: {
-        Form,
-        Field,
-        ErrorMessage
     },
     async mounted() {
         $(document).ready(function (e) {
@@ -46,25 +17,20 @@ export default {
                 $('.social').stop().slideToggle();
             });
         })
-        })
     },
     methods: {
-        logIng(){
+        ...mapActions(useStore, ['addUser']),
+        async logIng() {
             try {
                 await axios.post(SERVER + '/login', this.user)
                     .then(
                         // response => this.addUser(response.data),
                         response => {
-                        localStorage.setItem('user', JSON.stringify(response.data))
-                        this.addUser(this.user)
+                            localStorage.setItem('user', JSON.stringify(response.data))
                         },
-            this.$router.push('/student-mod/44')
-            )
+                        this.$router.push('/student-mod/45')
+                    )
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-                axios.put(SERVER + '/login' + this.user.email, this.user.password)
-                    .then(response => localStorage.setItem('usuario', JSON.stringify(response.data)))
-                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-                this.$router.push('/hola')
             } catch (error) {
                 alert('No existe ese usuario, vuelva a intentarlo')
             }
@@ -74,17 +40,19 @@ export default {
 </script>
 
 <template>
-    <Form>
+    <form>
         <h1><span>Iniciar</span> Sesion</h1>
-        <Field placeholder="Email" type="text" v-model="user.email"/>
-        <Field placeholder="Password" type="password" v-model="user.password"/>
-        <button class="btn" @click="logIng">Log in</button>
+        <input placeholder="Email" type="text" v-model="user.email" />
+        <input placeholder="Password" type="password" v-model="user.password" />
+        <button class="btn" @click="logIng()">Log in</button>
+        <h3>¿No tienes cuenta?</h3>
+        <button class="btn"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>
             <button class="google fb btn">Google+</button>
         </div>
-    </Form>
+    </form>
 
     <footer>
         <h5>
@@ -232,6 +200,10 @@ h6 {
     padding-top: 35px;
     color: #777;
     cursor: pointer;
+}
+
+h3 {
+    margin-top: 5px;
 }
 
 .social {

@@ -4,7 +4,7 @@ const token = JSON.parse(localStorage.getItem('user'));
 
 console.log(token)
 const apiClient = axios.create({
-    baseURL: 'http://localhost/api',
+    baseURL: 'http://localhost:8000/api',
     withCredentials: false,
     headers: {
         Authorization: token,
