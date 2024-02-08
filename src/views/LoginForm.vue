@@ -46,12 +46,7 @@ export default {
         <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
         <h3>¿No tienes cuenta?</h3>
-        <button class="btn"> Registrate </button>
-        <input placeholder="Email" type="text" v-model="user.email" />
-        <input placeholder="Password" type="password" v-model="user.password" />
-        <button class="btn" @click="logIng()">Log in</button>
-        <h3>¿No tienes cuenta?</h3>
-        <button class="btn"> Registrate </button>
+        <button class="btn"> Registrate </button>8
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>

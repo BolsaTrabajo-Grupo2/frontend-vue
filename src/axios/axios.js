@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-const tokenEntero = JSON.parse(localStorage.getItem('user')).token;
+let tokenEntero = '';
+const userString = localStorage.getItem('user');
+
+if (userString) {
+  const user = JSON.parse(userString);
+  tokenEntero = user.token;
+}
 const token = tokenEntero.split('|')[1]
 
 console.log(token)
