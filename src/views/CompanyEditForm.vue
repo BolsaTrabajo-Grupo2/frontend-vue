@@ -30,26 +30,8 @@ yup.addMethod(yup.string, 'password', function () {
     }
   })
 })
-yup.addMethod(
-  yup.string,
-  'uniqueEmail',
-  async function (message = 'Este email ya está registrado') {
-    return this.test({
-      name: 'unique-email',
-      message,
-      test: async function (value) {
-        if (!value) return true
-        try {
-          const response = await axios.get(`${SERVER}/checkEmail/${value}`)
-          return !response.data
-        } catch (error) {
-          console.error('Error al verificar el email:', error)
-          return true
-        }
-      }
-    })
-  }
-)
+
+
 yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está registrado') {
   return this.test({
     name: 'unique-cif',
@@ -66,6 +48,7 @@ yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está re
     },
   });
 });
+
 setLocale({
   mixed: {
     default: 'Campo no válido',
@@ -80,9 +63,19 @@ setLocale({
 export default {
   data() {
     const mySchema = yup.object({
+      
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().email().uniqueEmail(),
+      email: yup.string().required().email().test('unique-email', 'Este email ya está registrado', async function (value) {
+                    if (!value) return true;
+                    try {
+                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+                        return !response.data;
+                    } catch (error) {
+                        console.error('Error al verificar el email:', error);
+                        return true;
+                    }
+                }),
       password: yup.string().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
@@ -91,6 +84,7 @@ export default {
       phone: yup.string().required().length(9),
       web: yup.string().url().max(100),
       companyName: yup.string().required()
+      
     })
     return {
       company: {},
@@ -106,37 +100,11 @@ export default {
   },
   methods: {
     async editCompany() {
-<<<<<<< HEAD
       axios
         .post(SERVER + '/user/company/update/', this.id)
         .then()
         .catch((response) => alert('Error: no se ha editado el registro. ' + response.message))
     },
-=======
-        axios.post(SERVER + '/user/company/update/', this.id)
-          .then()
-          .catch(response => alert('Error: no se ha editado el registro. ' + response.message))
-    },
-
-    async reset() {
-      try {
-        const response = await axios.get(SERVER + '/company/' + this.id);
-        this.company = response.data;
-      } catch (error) {
-        console.error('Error al obtener la información de la empresa:', error);
-      }
-    },
-  },
-  props: ['id'],
-  async mounted() {
-    await axios.get(SERVER + '/company/' + this.id)
-      .then(response => this.company = response.data)
-      .catch(response => {
-        alert('Error: ' + response.message)
-      });
-    this.company.password = ''
-  }
->>>>>>> refs/remotes/origin/companyForm
 
     async reset() {
         try {
