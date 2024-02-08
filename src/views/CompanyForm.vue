@@ -86,7 +86,7 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit.prevent="submitForm" :validation-schema="mySchema">
+    <Form @submit="submitForm()" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ this.titulo }}</legend>
         <div>
@@ -101,6 +101,12 @@ export default {
             <label name="surname" for="surname">Apellidos:</label><br>
             <Field name="surname" type="text" v-model="company.surname" /><br />
             <ErrorMessage name="surname" class="validate-error" />
+          </div>
+
+          <div>
+            <label name="phone" for="phone">Teléfono:</label><br>
+            <Field name="phone" type="text" v-model="company.phone" /><br />
+            <ErrorMessage name="phone" class="validate-error" />
           </div>
 
           <div>
