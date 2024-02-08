@@ -4,16 +4,16 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-      <nav>
-        <RouterLink to="/">Form</RouterLink>
-      </nav>
+    <nav>
+      <RouterLink to="/">Form</RouterLink>
+    </nav>
   </header>
 
   <RouterView />
 </template>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css');
 header {
   line-height: 1.5;
   max-height: 100vh;
