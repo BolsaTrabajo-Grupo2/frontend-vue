@@ -8,7 +8,7 @@ import $ from 'jquery';
 export default {
     data() {
         return {
-            user: {email: '', password: ''}
+            user: { email: '', password: '' }
         }
     },
     async mounted() {
@@ -16,11 +16,12 @@ export default {
             $('h6').on('click', function () {
                 $('.social').stop().slideToggle();
             });
-        })
+        }),
+            localStorage.clear()
     },
     methods: {
         ...mapActions(useStore, ['addUser']),
-        async logIng(){
+        async logIng() {
             try {
                 await axios.post(SERVER + '/login', this.user)
                     .then(
@@ -40,8 +41,8 @@ export default {
 <template>
     <form>
         <h1><span>Iniciar</span> Sesion</h1>
-        <input placeholder="Email" type="text" v-model="user.email"/>
-        <input placeholder="Password" type="password" v-model="user.password"/>
+        <input placeholder="Email" type="text" v-model="user.email" />
+        <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" > Registrate </button>
