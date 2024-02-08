@@ -27,6 +27,7 @@ export default {
                         // response => this.addUser(response.data),
                         response => {
                             localStorage.setItem('user', JSON.stringify(response.data))
+                            localStorage.setItem('user', JSON.stringify(response.data))
                         },
                         this.$router.push('/student-mod/45')
                     )
@@ -42,6 +43,11 @@ export default {
 <template>
     <form>
         <h1><span>Iniciar</span> Sesion</h1>
+        <input placeholder="Email" type="text" v-model="user.email" />
+        <input placeholder="Password" type="password" v-model="user.password" />
+        <button class="btn" @click="logIng()">Log in</button>
+        <h3>¿No tienes cuenta?</h3>
+        <button class="btn"> Registrate </button>
         <input placeholder="Email" type="text" v-model="user.email" />
         <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
