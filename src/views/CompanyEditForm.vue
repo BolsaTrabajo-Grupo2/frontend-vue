@@ -105,35 +105,35 @@ export default {
   },
   methods: {
     async editCompany() {
-            this.company.rol = "COMP"
-            try {
-                axios.post(SERVER + '/user/company/update/', this.company.CIF)
-                    .then()
-                    .catch(response => alert('Error: no se ha editado el registro. ' + response.message))
-            } catch (error) {
-                alert(error)
-            }
-        },
-     
-async reset() {
-  if (this.company.CIF) {
-    try {
-      const response = await axios.get(SERVER + '/company/' + this.company.CIF);
-      this.company = response.data;
-    } catch (error) {
-      console.error('Error al obtener la información de la empresa:', error);
-    }
-  } else {
-    this.company = {};
-  }
-},
+        axios.post(SERVER + '/user/company/update/', this.id)
+          .then()
+          .catch(response => alert('Error: no se ha editado el registro. ' + response.message))
+    },
+
+    async reset() {
+      try {
+        const response = await axios.get(SERVER + '/company/' + this.id);
+        this.company = response.data;
+      } catch (error) {
+        console.error('Error al obtener la información de la empresa:', error);
+      }
+    },
   },
+  props: ['id'],
+  async mounted() {
+    await axios.get(SERVER + '/company/' + this.id)
+      .then(response => this.company = response.data)
+      .catch(response => {
+        alert('Error: ' + response.message)
+      });
+    this.company.password = ''
+  }
 
 }
 </script>
 <template>
   <div class="row">
-    <Form @reset="reset" @submit="addCompany" :validation-schema="mySchema">
+    <Form @reset="reset" @submit="editCompany" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ titulo }}</legend>
         <div>

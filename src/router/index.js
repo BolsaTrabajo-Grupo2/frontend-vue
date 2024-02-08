@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import CompanyForm from '../views/CompanyForm.vue'
+import CompanyEditForm from '../views/CompanyEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,9 +11,9 @@ const router = createRouter({
       component: CompanyForm
     },
     {
-      path: '/edit/:CIF',
+      path: '/edit/:id',
       name: 'editar',
-      component: CompanyForm,
+      component: CompanyEditForm,
       props: true
     },
   ]
