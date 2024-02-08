@@ -26,10 +26,10 @@ export default {
                     .then(
                         // response => this.addUser(response.data),
                         response => {
-                        localStorage.setItem('user', JSON.stringify(response.data))
+                            localStorage.setItem('user', JSON.stringify(response.data))
                         },
-            this.$router.push('/student-mod/44')
-            )
+                        this.$router.push('/student-mod/44')
+                    )
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
             } catch (error) {
                 alert('No existe ese usuario, vuelva a intentarlo')
@@ -46,7 +46,7 @@ export default {
         <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
         <h3>¿No tienes cuenta?</h3>
-        <button class="btn" > Registrate </button>
+        <button class="btn"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>
