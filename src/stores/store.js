@@ -7,6 +7,7 @@ export const useStore = defineStore('store', {
   state() {
     return {
       cycles: [],
+      user: [],
     }
   },
   actions: {
@@ -16,6 +17,14 @@ export const useStore = defineStore('store', {
         .catch(response => {
           alert('Error: ' + response.message)
         })
+    },
+    loadUser(){
+      const storedCart = localStorage.getItem('usuario')
+      if (storedCart) {
+        this.user = JSON.parse(storedCart)
+      } else {
+        this.user = []
+      }
     }
   }
 })
