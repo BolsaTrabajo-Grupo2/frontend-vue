@@ -29,6 +29,10 @@ export const useStore = defineStore('store', {
     addUser(usuario){
       this.user.push(usuario)
     }
+  },
+
+  getters: {
+    
   }
 })
 

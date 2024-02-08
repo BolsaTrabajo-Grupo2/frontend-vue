@@ -42,6 +42,8 @@ export default {
         <input placeholder="Email" type="text" v-model="user.email" />
         <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng()">Log in</button>
+        <h3>¿No tienes cuenta?</h3>
+        <button class="btn" > Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>
@@ -195,6 +197,10 @@ h6 {
     padding-top: 35px;
     color: #777;
     cursor: pointer;
+}
+
+h3 {
+    margin-top: 5px;
 }
 
 .social {
