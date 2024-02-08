@@ -18,6 +18,23 @@ yup.addMethod(yup.string, 'url', function () {
   });
 });
 
+yup.addMethod(yup.string, 'password', function () {
+  return this.test({
+    name: 'password',
+    message: 'La contraseña ha de contener al menos 8 carácteres, entre ellos una mayúscula y un número',
+    test: (value) => {
+      if (value === null || value === undefined || value === '') {
+        return true;
+      }
+      return (
+        value.length >= 8 &&
+        /[A-Z]/.test(value) &&
+        /\d/.test(value)
+      );
+    }
+  });
+});
+
 setLocale({
   mixed: {
     default: 'Campo no válido',
@@ -34,8 +51,17 @@ export default {
     const mySchema = yup.object({
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().email(),
-      password: yup.string().min(8).required(),
+      email: yup.string().required().test('unique-email', 'Este email ya está registrado', async function (value) {
+                    if (!value) return true;
+                    try {
+                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+                        return !response.data;
+                    } catch (error) {
+                        console.error('Error al verificar el email:', error);
+                        return true;
+                    }
+                }),
+      password: yup.string().required().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números'),
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
@@ -59,15 +85,12 @@ export default {
   },
   methods: {
     async addCompany() {
-            this.company.rol = "COMP"
-            try {
-                axios.post(SERVER + '/registerCompany', this.company)
-                    .then()
-                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
-            } catch (error) {
-                alert(error)
-            }
-        },
+      this.company.rol = "COMP"
+
+      axios.post(SERVER + '/registerCompany', this.company)
+        .then()
+        .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+    },
   },
 
 }
@@ -75,7 +98,7 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit="addCompany()" :validation-schema="mySchema">
+    <Form @submit="addCompany" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ titulo }}</legend>
         <div>
