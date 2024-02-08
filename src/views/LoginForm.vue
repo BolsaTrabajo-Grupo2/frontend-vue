@@ -56,6 +56,7 @@ export default {
                         // response => this.addUser(response.data),
                         response => {
                         localStorage.setItem('user', JSON.stringify(response.data))
+                        this.addUser(this.user)
                         },
             this.$router.push('/student-mod/44')
             )
