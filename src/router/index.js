@@ -10,7 +10,7 @@ const router = createRouter({
       component: CompanyForm
     },
     {
-      path: '/edit/:id',
+      path: '/edit/:CIF',
       name: 'editar',
       component: CompanyForm,
       props: true
