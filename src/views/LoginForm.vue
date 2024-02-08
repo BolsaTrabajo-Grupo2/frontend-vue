@@ -1,4 +1,6 @@
 <script>
+import { useStore } from '@/stores/store';
+import { mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import $ from 'jquery';
@@ -14,15 +16,20 @@ export default {
             $('h6').on('click', function () {
                 $('.social').stop().slideToggle();
             });
-        })
+        }),
+        localStorage.clear()
     },
     methods: {
-        logIng(){
+        ...mapActions(useStore, ['addUser']),
+        async logIng(){
             try {
-                axios.put(SERVER + '/login' + this.user.email, this.user.password)
-                    .then(response => localStorage.setItem('usuario', JSON.stringify(response.data)))
+                await axios.post(SERVER + '/login', this.user)
+                    .then(
+                        response => this.addUser(response.data),
+                        response => localStorage.setItem('usuario', JSON.stringify(response.data)),
+                        this.$router.push('/hola'),
+                        )
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-                this.$router.push('/hola')
             } catch (error) {
                 alert('No existe ese usuario, vuelva a intentarlo')
             }
@@ -36,7 +43,7 @@ export default {
         <h1><span>Iniciar</span> Sesion</h1>
         <input placeholder="Email" type="text" v-model="user.email"/>
         <input placeholder="Password" type="password" v-model="user.password"/>
-        <button class="btn" @click="logIng">Log in</button>
+        <button class="btn" @click="logIng()">Log in</button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>

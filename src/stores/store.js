@@ -25,6 +25,9 @@ export const useStore = defineStore('store', {
       } else {
         this.user = []
       }
+    },
+    addUser(usuario){
+      this.user.push(usuario)
     }
   }
 })
