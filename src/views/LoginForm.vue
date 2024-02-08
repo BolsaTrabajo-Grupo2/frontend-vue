@@ -16,8 +16,7 @@ export default {
             $('h6').on('click', function () {
                 $('.social').stop().slideToggle();
             });
-        }),
-            localStorage.clear()
+        })
     },
     methods: {
         ...mapActions(useStore, ['addUser']),
@@ -26,9 +25,11 @@ export default {
                 await axios.post(SERVER + '/login', this.user)
                     .then(
                         // response => this.addUser(response.data),
-                        response => localStorage.setItem('user', JSON.stringify(response.data)),
-                        this.$router.push('/hola'),
-                        )
+                        response => {
+                        localStorage.setItem('user', JSON.stringify(response.data))
+                        },
+            this.$router.push('/student-mod/44')
+            )
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
             } catch (error) {
                 alert('No existe ese usuario, vuelva a intentarlo')
