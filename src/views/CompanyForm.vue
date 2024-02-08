@@ -34,6 +34,22 @@ yup.addMethod(yup.string, 'password', function () {
     }
   });
 });
+yup.addMethod(yup.string, 'uniqueEmail', async function (message = 'Este email ya está registrado') {
+  return this.test({
+    name: 'unique-email',
+    message,
+    test: async function (value) {
+      if (!value) return true;
+      try {
+        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+        return !response.data;
+      } catch (error) {
+        console.error('Error al verificar el email:', error);
+        return true;
+      }
+    },
+  });
+});
 
 setLocale({
   mixed: {
@@ -51,16 +67,7 @@ export default {
     const mySchema = yup.object({
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().test('unique-email', 'Este email ya está registrado', async function (value) {
-                    if (!value) return true;
-                    try {
-                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
-                        return !response.data;
-                    } catch (error) {
-                        console.error('Error al verificar el email:', error);
-                        return true;
-                    }
-                }),
+      email: yup.string().required().email().uniqueEmail(),
       password: yup.string().required().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números'),
