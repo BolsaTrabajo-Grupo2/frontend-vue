@@ -6,6 +6,9 @@ const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
 import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
+import APIService from '../axios/axios.js'
+
+const apiService = new APIService()
 
 setLocale({
     mixed: {
@@ -62,15 +65,12 @@ export default {
     },
     methods: {
         async editStudent() {
-            alert('entra')
             this.student.cycle = this.cycleFields;
-            try {
-                axios.put(SERVER + '/user/student/update/' + this.id, this.student)
-                    .then()
-                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-            } catch (error) {
-                alert(error)
-            }
+            apiService.modStudent(this.student)
+                .then()
+                .catch(response => {
+                alert('Error: ' + response.message)
+            });
         },
         addCycleField(index) {
             if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
@@ -175,7 +175,7 @@ export default {
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" >
                     <label class="col-md-4 control-label">Observaciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
