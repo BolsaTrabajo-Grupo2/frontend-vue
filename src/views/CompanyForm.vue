@@ -34,7 +34,7 @@ yup.addMethod(yup.string, 'password', function () {
     }
   });
 });
-yup.addMethod(yup.string, 'uniqueEmail', async function (message = 'Este email ya está registrado') {
+yup.addMethod(yup.string, 'uniqueEmail', function (message = 'Este email ya está registrado') {
   return this.test({
     name: 'unique-email',
     message,
