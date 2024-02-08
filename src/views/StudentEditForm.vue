@@ -38,6 +38,7 @@ export default {
     computed: {
         ...mapState(useStore, {
             cycles: 'cycles',
+            user: 'user'
         })
     },
     components: {
@@ -64,7 +65,7 @@ export default {
             alert('entra')
             this.student.cycle = this.cycleFields;
             try {
-                axios.put(SERVER + '/user/profile/update/' + this.id, this.student)
+                axios.put(SERVER + '/user/student/update/' + this.id, this.student)
                     .then()
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
             } catch (error) {
