@@ -50,6 +50,22 @@ yup.addMethod(yup.string, 'uniqueEmail', function (message = 'Este email ya est�
     },
   });
 });
+yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está registrado') {
+  return this.test({
+    name: 'unique-cif',
+    message,
+    async test(value) {
+      if (!value) return true;
+      try {
+        const response = await axios.get(`${SERVER}/checkCIF/${value}`);
+        return !response.data;
+      } catch (error) {
+        console.error('Error al verificar el CIF:', error);
+        return false;
+      }
+    },
+  });
+});
 
 setLocale({
   mixed: {
@@ -70,7 +86,7 @@ export default {
       email: yup.string().required().email().uniqueEmail(),
       password: yup.string().required().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
-      CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números'),
+      CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
       address: yup.string().required().max(250),
       phone: yup.string().required().length(9),
