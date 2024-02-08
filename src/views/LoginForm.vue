@@ -27,7 +27,7 @@ export default {
                     .then(
                         response => this.addUser(response.data),
                         response => localStorage.setItem('usuario', JSON.stringify(response.data)),
-                        this.$router.push('/hola'),
+                        this.$router.push('/student-mod/45'),
                         )
                     .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
             } catch (error) {

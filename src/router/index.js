@@ -17,6 +17,12 @@ const router = createRouter({
       name: 'student-add',
       component: StudentForm
     },
+    {
+      path: '/student-mod/:id',
+      name: 'student-mod',
+      component: StudentEditForm,
+      props: true
+    }
   ]
 })
 
