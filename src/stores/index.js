@@ -1,4 +1,6 @@
-import { ref, computed } from 'vue'
+import { reactive } from 'vue'
+import axios from 'axios'
+const SERVER = import.meta.env.VITE_URL_API
 import { defineStore } from 'pinia'
 
 export const useCounterStore = defineStore('counter', () => {

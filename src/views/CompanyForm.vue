@@ -43,7 +43,8 @@ export default {
       address: yup.string().required().max(250),
       phone: yup.string().required().length(9),
       web: yup.string().url().max(100),
-      companyName: yup.string().required()
+      companyName: yup.string().required(),
+      aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
     })
     return {
       company: {},
@@ -72,8 +73,8 @@ export default {
     }
   },
   methods: {
-    async create() {
-      alert ("creado")
+    async submitForm() {
+      alert("creado")
     },
     async cancel() {
       this.$router.push("/")
@@ -85,13 +86,10 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit="create" :validation-schema="mySchema">
+    <Form @submit="submitForm" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ this.titulo }}</legend>
         <div>
-          <div>
-            <Field name="rol" type="text" value="COMP" hidden /><br />
-          </div>
 
           <div>
             <label name="name" for="name">Nombre:</label><br>
@@ -152,11 +150,18 @@ export default {
             <Field name="CP" type="text" /><br />
             <ErrorMessage name="CP" class="validate-error" />
           </div>
-          <div>
-            <input type="checkbox" id="accept" name="accept" required>
-            <label name="accept" for="accept">Aceptar</label><br>
-            <ErrorMessage name="accept" class="validate-error" />
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Términos y Condiciones</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
+                <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
+              </div>
+              <ErrorMessage name="aceptar" class="validate-error" />
+            </div>
           </div>
+
         </div>
 
         <button type="submit" class="btn btn-default btn-primary">Guardar</button>
