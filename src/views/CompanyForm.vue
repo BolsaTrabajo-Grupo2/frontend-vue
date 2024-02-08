@@ -1,9 +1,9 @@
 <script>
-import { mapActions, mapState } from 'pinia'
-import { useCounterStore } from '../stores'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup';
+import axios from 'axios'
+const SERVER = import.meta.env.VITE_URL_API
 
 yup.addMethod(yup.string, 'url', function () {
   return this.test({
@@ -17,7 +17,6 @@ yup.addMethod(yup.string, 'url', function () {
     }
   });
 });
-
 
 setLocale({
   mixed: {
@@ -48,7 +47,7 @@ export default {
     })
     return {
       company: {},
-      titulo: "Añadir Juego",
+      titulo: "Añadir Empresa",
       boton: "Añadir",
       mySchema,
     }
@@ -58,27 +57,17 @@ export default {
     Field,
     ErrorMessage,
   },
-  computed: {
-  },
-  async mounted() {
-    try {
-      if (this.$route.params.id) {
-        this.company = {}
-        this.titulo = "Editar Juego"
-        this.button = "Editar"
-      }
-    }
-    catch {
-      alert('Error al cargar el juego')
-    }
-  },
   methods: {
-    async submitForm() {
-      alert("creado")
-    },
-    async cancel() {
-      this.$router.push("/")
-    },
+    async addCompany() {
+            this.company.rol = "COMP"
+            try {
+                axios.post(SERVER + '/registerCompany', this.company)
+                    .then()
+                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+            } catch (error) {
+                alert(error)
+            }
+        },
   },
 
 }
@@ -86,7 +75,7 @@ export default {
 
 <template>
   <div class="row">
-    <Form @submit="submitForm()" :validation-schema="mySchema">
+    <Form @submit="addCompany()" :validation-schema="mySchema">
       <fieldset>
         <legend>{{ this.titulo }}</legend>
         <div>
@@ -157,21 +146,15 @@ export default {
             <ErrorMessage name="CP" class="validate-error" />
           </div>
 
-          <div class="form-group">
-            <label class="col-md-4 control-label">Términos y Condiciones</label>
-            <div class="col-md-4 inputGroupContainer">
-              <div class="input-group">
-                <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
-                <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
-              </div>
-              <ErrorMessage name="aceptar" class="validate-error" />
-            </div>
+          <div>
+            <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
+            <label class="form-check-label" for="aceptar"> Acepto los términos y condiciones</label>
+            <ErrorMessage name="aceptar" class="validate-error" />
           </div>
 
         </div>
 
         <button type="submit" class="btn btn-default btn-primary">Guardar</button>
-        <button type="button" @click="cancel" class="btn btn-danger">Cancelar</button>
       </fieldset>
     </Form>
   </div>
