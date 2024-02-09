@@ -27,7 +27,6 @@ export default {
                         localStorage.setItem('user', JSON.stringify(response.data)),
                         this.addUser(response.data)
                     },
-                    this.$router.push('/student-mod/44')
                 )
                 .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
         }
