@@ -1,4 +1,5 @@
 import axios from 'axios'
+const SERVER = import.meta.env.VITE_URL_API
 
 let tokenEntero = '';
 const userString = localStorage.getItem('user');
@@ -11,7 +12,7 @@ const token = tokenEntero.split('|')[1]
 
 console.log(token)
 const apiClient = axios.create({
-    baseURL: 'http://localhost/api',
+    baseURL: SERVER,
     withCredentials: false,
     headers: {
         Authorization: 'Bearer ' + token,
@@ -24,5 +25,8 @@ export default class APIService {
     modStudent(student) {
         console.log(student)
         return apiClient.put('/user/student/update/' + student.id, student)
+    }
+    getOffers(){
+        return apiClient.get('/offers')
     }
 }
