@@ -3,33 +3,28 @@ import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
-
 export default {
     data() {
         return {
             user: { email: '', password: '' }
         }
     },
-    async mounted() {
-        $(document).ready(function (e) {
-            $('h6').on('click', function () {
-                $('.social').stop().slideToggle();
-            });
-        })
-    },
+
     methods: {
         ...mapActions(useStore, ['addUser']),
-        logIng() {
-            axios.post(SERVER + '/login', this.user)
-                .then(
-                    // response => this.addUser(response.data),
-                    response => {
-                        localStorage.setItem('user', JSON.stringify(response.data)),
-                        this.addUser(response.data)
-                    },
-                    this.$router.push("/company-mod/60")
-                )
-                .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
+        async logIng() {
+            try {
+                const response = axios.post(SERVER + '/login', this.user)
+                localStorage.setItem('user', JSON.stringify(response.data))
+                this.addUser(response.data)
+                this.$router.push('/student-mod/41')
+            } catch (error) {
+                alert(error.message)
+            }
+        },
+
+        register() {
+            this.$router.push('/home')
         }
     }
 }
@@ -42,7 +37,7 @@ export default {
         <input placeholder="Password" type="password" v-model="user.password" />
         <button class="btn" @click="logIng">Log in</button>
         <h3>¿No tienes cuenta?</h3>
-        <button class="btn"> Registrate </button>
+        <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
             <button class="github btn">Git Hub</button>
@@ -202,9 +197,9 @@ h3 {
     margin-top: 5px;
 }
 
-.social {
+/* .social {
     display: none;
-}
+} */
 
 .github {
     margin-top: 15px;
