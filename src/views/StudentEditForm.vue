@@ -23,18 +23,28 @@ setLocale({
 })
 export default {
     data() {
-        let validationSchema = yup.object({
+        const validationSchema = yup.object({
             nombre: yup.string().required().max(250),
             apellidos: yup.string().required().max(250),
             direccion: yup.string().required(),
             cv: yup.string().url({
                 message: 'Por favor, introduce una URL válida para el CV.'
+            }),
+            contraseña: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
+                if (!value || value === '') return true;
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+            }),
+            repetirContraseña: yup.string().test('password-match', 'Las contraseñas no coinciden', function (value, context) {
+                const { contraseña } = context.parent;
+                if (!value || value === '') return true;
+                return value === contraseña;
             })
         });
         return {
             validationSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
             student: {},
+            passwordStudent: '',
         }
     },
     props: ['id'],
@@ -61,16 +71,18 @@ export default {
                 alert('Error: ' + response.message)
             });
         this.cycleFields = this.student.cycle
+        this.passwordStudent = this.student.password
         this.student.password = ''
     },
     methods: {
         async editStudent() {
             this.student.cycle = this.cycleFields;
+            this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
             apiService.modStudent(this.student)
                 .then()
                 .catch(response => {
-                alert('Error: ' + response.message)
-            });
+                    alert('Error: ' + response.message)
+                });
         },
         addCycleField(index) {
             if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
@@ -175,7 +187,7 @@ export default {
                     </div>
                 </div>
 
-                <div class="form-group" >
+                <div class="form-group">
                     <label class="col-md-4 control-label">Observaciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
@@ -186,7 +198,7 @@ export default {
                     </div>
                 </div>
 
-                
+
 
                 <!-- Button -->
                 <div class="form-group">

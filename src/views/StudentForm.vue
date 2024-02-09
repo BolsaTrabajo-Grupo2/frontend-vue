@@ -66,13 +66,18 @@ export default {
     },
     methods: {
         async addStudent() {
-            this.student.cycle = this.cycleFields
+            this.student.cycle = this.cycleFields;
             try {
-                axios.post(SERVER + '/registerStudent', this.student)
-                    .then()
-                    .catch(response => alert('Error: no se ha añadido el registro. ' + response.message))
+                await axios.post(SERVER + '/registerStudent', this.student);
             } catch (error) {
-                alert(error)
+                console.error('Error al añadir el registro:', error);
+                if (error.response.status === 429) {
+                    setTimeout(() => {
+                        this.addStudent();
+                    }, 5000);
+                } else {
+                    alert('Error: no se ha añadido el registro. ' + error.message);
+                }
             }
         },
         addCycleField(index) {
