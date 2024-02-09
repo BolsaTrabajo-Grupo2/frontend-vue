@@ -4,7 +4,6 @@ import { mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import $ from 'jquery';
-
 export default {
     data() {
         return {
@@ -20,21 +19,17 @@ export default {
     },
     methods: {
         ...mapActions(useStore, ['addUser']),
-        async logIng() {
-            try {
-                await axios.post(SERVER + '/login', this.user)
-                    .then(
-                        // response => this.addUser(response.data),
-                        response => {
-                            localStorage.setItem('user', JSON.stringify(response.data)),
-                            this.addUser(response.data)
-                        },
-                        
-                    )
-                    .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
-            } catch (error) {
-                alert('No existe ese usuario, vuelva a intentarlo')
-            }
+        logIng() {
+            axios.post(SERVER + '/login', this.user)
+                .then(
+                    // response => this.addUser(response.data),
+                    response => {
+                        localStorage.setItem('user', JSON.stringify(response.data)),
+                        this.addUser(response.data)
+                    },
+                    this.$router.push('/student-mod/44')
+                )
+                .catch(response => alert('Error: no se ha modificado el registro. ' + response.message))
         }
     }
 }
@@ -45,7 +40,7 @@ export default {
         <h1><span>Iniciar</span> Sesion</h1>
         <input placeholder="Email" type="text" v-model="user.email" />
         <input placeholder="Password" type="password" v-model="user.password" />
-        <button class="btn" @click="logIng()">Log in</button>
+        <button class="btn" @click="logIng">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn"> Registrate </button>
         <h6>Más opciones</h6>
