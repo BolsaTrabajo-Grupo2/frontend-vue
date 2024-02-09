@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import StudentForm from '@/views/StudentForm.vue'
 import HomeView from '@/views/Home.vue'
 import LoginForm from '@/views/LoginForm.vue'
-import StudentEditForm  from '@/views/StudentEditForm.vue'
+import StudentEditForm from '@/views/StudentEditForm.vue'
 import CompanyForm from '@/views/CompanyForm.vue'
 import CompanyEditForm from '@/views/CompanyEditForm.vue'
+import ListOffer from '@/views/ListOffer.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,11 @@ const router = createRouter({
       name: 'company-mod',
       component: CompanyEditForm,
       props: true
+    },
+    {
+      path: '/listOffers',
+      name: 'listOffers',
+      component: ListOffer
     }
   ]
 })

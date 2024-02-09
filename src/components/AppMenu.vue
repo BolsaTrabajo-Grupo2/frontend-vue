@@ -11,6 +11,7 @@ export default {}
       <RouterLink to="/student-mod">Editar Estudiante</RouterLink><br>
       <RouterLink to="/company-add">Añadir Empresa</RouterLink><br>
       <RouterLink to="/company-mod">Editar Empresa</RouterLink><br>
+      <RouterLink to="/listOffers">Listado de Ofertas</RouterLink><br>
     </ul>
   </nav>
 </template>
