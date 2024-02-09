@@ -99,7 +99,7 @@ export default {
 
 <template>
     <div class="container">
-        <p>Si no deaseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
+        <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
         <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
             <fieldset>
                 <legend>Modificar perfil</legend>

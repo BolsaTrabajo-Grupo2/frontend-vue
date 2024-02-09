@@ -25,4 +25,8 @@ export default class APIService {
         console.log(student)
         return apiClient.put('/user/student/update/' + student.id, student)
     }
+    modCompany(company) {
+        console.log(company)
+        return apiClient.put('/user/company/update/' + company.id, company)
+    }
 }
