@@ -60,6 +60,7 @@ export default {
         ErrorMessage
     },
     async mounted() {
+        console.log(this.user.rol)
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
@@ -187,7 +188,7 @@ export default {
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" :hidden="this.user.rol != 'RESP'">
                     <label class="col-md-4 control-label">Observaciones</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">

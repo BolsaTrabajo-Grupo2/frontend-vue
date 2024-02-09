@@ -37,7 +37,9 @@ export default {
                         return true;
                     }
                 }),
-            contraseña: yup.string().required().min(8),
+            contraseña: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+            }),
             direccion: yup.string().required(),
             cv: yup.string().matches(
                 /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
@@ -69,6 +71,7 @@ export default {
             this.student.cycle = this.cycleFields;
             try {
                 await axios.post(SERVER + '/registerStudent', this.student);
+                alert('Compruebe su correo para activar su cuenta')
             } catch (error) {
                 console.error('Error al añadir el registro:', error);
                 if (error.response.status === 429) {
