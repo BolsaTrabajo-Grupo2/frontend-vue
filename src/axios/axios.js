@@ -11,7 +11,7 @@ const token = tokenEntero.split('|')[1]
 
 console.log(token)
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://localhost/api',
     withCredentials: false,
     headers: {
         Authorization: 'Bearer ' + token,
