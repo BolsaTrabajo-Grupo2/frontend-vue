@@ -151,7 +151,7 @@ export default {
                     <label class="col-md-4 control-label">Repetir Contraseña</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <Field name="repetirContraseña" placeholder="repetir password" class="form-control"
+                            <Field name="repetirContraseña" placeholder="repetir contraseña" class="form-control"
                                 type="password" />
                             <ErrorMessage name="repetirContraseña" class="error" />
                         </div>
@@ -221,4 +221,8 @@ export default {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+
+}
+</style>

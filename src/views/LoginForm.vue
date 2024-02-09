@@ -17,7 +17,7 @@ export default {
                 const response = axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
-                this.$router.push('/student-mod/41')
+                this.$router.push('/offers')
             } catch (error) {
                 alert(error.message)
             }
@@ -188,14 +188,12 @@ input {
 
 h6 {
     text-align: center;
-    padding: 20px;
-    padding-top: 35px;
+    padding-top: 20px;
     color: #777;
-    cursor: pointer;
 }
 
 h3 {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 /* .social {
