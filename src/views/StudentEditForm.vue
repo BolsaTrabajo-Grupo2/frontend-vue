@@ -36,7 +36,7 @@ export default {
             }),
             repetirContraseña: yup.string().test('password-match', 'Las contraseñas no coinciden', function (value, context) {
                 const { contraseña } = context.parent;
-                if (!value || value === '') return true;
+                if (contraseña != '' && value == '') return false
                 return value === contraseña;
             })
         });

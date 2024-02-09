@@ -2,7 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import StudentForm from '@/views/StudentForm.vue'
 import HomeView from '@/views/Home.vue'
 import LoginForm from '@/views/LoginForm.vue'
-import StudentEditForm  from '@/views/StudentEditForm.vue'
+import StudentEditForm from '@/views/StudentEditForm.vue'
+import CompanyForm from '@/views/CompanyForm.vue'
+import CompanyEditForm from '@/views/CompanyEditForm.vue'
+import ListOffer from '@/views/ListOffer.vue'
 
 
 const router = createRouter({
@@ -12,8 +15,9 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       component: HomeView
-    },{
-      path: '/',
+    },
+    {
+      path: '/login',
       name: 'login',
       component: LoginForm
     },
@@ -27,6 +31,22 @@ const router = createRouter({
       name: 'student-mod',
       component: StudentEditForm,
       props: true
+    },
+    {
+      path: '/company-add',
+      name: 'company-add',
+      component: CompanyForm
+    },
+    {
+      path: '/company-mod/:id',
+      name: 'company-mod',
+      component: CompanyEditForm,
+      props: true
+    },
+    {
+      path: '/listOffers',
+      name: 'listOffers',
+      component: ListOffer
     }
   ]
 })
