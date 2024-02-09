@@ -32,23 +32,6 @@ yup.addMethod(yup.string, 'password', function () {
   })
 })
 
-yup.addMethod(yup.string, 'uniqueEmail', function (message = 'Este email ya está registrado') {
-  return this.test({
-    name: 'unique-email',
-    message,
-    test: async function (value) {
-      if (!value) return true
-      try {
-        const response = await axios.get(`${SERVER}/checkEmail/${value}`)
-        return !response.data
-      } catch (error) {
-        console.error('Error al verificar el email:', error)
-        return true
-      }
-    }
-  })
-})
-
 yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está registrado') {
   return this.test({
     name: 'unique-cif',
@@ -82,7 +65,7 @@ export default {
     const mySchema = yup.object({
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().email().uniqueEmail(),
+      email: yup.string().required().email(),
       password: yup.string().required().password(),
       confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
@@ -109,7 +92,7 @@ export default {
     async addCompany() {
       this.company.rol = 'COMP'
 
-      axios
+      await axios
         .post(SERVER + '/registerCompany', this.company)
         .then()
         .catch((response) => alert('Error: no se ha añadido el registro. ' + response.message))

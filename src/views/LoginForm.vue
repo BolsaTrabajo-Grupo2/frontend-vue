@@ -21,7 +21,6 @@ export default {
             } catch (error) {
                 alert(error.message)
             }
-
         },
 
         register() {
