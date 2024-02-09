@@ -3,7 +3,7 @@ import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
-import $ from 'jquery';
+
 export default {
     data() {
         return {

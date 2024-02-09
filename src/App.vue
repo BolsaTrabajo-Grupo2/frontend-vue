@@ -1,9 +1,13 @@
 <script>
+import AppMenu from './components/AppMenu.vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useStore } from './stores/store';
 import { mapActions } from 'pinia';
 
 export default {
+  components: {
+    AppMenu,
+  },
   methods: {
     ...mapActions(useStore, ['loadCycles', 'loadUser'])
   },
@@ -11,7 +15,6 @@ export default {
     this.loadCycles()
     this.loadUser()
   }
-
 }
 </script>
 
@@ -19,13 +22,11 @@ export default {
   <nav>
     <h1>Bolsa trabajo</h1>
   </nav>
+  <app-menu></app-menu>
   <RouterView/>
 </template>
 
 <style scoped>
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css');
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
 </style>
+ 
