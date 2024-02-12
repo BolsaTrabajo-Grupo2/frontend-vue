@@ -53,6 +53,7 @@ export default {
       confirmPassword: yup.string().test('password-match', 'Las contraseñas no coinciden', function (value, context) {
         const { password } = context.parent;
         if (password !== '' && value === '') return false
+        if (password === '' && value === undefined) return true
         return value === password;
       }),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
