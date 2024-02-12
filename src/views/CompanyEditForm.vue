@@ -2,44 +2,21 @@
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup'
+import { useStore } from '@/stores/store';
+import { mapState } from 'pinia';
 import axios from 'axios'
+import APIService from '../axios/axios.js'
+const apiService = new APIService()
 const SERVER = import.meta.env.VITE_URL_API
-
-yup.addMethod(yup.string, 'url', function () {
-  return this.test({
-    name: 'url',
-    message: 'La URL no es válida',
-    test: (value) => {
-      if (!value) {
-        return true
-      }
-      return /^(ftp|http|https):\/\/[^ "]+$/.test(value)
-    }
-  })
-})
-yup.addMethod(yup.string, 'password', function () {
-  return this.test({
-    name: 'password',
-    message:
-      'La contraseña ha de contener al menos 8 caracteres, entre ellos una mayúscula y un número',
-    test: (value) => {
-      if (value === null || value === undefined || value === '') {
-        return true
-      }
-      return value.length >= 8 && /[A-Z]/.test(value) && /\d/.test(value)
-    }
-  })
-})
-
 
 yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está registrado') {
   return this.test({
     name: 'unique-cif',
     message,
     async test(value) {
-      if (!value) return true;
+      if (!value || value === currentCIF) return true;
       try {
-        const response = await axios.get(`${SERVER}/checkCIF/${value}`);
+        const response = await axios.get(${SERVER}/checkCIF/${value});
         return !response.data;
       } catch (error) {
         console.error('Error al verificar el CIF:', error);
@@ -60,20 +37,23 @@ setLocale({
   }
 })
 
+let currentCIF = ''
+
 export default {
   data() {
     const mySchema = yup.object({
-      
+
       name: yup.string().required(),
       surname: yup.string().required(),
       email: yup.string().required().email(),
       password: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
         if (!value || value === '') return true;
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+        return /^(?=.[a-z])(?=.[A-Z])(?=.*\d).{8,}$/.test(value);
       }),
       confirmPassword: yup.string().test('password-match', 'Las contraseñas no coinciden', function (value, context) {
         const { password } = context.parent;
         if (password !== '' && value === '') return false
+        if (password === '' && value === undefined) return true
         return value === password;
       }),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
@@ -82,7 +62,7 @@ export default {
       phone: yup.string().required().length(9),
       web: yup.string().url().max(100),
       companyName: yup.string().required()
-      
+
     })
     return {
       company: {},
@@ -98,20 +78,23 @@ export default {
   },
   methods: {
     async editCompany() {
-      axios
-        .post(SERVER + '/user/company/update/', this.id)
+      this.company.rol = 'COMP'
+
+      apiService.modCompany(this.company)
         .then()
-        .catch((response) => alert('Error: no se ha editado el registro. ' + response.message))
+        .catch(response => {
+          alert('Error: ' + response.message)
+        });
     },
 
     async reset() {
-        try {
-          const response = await axios.get(SERVER + '/company/' + this.id)
-          this.company = response.data
-        } catch (error) {
-          console.error('Error al obtener la información de la empresa:', error)
-        }
-        this.company.password = ''
+      try {
+        const response = await axios.get(SERVER + '/company/' + this.id)
+        this.company = response.data
+      } catch (error) {
+        console.error('Error al obtener la información de la empresa:', error)
+      }
+      this.company.password = ''
     }
   },
   props: ['id'],
