@@ -222,7 +222,4 @@ export default {
 </template>
 
 <style scoped>
-.container {
-
-}
 </style>
