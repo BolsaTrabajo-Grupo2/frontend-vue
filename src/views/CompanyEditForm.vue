@@ -83,7 +83,7 @@ export default {
       apiService.modCompany(this.company)
         .then()
         .catch(response => {
-          alert('Error: ' + response.message)
+          this.addMsgArray('danger', 'Error: ' + response.message)
         });
     },
 
@@ -102,7 +102,7 @@ export default {
     await axios.get(SERVER + '/company/' + this.id)
       .then(response => this.company = response.data)
       .catch(response => {
-        alert('Error: ' + response.message)
+        this.addMsgArray('danger', 'Error: ' + response.message)
       });
     currentCIF = this.company.CIF
     this.company.password = ''

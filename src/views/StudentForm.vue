@@ -1,6 +1,6 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
@@ -67,19 +67,20 @@ export default {
         ErrorMessage
     },
     methods: {
+        ...mapActions(useStore, ['addMsgArray']),
         async addStudent() {
             this.student.cycle = this.cycleFields;
             try {
                 await axios.post(SERVER + '/registerStudent', this.student);
-                alert('Compruebe su correo para activar su cuenta')
+                this.addMsgArray('success', 'Compruebe su correo para activar su cuenta')
             } catch (error) {
-                console.error('Error al añadir el registro:', error);
+                this.addMsgArray('danger', 'Error al añadir el registro: ' + error)
                 if (error.response.status === 429) {
                     setTimeout(() => {
                         this.addStudent();
                     }, 5000);
                 } else {
-                    alert('Error: no se ha añadido el registro. ' + error.message);
+                    this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message)
                 }
             }
         },

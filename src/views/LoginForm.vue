@@ -2,30 +2,38 @@
 import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
-const SERVER = import.meta.env.VITE_URL_API
+const SERVER = 'http://localhost/'
 export default {
     data() {
         return {
             user: { email: '', password: '' }
         }
     },
-
+    mounted() {
+        localStorage.clear()
+    },
     methods: {
-        ...mapActions(useStore, ['addUser']),
+        ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
-            event.preventDefault();
+            event.preventDefault()
             try {
                 const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
                 this.$router.push('/listOffers')
             } catch (error) {
-                alert(error.message)
+                this.addMsgArray('danger', 'Error: datos incorrectos ' + error.message)
             }
         },
 
         register() {
             this.$router.push('/home')
+        },
+        async gitHub() {
+            
+        },
+        async google() {
+            
         }
     }
 }
@@ -41,8 +49,8 @@ export default {
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="github btn">Git Hub</button>
-            <button class="google fb btn">Google+</button>
+            <button class="github btn" @click="gitHub()">Git Hub</button>
+            <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
 
