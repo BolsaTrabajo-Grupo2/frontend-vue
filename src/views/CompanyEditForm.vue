@@ -16,7 +16,7 @@ yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está re
     async test(value) {
       if (!value || value === currentCIF) return true;
       try {
-        const response = await axios.get(${SERVER}/checkCIF/${value});
+        const response = await axios.get(`${SERVER}/checkCIF/${value}`);
         return !response.data;
       } catch (error) {
         console.error('Error al verificar el CIF:', error);
