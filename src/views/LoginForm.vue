@@ -13,8 +13,9 @@ export default {
     methods: {
         ...mapActions(useStore, ['addUser']),
         async logIng() {
+            event.preventDefault();
             try {
-                const response = axios.post(SERVER + '/login', this.user)
+                const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
                 this.$router.push('/listOffers')
