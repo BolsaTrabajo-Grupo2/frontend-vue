@@ -66,18 +66,16 @@ export default {
       
       name: yup.string().required(),
       surname: yup.string().required(),
-      email: yup.string().required().email().test('unique-email', 'Este email ya está registrado', async function (value) {
-                    if (!value) return true;
-                    try {
-                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
-                        return !response.data;
-                    } catch (error) {
-                        console.error('Error al verificar el email:', error);
-                        return true;
-                    }
-                }),
-      password: yup.string().password(),
-      confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
+      email: yup.string().required().email(),
+      password: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
+        if (!value || value === '') return true;
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+      }),
+      confirmPassword: yup.string().test('password-match', 'Las contraseñas no coinciden', function (value, context) {
+        const { password } = context.parent;
+        if (password !== '' && value === '') return false
+        return value === password;
+      }),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
       address: yup.string().required().max(250),
@@ -123,6 +121,7 @@ export default {
       .catch(response => {
         alert('Error: ' + response.message)
       });
+    currentCIF = this.company.CIF
     this.company.password = ''
   }
 }
@@ -153,7 +152,7 @@ export default {
 
           <div>
             <label name="email" for="email">Email:</label><br />
-            <Field name="email" type="text" v-model="company.email" /><br />
+            <Field name="email" type="text" v-model="company.email" disabled /><br />
             <ErrorMessage name="email" class="validate-error" />
           </div>
 
@@ -209,5 +208,9 @@ export default {
 <style scoped>
 .validate-error {
   color: red;
+}
+
+.row {
+  margin-left: 5%;
 }
 </style>
