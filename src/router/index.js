@@ -6,6 +6,7 @@ import StudentEditForm from '@/views/StudentEditForm.vue'
 import CompanyForm from '@/views/CompanyForm.vue'
 import CompanyEditForm from '@/views/CompanyEditForm.vue'
 import ListOffer from '@/views/ListOffer.vue'
+import UsersListVue from '@/views/UsersList.vue'
 
 
 const router = createRouter({
@@ -47,7 +48,12 @@ const router = createRouter({
       path: '/listOffers',
       name: 'listOffers',
       component: ListOffer
-    }
+    },
+    {
+      path: '/users-list',
+      name: 'users-list',
+      component: UsersListVue,
+    },
   ]
 })
 
