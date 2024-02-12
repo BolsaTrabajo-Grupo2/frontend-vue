@@ -7,7 +7,8 @@ export const useStore = defineStore('store', {
   state() {
     return {
       cycles: [],
-      user: [],
+      user: null,
+      message: [],
     }
   },
   actions: {
@@ -27,7 +28,7 @@ export const useStore = defineStore('store', {
       }
     },
     addUser(usuario){
-      this.user.push(usuario)
+      this.user = usuario
     }
   },
 
