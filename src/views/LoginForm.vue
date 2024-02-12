@@ -2,14 +2,14 @@
 import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
-const SERVER = import.meta.env.VITE_URL_API
+const SERVER = 'http://localhost/'
 export default {
     data() {
         return {
             user: { email: '', password: '' }
         }
     },
-    mounted(){
+    mounted() {
         localStorage.clear()
     },
     methods: {
@@ -28,6 +28,12 @@ export default {
 
         register() {
             this.$router.push('/home')
+        },
+        async gitHub() {
+            
+        },
+        async google() {
+            
         }
     }
 }
@@ -43,8 +49,8 @@ export default {
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="github btn">Git Hub</button>
-            <button class="google fb btn">Google+</button>
+            <button class="github btn" @click="gitHub()">Git Hub</button>
+            <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
 
