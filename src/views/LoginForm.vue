@@ -2,7 +2,7 @@
 import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
-const SERVER = 'http://localhost/'
+const SERVER = import.meta.env.VITE_URL_API
 export default {
     data() {
         return {
