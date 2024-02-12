@@ -8,7 +8,7 @@ export const useStore = defineStore('store', {
     return {
       cycles: [],
       user: null,
-      message: [],
+      messages: [],
     }
   },
   actions: {
@@ -16,7 +16,11 @@ export const useStore = defineStore('store', {
       await axios.get(SERVER + '/cycles')
         .then(response => this.cycles = response.data)
         .catch(response => {
-          alert('Error: ' + response.message)
+          this.messages.push({
+            id: id++,
+            type: 'danger',
+            text: response.message
+          })
         })
     },
     loadUser(){
@@ -29,11 +33,23 @@ export const useStore = defineStore('store', {
     },
     addUser(usuario){
       this.user = usuario
-    }
+    },
+    addMsgArray(type, text) {
+      this.messages.push({
+        id: id++,
+        type: type,
+        text: text
+      })
+    },
+    clearErrorMessages(index) {
+      this.messages.splice(index, 1)
+    },
   },
 
   getters: {
     
   }
 })
+
+let id = 1
 

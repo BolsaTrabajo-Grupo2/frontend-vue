@@ -9,18 +9,20 @@ export default {
             user: { email: '', password: '' }
         }
     },
-
+    mounted(){
+        localStorage.clear()
+    },
     methods: {
-        ...mapActions(useStore, ['addUser']),
+        ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
-            event.preventDefault();
+            event.preventDefault()
             try {
                 const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
                 this.$router.push('/listOffers')
             } catch (error) {
-                alert(error.message)
+                this.addMsgArray('danger', 'Error: datos incorrectos ' + error.message)
             }
         },
 
