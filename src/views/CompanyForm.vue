@@ -189,4 +189,7 @@ export default {
 .validate-error {
   color: red;
 }
+.row {
+  margin-left: 5%;
+}
 </style>
