@@ -64,12 +64,12 @@ export default {
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
-                alert('Error: ' + response.message)
+                this.addMsgArray('danger', 'Error: ' + response.message)
             });
         await axios.get(SERVER + '/studentCicles/' + this.id)
             .then(response => this.student.cycle = response.data)
             .catch(response => {
-                alert('Error: ' + response.message)
+                this.addMsgArray('danger', 'Error: ' + response.message)
             });
         this.cycleFields = this.student.cycle
         this.passwordStudent = this.student.password
@@ -82,7 +82,7 @@ export default {
             apiService.modStudent(this.student)
                 .then()
                 .catch(response => {
-                    alert('Error: ' + response.message)
+                    this.addMsgArray('danger', 'Error: ' + response.message)
                 });
         },
         addCycleField(index) {

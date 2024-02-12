@@ -95,7 +95,7 @@ export default {
       await axios
         .post(SERVER + '/registerCompany', this.company)
         .then()
-        .catch((response) => alert('Error: no se ha añadido el registro. ' + response.message))
+        .catch((response) => this.addMsgArray('danger', 'Error al añadir el registro: ' + response.message))
     }
   }
 }
