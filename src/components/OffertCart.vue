@@ -1,11 +1,12 @@
 <script>
 export default {
     props: {
-        item: Object
+        offer: Object,
     }
 }
 </script>
 <template>
-    <h5>{{ item.description }}</h5>
+    <h5>{{ offer.description }}</h5>
+    <p>"Jornada: " {{ offer.duration }}</p>
 </template>
 <style></style>
