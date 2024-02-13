@@ -22,8 +22,8 @@ export default {
                 rol: urlParams.get('rol')
             };
 
-            localStorage.setItem('user', JSON.stringify(user)); // Guarda los parámetros del usuario en el almacenamiento local
-            window.location.href = '/listOffers'; // Redirige a la página deseada
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.href = '/listOffers';
         }
     },
     methods: {
@@ -53,7 +53,13 @@ export default {
             }
         },
         async google() {
+            try {
 
+                const authWindow = window.open('http://localhost/auth/google');
+
+            } catch (error) {
+                console.error('Error durante la autenticación con GitHub:', error);
+            }
         }
     }
 }
