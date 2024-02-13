@@ -4,40 +4,80 @@ import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
 import { mapState } from 'pinia'
 
-
 export default {
-    data() {
-        return {
-            offers: []
-        }
-    },
-    computed: {
-        ...mapState(useStore, {
-            user: 'user'
-        })
-    },
-    components: {
-        OffertCart,
-    },
-    async mounted() {
-        const apiService = new APIService(this.user.token)
-        try {
-            const response = await apiService.getOffers();
-            this.offers = response.data.data
-        } catch (error) {
-            alert(error);
-        }
+  data() {
+    return {
+      offers: [],
+      currentPage: 1,
+      pageSize: 10,
+      totalRecords: 0,
+      paginationLinks: {
+        prev: null,
+        next: null
+      }
     }
+  },
+  computed: {
+    ...mapState(useStore, {
+      user: 'user'
+    }),
+    totalPages() {
+      return Math.ceil(this.totalRecords / this.pageSize);
+    },
+    paginatedOffers() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.offers.slice(start, end);
+    }
+  },
+  components: {
+    OffertCart,
+  },
+  async mounted() {
+    await this.fetchOffers();
+  },
+  methods: {
+    async fetchOffers() {
+      const apiService = new APIService(this.user.token);
+      try {
+        const response = await apiService.getOffers({
+          page: this.currentPage
+        });
+        this.offers = response.data.data;
+        this.totalRecords = response.data.total_records;
+        this.paginationLinks = response.data.links || { prev: null, next: null };
+      } catch (error) {
+        alert(error);
+      }
+    },
+    async nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        await this.fetchOffers();
+      }
+    },
+    async prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        await this.fetchOffers();
+      }
+    }
+  }
 }
 </script>
 
 <template>
-    <div class="container">
-        <h1>Listado de ofertas</h1>
-        <div class="row">
-            <offert-cart v-for="offer in offers" :offer="offer" :key="offer.id" ></offert-cart>
-        </div>
+  <div class="container">
+    <h1>Listado de ofertas</h1>
+    <div class="row">
+      <offert-cart v-for="offer in paginatedOffers" :offer="offer" :key="offer.CIF"></offert-cart>
     </div>
+    <div>
+      <button @click="prevPage" :disabled="currentPage === 1 || !paginationLinks.prev">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages || !paginationLinks.next">Siguiente</button>
+    </div>
+  </div>
 </template>
 
 <style scoped>

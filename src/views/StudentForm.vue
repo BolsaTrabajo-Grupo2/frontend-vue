@@ -45,7 +45,8 @@ export default {
                 /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
                 'Por favor, introduce una URL válida para el CV.'
             ),
-            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
+            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.'),
+            cycle: yup.array().min(1, 'Debes seleccionar al menos un ciclo.')
         });
         return {
             validationSchema,
@@ -164,7 +165,7 @@ export default {
                     <label class="col-md-4 control-label">Ciclo</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
-                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
+                            <select name="cycle" v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
                             </select>
@@ -172,6 +173,7 @@ export default {
                             <button @click="removeCycleField(index)">Eliminar</button>
                         </div>
                     </div>
+                    <ErrorMessage name="cycle" class="error" />
                 </div>
 
                 <!-- Text input-->
@@ -222,5 +224,4 @@ export default {
     </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

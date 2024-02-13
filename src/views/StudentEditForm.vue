@@ -37,7 +37,8 @@ export default {
                 const { contraseña } = context.parent;
                 if (contraseña === '') return true
                 return value === contraseña;
-            })
+            }),
+            cycle: yup.array().min(1, 'Debes seleccionar al menos un ciclo.')
         });
         return {
             validationSchema,
