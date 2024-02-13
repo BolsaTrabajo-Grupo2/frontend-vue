@@ -30,7 +30,19 @@ export default {
             this.$router.push('/home')
         },
         async gitHub() {
-
+            try {
+                const response = await axios.get('http://localhost/auth/github');
+                
+                
+                if (response.data.token) {
+                    localStorage.setItem('auth_token', response.data.token);
+                    this.$router.push('/listOffers');
+                } else {
+                    console.error('No se pudo obtener el token de autenticación.');
+                }
+            } catch (error) {
+                console.error('Error durante la autenticación con GitHub:', error);
+            }
         },
         async google() {
 
@@ -52,6 +64,7 @@ export default {
             <button class="github btn">
                 <a href="http://localhost/auth/github" target="_blank">Git Hub</a>
             </button>
+            <button class="google fb btn" @click="gitHub()">Git Hub</button>
             <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
