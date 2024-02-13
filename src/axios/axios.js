@@ -35,4 +35,7 @@ export default class APIService {
         return apiClient.put('/user/company/update/' + company.id, company)
 
     }
+    addOffert(offert){
+        return apiClient.post('/offers', offert)
+    }
 }

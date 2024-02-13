@@ -7,6 +7,7 @@ import CompanyForm from '@/views/CompanyForm.vue'
 import CompanyEditForm from '@/views/CompanyEditForm.vue'
 import ListOffer from '@/views/ListOffer.vue'
 import UsersListVue from '@/views/UsersList.vue'
+import OfferForm from '@/views/OfferForm.vue'
 
 
 const router = createRouter({
@@ -54,6 +55,11 @@ const router = createRouter({
       name: 'users-list',
       component: UsersListVue,
     },
+    {
+      path:'/offer-add',
+      name: 'offer-add',
+      component: OfferForm
+    }
   ]
 })
 
