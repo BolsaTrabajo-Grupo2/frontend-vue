@@ -2,12 +2,27 @@
 import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
+import * as yup from 'yup'
+import { setLocale } from 'yup'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+
 const SERVER = import.meta.env.VITE_URL_API
+
 export default {
     data() {
+        const validationSchema = yup.object({
+            email: yup.string().required().email(),
+
+        });
         return {
+            validationSchema,
             user: { email: '', password: '' }
         }
+    },
+    components: {
+        Form,
+        ErrorMessage,
+        Field
     },
     mounted() {
         localStorage.clear()
@@ -21,7 +36,7 @@ export default {
                 email: urlParams.get('email'),
                 rol: urlParams.get('rol')
             };
-
+            this.user = user
             localStorage.setItem('user', JSON.stringify(user));
             window.location.href = '/listOffers';
         }
@@ -31,6 +46,7 @@ export default {
         async logIng() {
             event.preventDefault()
             try {
+                await this.$refs.form.validate();
                 const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
@@ -66,10 +82,12 @@ export default {
 </script>
 
 <template>
-    <form>
+    <Form ref="form" :initial-values="user" :validation-schema="validationSchema">
         <h1><span>Iniciar</span> Sesion</h1>
-        <input placeholder="Email" type="text" v-model="user.email" />
-        <input placeholder="Password" type="password" v-model="user.password" />
+        <Field placeholder="Email" type="text" v-model="user.email" name="email" />
+        <ErrorMessage name="email" class="error" />
+        <Field placeholder="Password" type="password" v-model="user.password" name="password" />
+        <ErrorMessage name="password" class="error" />
         <button class="btn" @click="logIng">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" @click="register()"> Registrate </button>
