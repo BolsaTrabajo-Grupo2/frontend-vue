@@ -5,7 +5,7 @@ export default {
     },
     methods:{
         showDetails(){
-            
+            this.$router.push('/show-details/offer/' + this.offer.id)
         }
     }
 }

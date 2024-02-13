@@ -26,4 +26,8 @@ export default class APIService {
     addOffert(offert) {
         return this.apiClient.post('/offers', offert)
     }
+
+    showOffer(id){
+        return this.apiClient.post('/offers/', id)
+    }
 }

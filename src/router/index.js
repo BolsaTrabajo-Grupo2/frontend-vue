@@ -8,7 +8,7 @@ import CompanyEditForm from '@/views/CompanyEditForm.vue'
 import ListOffer from '@/views/ListOffer.vue'
 import UsersListVue from '@/views/UsersList.vue'
 import OfferForm from '@/views/OfferForm.vue'
-
+import OfferDetails from '@/components/OfferDetails.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,12 +53,18 @@ const router = createRouter({
     {
       path: '/users-list',
       name: 'users-list',
-      component: UsersListVue,
+      component: UsersListVue
     },
     {
-      path:'/offer-add',
+      path: '/offer-add',
       name: 'offer-add',
       component: OfferForm
+    },
+    {
+      path: '/show-details/offer/:id',
+      name: 'shoe-details',
+      props: true,
+      component: OfferDetails
     }
   ]
 })
