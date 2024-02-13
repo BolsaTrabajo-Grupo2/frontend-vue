@@ -30,10 +30,10 @@ export default {
             this.$router.push('/home')
         },
         async gitHub() {
-            
+
         },
         async google() {
-            
+
         }
     }
 }
@@ -49,7 +49,9 @@ export default {
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="github btn" @click="gitHub()">Git Hub</button>
+            <button class="github btn">
+                <a href="http://localhost/auth/github" target="_blank">Git Hub</a>
+            </button>
             <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
