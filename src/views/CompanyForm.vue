@@ -1,8 +1,10 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
-import { setLocale } from 'yup'
+import { setLocale,  } from 'yup'
 import axios from 'axios'
+import { mapActions } from 'pinia'
+import { useStore } from '@/stores/store'
 const SERVER = import.meta.env.VITE_URL_API
 
 yup.addMethod(yup.string, 'url', function () {
@@ -89,12 +91,13 @@ export default {
     ErrorMessage
   },
   methods: {
+    ...mapActions(useStore, ['addMsgArray']),
     async addCompany() {
       this.company.rol = 'COMP'
 
       await axios
         .post(SERVER + '/registerCompany', this.company)
-        .then()
+        .then(this.addMsgArray('succes','Empresa registrada con exito'))
         .catch((response) => this.addMsgArray('danger', 'Error al añadir el registro: ' + response.message))
     }
   }
@@ -189,6 +192,7 @@ export default {
 .validate-error {
   color: red;
 }
+
 .row {
   margin-left: 5%;
 }

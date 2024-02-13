@@ -1,18 +1,26 @@
 <script>
 import OffertCart from '@/components/OffertCart.vue'
 import APIService from '../axios/axios.js'
+import { useStore } from '@/stores/store'
+import { mapState } from 'pinia'
 
-const apiService = new APIService()
+
 export default {
     data() {
         return {
             offers: []
         }
     },
+    computed: {
+        ...mapState(useStore, {
+            user: 'user'
+        })
+    },
     components: {
         OffertCart,
     },
     async mounted() {
+        const apiService = new APIService(this.user.token)
         try {
             const response = await apiService.getOffers();
             this.offers = response.data.data

@@ -1,41 +1,29 @@
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 
-let tokenEntero = '';
-const userString = localStorage.getItem('user');
-
-if (userString) {
-  const user = JSON.parse(userString);
-  tokenEntero = user.token;
-}
-const token = tokenEntero.split('|')[1]
-
-console.log(token)
-const apiClient = axios.create({
-    baseURL: SERVER,
-    withCredentials: false,
-    headers: {
-        Authorization: 'Bearer ' + token,
-    }
-});
 
 export default class APIService {
-    constructor() {
+    constructor(token) {
+        this.apiClient = axios.create({
+            baseURL: SERVER,
+            withCredentials: false,
+            headers: {
+                Authorization: 'Bearer ' + token,
+            }
+        });
     }
     modStudent(student) {
-        console.log(student)
-        return apiClient.put('/user/student/update/' + student.id, student)
+        return this.apiClient.put('/user/student/update/' + student.id, student)
     }
 
-    getOffers(){
-        return apiClient.get('/offers')
+    getOffers() {
+        return this.apiClient.get('/offers')
     }
     modCompany(company) {
-        console.log(company)
-        return apiClient.put('/user/company/update/' + company.id, company)
+        return this.apiClient.put('/user/company/update/' + company.id, company)
 
     }
-    addOffert(offert){
-        return apiClient.post('/offers', offert)
+    addOffert(offert) {
+        return this.apiClient.post('/offers', offert)
     }
 }

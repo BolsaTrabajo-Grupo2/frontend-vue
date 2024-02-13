@@ -5,7 +5,6 @@ import { mapState, mapActions } from 'pinia';
 import * as yup from 'yup'
 import APIService from '../axios/axios.js'
 
-const apiService = new APIService()
 export default {
     data() {
         const validationSchema = yup.object({
@@ -36,6 +35,7 @@ export default {
         ...mapActions(useStore, ['addMsgArray']),
         async addNewOffert(){
             try{
+                const apiService = new APIService(this.user.token)
                 this.offert.inscription_method = this.offert.inscription_method == 'on'
                 await apiService.addOffert(this.offert)
                 this.addMsgArray('sucess', 'Oferta añadida con exito')
