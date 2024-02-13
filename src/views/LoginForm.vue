@@ -11,6 +11,20 @@ export default {
     },
     mounted() {
         localStorage.clear()
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (token) {
+            const user = {
+                token,
+                name: urlParams.get('name'),
+                email: urlParams.get('email'),
+                rol: urlParams.get('rol')
+            };
+
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.href = '/listOffers';
+        }
     },
     methods: {
         ...mapActions(useStore, ['addUser', 'addMsgArray']),
@@ -31,27 +45,21 @@ export default {
         },
         async gitHub() {
             try {
-                window.location.href = 'http://localhost/auth/github';
-                setTimeout(this.checkCallbackGitHUb, 3000);
+
+                const authWindow = window.open('http://127.0.0.1/auth/github');
+
             } catch (error) {
                 console.error('Error durante la autenticación con GitHub:', error);
             }
         },
-        async checkCallbackGitHUb() {
-            try {
-                const response = await axios.get('http://localhost/callback');
-                const { token } = response.data;
-
-                if (token) {
-                    localStorage.setItem('auth_token', token);
-                    this.$router.push('/listOffers');
-                }
-            } catch (error) {
-                console.error('Error al verificar el callback:', error);
-            }
-        },
         async google() {
+            try {
 
+                const authWindow = window.open('http://localhost/auth/google');
+
+            } catch (error) {
+                console.error('Error durante la autenticación con GitHub:', error);
+            }
         }
     }
 }
