@@ -5,7 +5,6 @@ import { mapState, mapActions } from 'pinia';
 import * as yup from 'yup'
 import APIService from '../axios/axios.js'
 
-const apiService = new APIService()
 export default {
     data() {
         const validationSchema = yup.object({
@@ -36,6 +35,7 @@ export default {
         ...mapActions(useStore, ['addMsgArray']),
         async addNewOffert(){
             try{
+                const apiService = new APIService(this.user.token)
                 this.offert.inscription_method = this.offert.inscription_method == 'on'
                 await apiService.addOffert(this.offert)
                 this.addMsgArray('sucess', 'Oferta añadida con exito')
@@ -77,7 +77,7 @@ export default {
             </div>
             <div class="form-group">
                 <div class="form-check">
-                    <Field type="checkbox" id="inscription_method" name="inscription_method" class="form-check-input"v-model="offert.inscription_method" true-value="true" false-value="false" />
+                    <Field type="checkbox" id="inscription_method" name="inscription_method" class="form-check-input" v-model="offert.inscription_method" true-value="true" false-value="false" />
                         <label class="form-check-label" for="inscription_method">¿Deseas que los alumnos se apunten aquí?</label>
                 </div>
                 <ErrorMessage name="inscription_method" />

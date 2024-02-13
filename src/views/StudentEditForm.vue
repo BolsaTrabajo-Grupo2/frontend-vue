@@ -1,6 +1,6 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
@@ -8,7 +8,6 @@ import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import APIService from '../axios/axios.js'
 
-const apiService = new APIService()
 
 setLocale({
     mixed: {
@@ -60,7 +59,7 @@ export default {
         ErrorMessage
     },
     async mounted() {
-        console.log(this.user.rol)
+        
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
@@ -76,7 +75,10 @@ export default {
         this.student.password = ''
     },
     methods: {
+        ...mapActions(useStore, ['addMsgArray']),
+        
         async editStudent() {
+            const apiService = new APIService(this.user.token)
             this.student.cycle = this.cycleFields;
             this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
             apiService.modStudent(this.student)
