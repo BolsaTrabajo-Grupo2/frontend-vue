@@ -28,6 +28,6 @@ export default class APIService {
     }
 
     showOffer(id){
-        return this.apiClient.post('/offers/', id)
+        return this.apiClient.get('/offers/' + id)
     }
 }

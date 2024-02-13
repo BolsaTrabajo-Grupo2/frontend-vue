@@ -21,7 +21,7 @@ export default {
         const apiService = new APIService(this.user.token)
         try {
             const response = await apiService.showOffer(Number(this.id));
-            this.offer = response.data
+            this.offer = response.data.data
         } catch (error) {
             alert(error);
         }
