@@ -31,17 +31,23 @@ export default {
         },
         async gitHub() {
             try {
-                const response = await axios.get('http://localhost/auth/github');
-                
-                
-                if (response.data.token) {
-                    localStorage.setItem('auth_token', response.data.token);
-                    this.$router.push('/listOffers');
-                } else {
-                    console.error('No se pudo obtener el token de autenticación.');
-                }
+                window.location.href = 'http://localhost/auth/github';
+                setTimeout(this.checkCallbackGitHUb, 3000);
             } catch (error) {
                 console.error('Error durante la autenticación con GitHub:', error);
+            }
+        },
+        async checkCallbackGitHUb() {
+            try {
+                const response = await axios.get('http://localhost/callback');
+                const { token } = response.data;
+
+                if (token) {
+                    localStorage.setItem('auth_token', token);
+                    this.$router.push('/listOffers');
+                }
+            } catch (error) {
+                console.error('Error al verificar el callback:', error);
             }
         },
         async google() {
