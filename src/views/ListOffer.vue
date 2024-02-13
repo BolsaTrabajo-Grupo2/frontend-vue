@@ -35,7 +35,7 @@ export default {
     <div class="container">
         <h1>Listado de ofertas</h1>
         <div class="row">
-            <offert-cart v-for="offer in offers" :offer="offer" :key="offer.id" class="col-6 bg-secondary"></offert-cart>
+            <offert-cart v-for="offer in offers" :offer="offer" :key="offer.id" ></offert-cart>
         </div>
     </div>
 </template>
