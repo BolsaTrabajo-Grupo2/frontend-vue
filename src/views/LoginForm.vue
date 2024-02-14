@@ -11,7 +11,17 @@ const SERVER = import.meta.env.VITE_URL_API
 export default {
     data() {
         const validationSchema = yup.object({
-            email: yup.string().required().email(),
+            email: yup.string().required().email()
+            .test('unique-email', 'Este email no está registrado, por favor registrate', async function (value) {
+                    if (!value) return true;
+                    try {
+                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+                        return response.data;
+                    } catch (error) {
+                        console.error('Error al verificar el email:', error);
+                        return true;
+                    }
+            }),
 
         });
         return {
@@ -44,7 +54,7 @@ export default {
     methods: {
         ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
-            event.preventDefault()
+            
             try {
                 await this.$refs.form.validate();
                 const response = await axios.post(SERVER + '/login', this.user)
@@ -52,7 +62,7 @@ export default {
                 this.addUser(response.data)
                 this.$router.push('/listOffers')
             } catch (error) {
-                this.addMsgArray('danger', 'Error: datos incorrectos ' + error.message)
+                this.addMsgArray('danger', 'Error: datos incorrectos pr favor revise que la contarseña sea la correcta')
             }
         },
 
@@ -82,20 +92,17 @@ export default {
 </script>
 
 <template>
-    <Form ref="form" :initial-values="user" :validation-schema="validationSchema">
+    <Form ref="form" :initial-values="user" :validation-schema="validationSchema" @submit="logIng">
         <h1><span>Iniciar</span> Sesion</h1>
         <Field placeholder="Email" type="text" v-model="user.email" name="email" />
         <ErrorMessage name="email" class="error" />
         <Field placeholder="Password" type="password" v-model="user.password" name="password" />
         <ErrorMessage name="password" class="error" />
-        <button class="btn" @click="logIng">Log in</button>
+        <button class="btn" type="submit">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="github btn">
-                <a href="http://localhost/auth/github" target="_blank">Git Hub</a>
-            </button>
             <button class="google fb btn" @click="gitHub()">Git Hub</button>
             <button class="google fb btn" @click="google()">Google+</button>
         </div>
