@@ -31,7 +31,16 @@ export default {
         }
     },
     methods: {
-
+        singUp(){
+            const apiService = new APIService(this.user.token)
+            try {
+                const response = apiService.singup(Number(this.offer.id))
+                this.addMsgArray('Success','Te has apuntado con exito a la oferta')
+                this.$router.push('/listOffers')
+            } catch (error) {
+                this.addMsgArray('Danger','Ya estas apuntado a la oferta')
+            }
+        }
     }
 }
 </script>
@@ -46,7 +55,7 @@ export default {
             <p>Telefono de contacto: {{ company.telefono }}</p>
             <p>Pagina web: {{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STUD'"
-                class="apuntarse btn btn-success">Apuntarse</button>
+                class="apuntarse btn btn-success" @click="singUp">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success">Ver
                 candidatos</button>
         </div>

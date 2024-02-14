@@ -37,4 +37,7 @@ export default class APIService {
     getCompany(cif){
         return this.apiClient.get('/companyCIF/'+ cif)
     }
+    singup(idOffer){
+        return this.apiClient.post('/apply',idOffer)
+    }
 }
