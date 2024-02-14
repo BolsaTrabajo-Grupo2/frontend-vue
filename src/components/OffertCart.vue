@@ -36,7 +36,7 @@ export default {
         <h5>{{ offer.description }}</h5>
         <p>"Jornada: " {{ offer.duration }}</p>
         <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success" @click="singUp">Apuntarse</button>
-        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success">Ver candidatos</button>
+        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success" @click="this.$router.push('/users-list')">Ver candidatos</button>
         <button class="details btn btn-info" @click="showDetails">Detalles</button>
     </div>
 </template>

@@ -56,7 +56,7 @@ export default {
             <p>Pagina web: {{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STUD'"
                 class="apuntarse btn btn-success" @click="singUp">Apuntarse</button>
-            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success">Ver
+            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success" @click="this.$router.push('/users-list')">Ver
                 candidatos</button>
         </div>
     </div>
