@@ -19,6 +19,9 @@ export default class APIService {
     getOffers() {
         return this.apiClient.get('/offers')
     }
+    getOffersPage(page) {
+        return this.apiClient.get('/offers?page='+page)
+    }
     modCompany(company) {
         return this.apiClient.put('/user/company/update/' + company.id, company)
 
@@ -30,6 +33,7 @@ export default class APIService {
     showOffer(id){
         return this.apiClient.get('/offers/' + id)
     }
+    
     getCompany(cif){
         return this.apiClient.get('/companyCIF/'+ cif)
     }
