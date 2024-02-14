@@ -17,8 +17,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true }
+      component: HomeView
     },
     {
       path: '/',
@@ -28,8 +27,7 @@ const router = createRouter({
     {
       path: '/student-add',
       name: 'student-add',
-      component: StudentForm,
-      meta: { requiresAuth: true }
+      component: StudentForm
     },
     {
       path: '/student-mod/:id',
@@ -41,8 +39,7 @@ const router = createRouter({
     {
       path: '/company-add',
       name: 'company-add',
-      component: CompanyForm,
-      meta: { requiresAuth: true }
+      component: CompanyForm
     },
     {
       path: '/company-mod/:id',
@@ -73,22 +70,21 @@ const router = createRouter({
       path: '/show-details/offer/:id',
       name: 'shoe-details',
       props: true,
-      component: OfferDetails
+      component: OfferDetails,
+      meta: { requiresAuth: true }
     }
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  const store = useStore();
+  const isAuthenticated = Object.values(store.user).length !== 0;
 
-// router.beforeEach((to, from, next) => {
-//   const store = useStore();
-//   console.log("Usuario en el store:", store.user);
-//   const isAuthenticated = store.user;
-
-//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-//     router.push('/'); 
-//   } else {
-//     next(); 
-//   }
-// });
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/'); 
+  } else {
+    next(); 
+  }
+});
 
 export default router
