@@ -1,7 +1,7 @@
 <script>
 import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 
 export default {
     data() {
@@ -31,14 +31,23 @@ export default {
         }
     },
     methods: {
-        singUp(){
+        ...mapActions(useStore, ['addMsgArray']),
+        async singUp() {
             const apiService = new APIService(this.user.token)
             try {
-                const response = apiService.singup(Number(this.offer.id))
-                this.addMsgArray('Success','Te has apuntado con exito a la oferta')
-                this.$router.push('/listOffers')
+                const response = await apiService.singup(Number(this.offer.id));
+                if (response.status === 200) {
+                    if (response.data.error === "Ya has aplicado a esta oferta") {
+                        this.addMsgArray('Danger', 'Ya estás apuntado a la oferta');
+                    } else {
+                        this.addMsgArray('Success', 'Te has apuntado con éxito a la oferta');
+                        this.$router.push('/listOffers');
+                    }
+                } else {
+                    console.error('Código de estado no manejado:', response.status);
+                }
             } catch (error) {
-                this.addMsgArray('Danger','Ya estas apuntado a la oferta')
+                this.addMsgArray('Danger', 'Ya estas apuntado a la oferta')
             }
         }
     }
@@ -54,9 +63,10 @@ export default {
             <p>Direccion: {{ company.direccion }}</p>
             <p>Telefono de contacto: {{ company.telefono }}</p>
             <p>Pagina web: {{ company.web }}</p>
-            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STUD'"
-                class="apuntarse btn btn-success" @click="singUp">Apuntarse</button>
-            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success" @click="this.$router.push('/users-list')">Ver
+            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
+                @click="singUp">Apuntarse</button>
+            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
+                @click="this.$router.push('/users-list')">Ver
                 candidatos</button>
         </div>
     </div>
