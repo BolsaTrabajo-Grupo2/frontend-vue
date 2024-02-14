@@ -40,7 +40,11 @@ export default {
         <div class="col-6 bg-secondary">
             <h5>{{ offer.description }}</h5>
             <p>Duracion: {{ offer.duration }}</p>
-            <p>Perona de contacto: {{ offer.responsibleName }}</p>
+            <p>Persona de contacto: {{ offer.responsibleName }}</p>
+            <p>Nombre de la empresa: {{ company.companyName }}</p>
+            <p>Direccion: {{ company.direccion }}</p>
+            <p>Telefono de contacto: {{ company.telefono }}</p>
+            <p>Pagina web: {{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STUD'"
                 class="apuntarse btn btn-success">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success">Ver
