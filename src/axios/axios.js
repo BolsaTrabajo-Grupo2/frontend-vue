@@ -30,4 +30,7 @@ export default class APIService {
     showOffer(id){
         return this.apiClient.get('/offers/' + id)
     }
+    getCompany(cif){
+        return this.apiClient.get('/companyCIF/'+ cif)
+    }
 }
