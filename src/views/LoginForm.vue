@@ -2,47 +2,109 @@
 import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
+import * as yup from 'yup'
+import { setLocale } from 'yup'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+
 const SERVER = import.meta.env.VITE_URL_API
+
 export default {
     data() {
+        const validationSchema = yup.object({
+            email: yup.string().required().email()
+                .test('unique-email', 'Este email no está registrado, por favor registrate', async function (value) {
+                    if (!value) return true;
+                    try {
+                        const response = await axios.get(`${SERVER}/checkEmail/${value}`);
+                        return response.data;
+                    } catch (error) {
+                        console.error('Error al verificar el email:', error);
+                        return true;
+                    }
+                }),
+            contraseña: yup.string().required()
+
+        });
         return {
+            validationSchema,
             user: { email: '', password: '' }
         }
     },
+    components: {
+        Form,
+        ErrorMessage,
+        Field
+    },
+    mounted() {
+        localStorage.clear()
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
 
+        if (token) {
+            const user = {
+                token,
+                name: urlParams.get('name'),
+                email: urlParams.get('email'),
+                rol: urlParams.get('rol')
+            };
+            this.user = user
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.href = '/listOffers';
+        }
+    },
     methods: {
-        ...mapActions(useStore, ['addUser']),
+        ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
-            event.preventDefault();
             try {
+                await this.$refs.form.validate();
                 const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
                 this.$router.push('/listOffers')
             } catch (error) {
-                alert(error.message)
+                this.addMsgArray('danger', 'Error: datos incorrectos pr favor revise que la contarseña sea la correcta')
             }
         },
 
         register() {
             this.$router.push('/home')
+        },
+        async gitHub() {
+            try {
+
+                const authWindow = window.open('http://127.0.0.1/auth/github');
+
+            } catch (error) {
+                console.error('Error durante la autenticación con GitHub:', error);
+            }
+        },
+        async google() {
+            try {
+
+                const authWindow = window.open('http://localhost/auth/google');
+
+            } catch (error) {
+                console.error('Error durante la autenticación con GitHub:', error);
+            }
         }
     }
 }
 </script>
 
 <template>
-    <form>
+    <Form ref="form" :initial-values="user" :validation-schema="validationSchema" @submit="logIng">
         <h1><span>Iniciar</span> Sesion</h1>
-        <input placeholder="Email" type="text" v-model="user.email" />
-        <input placeholder="Password" type="password" v-model="user.password" />
-        <button class="btn" @click="logIng">Log in</button>
+        <Field placeholder="Email" type="text" v-model="user.email" name="email" />
+        <ErrorMessage name="email" class="error" />
+        <Field placeholder="Password" type="password" v-model="user.password" name="contraseña" />
+        <ErrorMessage name="contraseña" class="error" />
+        <button class="btn" type="submit">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="github btn">Git Hub</button>
-            <button class="google fb btn">Google+</button>
+            <button class="google fb btn" @click="gitHub()">Git Hub</button>
+            <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
 

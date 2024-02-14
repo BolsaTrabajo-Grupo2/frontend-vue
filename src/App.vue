@@ -2,7 +2,8 @@
 
 import { RouterLink, RouterView } from 'vue-router'
 import { useStore } from './stores/store';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import AppMessage from './components/AppMessage.vue'
 
 export default {
   methods: {
@@ -11,13 +12,22 @@ export default {
   mounted() {
     this.loadCycles()
     this.loadUser()
-  }
+  },
+  computed: {
+    ...mapState(useStore, {
+      messages: 'messages',
+  })
+  },
+  components: {
+    AppMessage
+  },
 }
 </script>
 
 <template>
   <nav>
     <h1>Bolsa Batoi</h1>
+    <app-message v-for="(message, index) in messages" :key="message.id" :message="message" :index="index"></app-message>
   </nav>
   <RouterView/>
 </template>
@@ -28,5 +38,7 @@ nav {
   text-align: center;
   color: rgb(95, 191, 255)
 }
+
+
 </style>
  

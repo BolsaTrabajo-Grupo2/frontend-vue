@@ -1,6 +1,6 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
@@ -8,7 +8,6 @@ import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import APIService from '../axios/axios.js'
 
-const apiService = new APIService()
 
 setLocale({
     mixed: {
@@ -38,7 +37,8 @@ export default {
                 const { contraseña } = context.parent;
                 if (contraseña === '') return true
                 return value === contraseña;
-            })
+            }),
+            cycle: yup.array().min(1, 'Debes seleccionar al menos un ciclo.')
         });
         return {
             validationSchema,
@@ -60,29 +60,32 @@ export default {
         ErrorMessage
     },
     async mounted() {
-        console.log(this.user.rol)
+
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
-                alert('Error: ' + response.message)
+                this.addMsgArray('danger', 'Error: ' + response.message)
             });
         await axios.get(SERVER + '/studentCicles/' + this.id)
             .then(response => this.student.cycle = response.data)
             .catch(response => {
-                alert('Error: ' + response.message)
+                this.addMsgArray('danger', 'Error: ' + response.message)
             });
         this.cycleFields = this.student.cycle
         this.passwordStudent = this.student.password
         this.student.password = ''
     },
     methods: {
+        ...mapActions(useStore, ['addMsgArray']),
+
         async editStudent() {
+            const apiService = new APIService(this.user.token)
             this.student.cycle = this.cycleFields;
             this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
             apiService.modStudent(this.student)
                 .then()
                 .catch(response => {
-                    alert('Error: ' + response.message)
+                    this.addMsgArray('danger', 'Error: ' + response.message)
                 });
         },
         addCycleField(index) {
@@ -105,8 +108,8 @@ export default {
                 <legend>Modificar perfil</legend>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Nombre</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Nombre</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="nombre" placeholder="nombre" class="form-control" type="text"
                                 v-model="student.name" />
@@ -116,8 +119,8 @@ export default {
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Apellido</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Apellido</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
                                 v-model="student.surname" />
@@ -128,8 +131,8 @@ export default {
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Contraseña</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Contraseña</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
                                 v-model="student.password" />
@@ -140,8 +143,8 @@ export default {
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Repetir Contraseña</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Repetir Contraseña</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="repetirContraseña" placeholder="repetir password" class="form-control"
                                 type="password" />
@@ -152,8 +155,8 @@ export default {
 
                 <!-- Text input-->
                 <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
-                    <label class="col-md-4 control-label">Ciclo</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Ciclo</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
                                 <option value="">Seleccionar ciclo</option>
@@ -167,8 +170,8 @@ export default {
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Dirección</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Dirección</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="direccion" placeholder="direccion" class="form-control" type="text"
                                 v-model="student.address" />
@@ -179,8 +182,8 @@ export default {
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Link Curriculum</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Link Curriculum</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
                         </div>
@@ -189,8 +192,8 @@ export default {
                 </div>
 
                 <div class="form-group" :hidden="this.user.rol != 'RESP'">
-                    <label class="col-md-4 control-label">Observaciones</label>
-                    <div class="col-md-4 inputGroupContainer">
+                    <label class="col-md-8 control-label">Observaciones</label>
+                    <div class="col-md-8 inputGroupContainer">
                         <div class="input-group">
                             <Field type="textarea" name="observaciones" placeholder="observaciones" class="form-control"
                                 v-model="student.observation" />
@@ -203,8 +206,8 @@ export default {
 
                 <!-- Button -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label"></label>
-                    <div class="col-md-4">
+                    <label class="col-md-8 control-label"></label>
+                    <div class="col-md-8">
                         <button type="submit" class="btn btn-warning">Modificar<span
                                 class="glyphicon glyphicon-send"></span></button>
                     </div>
@@ -213,4 +216,65 @@ export default {
         </Form>
     </div>
 </template>
-<style></style>
+<style>
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    /* Color de fondo */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    /* Sombra */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group input,
+.input-group select,
+.input-group button {
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.input-group button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    font-size: 0.8rem;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+</style>

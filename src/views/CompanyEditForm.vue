@@ -3,10 +3,10 @@ import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { setLocale } from 'yup'
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import axios from 'axios'
 import APIService from '../axios/axios.js'
-const apiService = new APIService()
+
 const SERVER = import.meta.env.VITE_URL_API
 
 yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está registrado') {
@@ -71,20 +71,27 @@ export default {
       mySchema
     }
   },
+  computed: {
+    ...mapState(useStore, {
+      user: 'user'
+    })
+  },
   components: {
     Form,
     Field,
     ErrorMessage
   },
   methods: {
+    ...mapActions(useStore, ['addMsgArray']),
     async editCompany() {
       this.company.rol = 'COMP'
-
-      apiService.modCompany(this.company)
-        .then()
-        .catch(response => {
-          alert('Error: ' + response.message)
-        });
+      const apiService = new APIService(this.user.token)
+      try {
+        const response = apiService.modCompany(this.company)
+        this.addMsgArray('sucess','Empresa modificada con exito')
+      } catch (error) {
+        this.addMsgArray('danger', 'Error: ' + error)
+      }
     },
 
     async reset() {
@@ -92,7 +99,7 @@ export default {
         const response = await axios.get(SERVER + '/company/' + this.id)
         this.company = response.data
       } catch (error) {
-        console.error('Error al obtener la información de la empresa:', error)
+        this.addMsgArray('danger', 'Error al obtener los datos de la compañia')
       }
       this.company.password = ''
     }
@@ -102,7 +109,7 @@ export default {
     await axios.get(SERVER + '/company/' + this.id)
       .then(response => this.company = response.data)
       .catch(response => {
-        alert('Error: ' + response.message)
+        this.addMsgArray('danger', 'Error: ' + response.message)
       });
     currentCIF = this.company.CIF
     this.company.password = ''
