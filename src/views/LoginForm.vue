@@ -12,7 +12,7 @@ export default {
     data() {
         const validationSchema = yup.object({
             email: yup.string().required().email()
-            .test('unique-email', 'Este email no está registrado, por favor registrate', async function (value) {
+                .test('unique-email', 'Este email no está registrado, por favor registrate', async function (value) {
                     if (!value) return true;
                     try {
                         const response = await axios.get(`${SERVER}/checkEmail/${value}`);
@@ -21,7 +21,8 @@ export default {
                         console.error('Error al verificar el email:', error);
                         return true;
                     }
-            }),
+                }),
+            contraseña: yup.string().required()
 
         });
         return {
@@ -54,7 +55,6 @@ export default {
     methods: {
         ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
-            
             try {
                 await this.$refs.form.validate();
                 const response = await axios.post(SERVER + '/login', this.user)
@@ -96,8 +96,8 @@ export default {
         <h1><span>Iniciar</span> Sesion</h1>
         <Field placeholder="Email" type="text" v-model="user.email" name="email" />
         <ErrorMessage name="email" class="error" />
-        <Field placeholder="Password" type="password" v-model="user.password" name="password" />
-        <ErrorMessage name="password" class="error" />
+        <Field placeholder="Password" type="password" v-model="user.password" name="contraseña" />
+        <ErrorMessage name="contraseña" class="error" />
         <button class="btn" type="submit">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" @click="register()"> Registrate </button>
