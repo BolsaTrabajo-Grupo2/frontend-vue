@@ -78,7 +78,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const store = useStore();
-  const isAuthenticated = Object.values(store.user).length !== 0;
+  const isAuthenticated = store.user && Object.values(store.user).length !== 0;
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/'); 
