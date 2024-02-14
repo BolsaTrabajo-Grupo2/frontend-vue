@@ -40,4 +40,7 @@ export default class APIService {
     singup(idOffer) {
         return this.apiClient.post(`/apply/${idOffer}`);
     }
+    getUsersOffer(idOffer){
+        return this.apiClient.get('/userOffert/'+ idOffer)
+    }
 }

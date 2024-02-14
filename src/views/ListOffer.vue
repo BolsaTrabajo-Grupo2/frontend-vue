@@ -31,26 +31,26 @@ export default {
 
         }
     },
-    methods: {
-
-        async nextPage() {
+    methods:{
+        
+        async nextPage(){
             const apiService = new APIService(this.user.token)
             try {
                 let page = this.offers.current_page + 1
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                
             }
         },
-        async prevPage() {
+        async prevPage(){
             const apiService = new APIService(this.user.token)
             try {
                 let page = this.offers.current_page - 1
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                
             }
         }
     }
@@ -60,36 +60,17 @@ export default {
 <template>
     <div class="container">
         <h1>Listado de ofertas</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Duracion</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
-            </tbody>
-
-        </table>
-
-
-
-
-
-
-            <div class="row" v-if="this.offers.data.length > 0">
-                <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
-                <div>
-                    <button @click="prevPage" :disabled="this.offers.links.prev[0] == null">Anterior</button>
-                    <span>Página {{ this.offers.current_page }} de {{ this.offers.total_pages }}</span>
-                    <button @click="nextPage" :disabled="this.offers.links.next[0] == null">Siguiente</button>
-                </div>
+        <div class="row" v-if="this.offers.data.length > 0">
+            <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
+            <div>
+                <button @click="prevPage" :disabled="this.offers.links.prev[0] == null">Anterior</button>
+                <span>Página {{ this.offers.current_page }} de {{ this.offers.total_pages }}</span>
+                <button @click="nextPage" :disabled="this.offers.links.next[0] == null">Siguiente</button>
             </div>
-            <div v-else>
-                <h3>No tienen ofertas para ver</h3>
-            </div>
+        </div>
+        <div v-else>
+            <h3>No tienen ofertas para ver</h3>
+        </div>
     </div>
 </template>
 

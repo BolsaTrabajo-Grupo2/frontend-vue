@@ -66,7 +66,7 @@ export default {
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
                 @click="singUp">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
-                @click="this.$router.push('/users-list')">Ver
+            @click="this.$router.push('/users-list/'+ offer.id)">Ver
                 candidatos</button>
         </div>
     </div>

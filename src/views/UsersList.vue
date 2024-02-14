@@ -21,12 +21,13 @@ export default {
         const apiService = new APIService(this.user.token)
         try {
             const response = await apiService.getUsersOffer(this.id)
+            console.log(response.data)
             this.students = response.data
         } catch (error) {
 
         }
     },
-    components:{
+    components: {
         UserLi
     },
     methods: {
@@ -37,17 +38,18 @@ export default {
 
 <template>
     <h1>Todos los Usuarios</h1>
-    <div class="container" v-if="this.students.length > 0">
-        <tr>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Email</th>
-        </tr>
-        <user-li v-for="student in this.students" :offer="student" :key="student.id"></user-li>
-    </div>
-    <div class="container" v-else>
-        <h3>Aun no se han apuntado candidatos a esta oferta</h3>
-    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <user-li v-for="student in this.students" :student="student" :key="student.id"></user-li>
+        </tbody>
+    </table>
 </template>
 
 <style scoped></style>

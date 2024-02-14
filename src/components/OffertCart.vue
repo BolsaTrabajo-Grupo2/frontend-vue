@@ -13,12 +13,12 @@ export default {
             user: 'user'
         })
     },
-    methods: {
+    methods:{
         ...mapActions(useStore, ['addMsgArray']),
-        showDetails() {
+        showDetails(){
             this.$router.push('/show-details/offer/' + this.offer.id)
         },
-        async singUp() {
+        async singUp(){
             const apiService = new APIService(this.user.token)
             try {
                 const response = await apiService.singup(Number(this.offer.id));
@@ -40,17 +40,13 @@ export default {
 }
 </script>
 <template>
-    <tr>
-        <td>{{ offer.description }}</td>
-        <td>{{ offer.duration }}</td>
-        <td>
-            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
-                @click="singUp">Apuntarse</button>
-            <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
-                @click="this.$router.push('/users-list')">Ver candidatos</button>
-            <button class="details btn btn-info" @click="showDetails">Detalles</button>
-        </td>
-    </tr>
+    <div class="col-6 bg-secondary">
+        <h5>{{ offer.description }}</h5>
+        <p>"Jornada: " {{ offer.duration }}</p>
+        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success" @click="singUp">Apuntarse</button>
+        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success" @click="this.$router.push('/users-list/'+ offer.id)">Ver candidatos</button>
+        <button class="details btn btn-info" @click="showDetails">Detalles</button>
+    </div>    
 </template>
 <style scoped>
 .apuntarse {

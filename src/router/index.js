@@ -55,7 +55,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/users-list',
+      path: '/users-list/:id',
       name: 'users-list',
       component: UsersListVue,
       props: true,
