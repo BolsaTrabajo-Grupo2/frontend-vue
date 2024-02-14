@@ -22,6 +22,9 @@ export default class APIService {
     getOffersPage(page) {
         return this.apiClient.get('/offers?page='+page)
     }
+    getOfferByCIF(cif){
+        return this.apiClient.get('/offerByCIF/'+cif)
+    }
     modCompany(company) {
         return this.apiClient.put('/user/company/update/' + company.id, company)
 

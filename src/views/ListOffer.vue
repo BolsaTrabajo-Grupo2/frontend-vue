@@ -10,7 +10,8 @@ export default {
             offers: {
                 data: [],
                 prev: []
-            }
+            },
+            searchCIF: ''
         }
     },
     computed: {
@@ -26,7 +27,6 @@ export default {
         try {
             const response = await apiService.getOffers()
             this.offers = response.data
-            console.log(this.offers)
         } catch (error) {
 
         }
@@ -52,6 +52,16 @@ export default {
             } catch (error) {
                 
             }
+        },
+        async searchByCIF(){
+            const apiService = new APIService(this.user.token)
+            try {
+                const responseCIF = await apiService.getOfferByCIF(this.searchByCIF)
+                console.log(responseCIF)
+                this.offers = responseCIF.data
+            } catch (error) {
+                
+            }
         }
     }
 }
@@ -60,6 +70,10 @@ export default {
 <template>
     <div class="container">
         <h1>Listado de ofertas</h1>
+        <form @submit.prevent="searchByCIF">
+            <input type="text" v-model="searchCIF" placeholder="Buscar por CIF...">
+            <button type="submit">Buscar</button>
+        </form>
         <div class="row" v-if="this.offers.data.length > 0">
             <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
             <div>
