@@ -1,9 +1,9 @@
 <script>
 
-import { RouterLink, RouterView } from 'vue-router'
 import { useStore } from './stores/store';
 import { mapActions, mapState } from 'pinia';
 import AppMessage from './components/AppMessage.vue'
+import AppMenu from './components/AppMenu.vue';
 
 export default {
   methods: {
@@ -16,10 +16,16 @@ export default {
   computed: {
     ...mapState(useStore, {
       messages: 'messages',
-  })
+      user: 'user'
+  }),
+  isAuthenticated() {
+      // Verificar si el usuario está autenticado
+      return this.user && Object.values(this.user).length !== 0;
+    }
   },
   components: {
-    AppMessage
+    AppMessage,
+    AppMenu
   },
 }
 </script>
@@ -27,6 +33,7 @@ export default {
 <template>
   <nav>
     <h1>Bolsa Batoi</h1>
+    <app-menu v-if="isAuthenticated"></app-menu>
     <app-message v-for="(message, index) in messages" :key="message.id" :message="message" :index="index"></app-message>
   </nav>
   <RouterView/>

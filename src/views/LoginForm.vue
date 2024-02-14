@@ -103,7 +103,7 @@ export default {
         <button class="btn" @click="register()"> Registrate </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="google fb btn" @click="gitHub()">Git Hub</button>
+            <button class="github btn" @click="gitHub()">Git Hub</button>
             <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>

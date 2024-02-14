@@ -46,7 +46,6 @@ export default {
                 'Por favor, introduce una URL válida para el CV.'
             ),
             aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.'),
-            cycle: yup.array().min(1, 'Debes seleccionar al menos un ciclo.')
         });
         return {
             validationSchema,
@@ -173,7 +172,6 @@ export default {
                             <button @click="removeCycleField(index)">Eliminar</button>
                         </div>
                     </div>
-                    <ErrorMessage name="cycle" class="error" />
                 </div>
 
                 <!-- Text input-->
