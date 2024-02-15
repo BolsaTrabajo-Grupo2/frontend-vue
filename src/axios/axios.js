@@ -40,4 +40,10 @@ export default class APIService {
     singup(idOffer){
         return this.apiClient.post('/apply',idOffer)
     }
+    getStudent(email){
+        return this.apiClient.get('/studentEmail/' + email)
+    }
+    getCompanyEmail(email){
+        return this.apiClient.get('/companyEmail/'+ email)
+    }
 }
