@@ -46,4 +46,10 @@ export default class APIService {
     getCompanyEmail(email){
         return this.apiClient.get('/companyEmail/'+ email)
     }
+    deleteCompany(id){
+        return this.apiClient.delete('/companyDelete/'+ id)
+    }
+    deleteStudent(id){
+        return this.apiClient.delete('/studentDelete/'+ id)
+    }
 }

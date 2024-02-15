@@ -10,6 +10,7 @@ import ListOffer from '@/views/ListOffer.vue'
 import UsersListVue from '@/views/UsersList.vue'
 import OfferForm from '@/views/OfferForm.vue'
 import OfferDetails from '@/components/OfferDetails.vue'
+import ProfileViewVue from '@/views/ProfileView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,12 @@ const router = createRouter({
       name: 'shoe-details',
       props: true,
       component: OfferDetails,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileViewVue,
       meta: { requiresAuth: true }
     }
   ]
