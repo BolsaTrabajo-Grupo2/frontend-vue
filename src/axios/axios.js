@@ -1,23 +1,5 @@
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
-// const DEBUG = true
-
-// axios.interceptors.request.use((config) => {
-//     if (DEBUG) {
-//         console.info('Request: ', config)
-//     }
-
-//     const token = localStorage.token
-//     if (token) {
-//         config.headers['Authorization'] = 'Bearer ' + localStorage.token
-//     }
-//     return config
-// }, (error) => {
-//     if (DEBUG) {
-//         console.error('Request error: ', error)
-//     }
-//     return Promise.reject(error)
-// })
 
 export default class APIService {
     constructor(token) {
@@ -28,7 +10,23 @@ export default class APIService {
                 Authorization: 'Bearer ' + token,
             }
         });
+        this.setupInterceptors(token)
     }
+
+    setupInterceptors(token) {
+        this.apiClient.interceptors.request.use(
+            (config) => {
+                if (token) {
+                    config.headers['Authorization'] = `Bearer ` + token;
+                }
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+    }
+
     modStudent(student) {
         return this.apiClient.put('/user/student/update/' + student.id, student)
     }
