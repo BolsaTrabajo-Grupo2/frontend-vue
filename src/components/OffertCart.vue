@@ -2,7 +2,6 @@
 import { useStore } from '@/stores/store';
 import { mapState, mapActions } from 'pinia';
 import APIService from '../axios/axios.js'
-import { resolveTransitionHooks } from 'vue';
 
 export default {
     props: {

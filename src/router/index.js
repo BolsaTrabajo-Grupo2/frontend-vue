@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useStore } from '@/stores/store';
+import { useStore } from '@/stores/store'
 import StudentForm from '@/views/StudentForm.vue'
 import HomeView from '@/views/Home.vue'
 import LoginForm from '@/views/LoginForm.vue'
@@ -10,6 +10,7 @@ import ListOffer from '@/views/ListOffer.vue'
 import UsersListVue from '@/views/UsersList.vue'
 import OfferForm from '@/views/OfferForm.vue'
 import OfferDetails from '@/components/OfferDetails.vue'
+import ProfileViewVue from '@/views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,19 +74,25 @@ const router = createRouter({
       props: true,
       component: OfferDetails,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileViewVue,
+      meta: { requiresAuth: true }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  const store = useStore();
-  const isAuthenticated = store.user && Object.values(store.user).length !== 0;
+  const store = useStore()
+  const isAuthenticated = store.user && Object.values(store.user).length !== 0
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/'); 
+    next('/')
   } else {
-    next(); 
+    next()
   }
-});
+})
 
 export default router
