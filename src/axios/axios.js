@@ -73,4 +73,10 @@ export default class APIService {
     deleteStudent(id){
         return this.apiClient.delete('/studentDelete/'+ id)
     }
+    softDelet(id){
+        return this.apiClient.delete('/offersDelete/'+ id)
+    }
+    deshabiliti(id){
+        return this.apiClient.put('/offersDeactivate/'+ id)
+    }
 }

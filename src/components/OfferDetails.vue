@@ -49,13 +49,31 @@ export default {
             } catch (error) {
                 this.addMsgArray('Danger', 'Ya estas apuntado a la oferta')
             }
+        },
+        async softDelete(){
+            const apiService = new APIService(this.user.token)
+            try {
+                await apiService.softDelet(Number(this.offer.id));
+                this.$router.push('/listOffers')
+            } catch (error) {
+                this.addMsgArray('Danger', 'No se pudo eliminar la oferta')
+            }
+        },
+        async deshablitar(){
+            const apiService = new APIService(this.user.token)
+            try {
+                await apiService.deshabiliti(Number(this.offer.id));
+                this.$router.push('/listOffers')
+            } catch (error) {
+                this.addMsgArray('Danger', 'No se pudo deshabilitar la oferta')
+            }
         }
     }
 }
 </script>
 <template>
     <div class="row">
-        <div class="col-md-6 details" >
+        <div class="col-md-6 details">
             <h5>{{ offer.description }}</h5>
             <p><span>Duracion: </span>{{ offer.duration }}</p>
             <p><span>Persona de contacto: </span>{{ offer.responsibleName }}</p>
@@ -68,6 +86,10 @@ export default {
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
                 @click="this.$router.push('/users-list/' + offer.id)">Ver
                 candidatos</button>
+            <button v-if="this.user.rol == 'COMP'" class="apuntarse btn btn-success"
+                @click="softDelete">Eliminar</button>
+            <button v-if="this.user.rol == 'COMP'" class="apuntarse btn btn-success"
+                @click="deshablitar">Deshabilitar</button>
         </div>
     </div>
 </template>
@@ -86,7 +108,8 @@ export default {
 .details p {
     margin-bottom: 5px;
 }
-.details span{
+
+.details span {
     font-weight: bold;
 }
 
@@ -94,7 +117,8 @@ export default {
     margin-top: 10px;
     background-color: #448694;
 }
-.apuntarse:hover{
+
+.apuntarse:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
