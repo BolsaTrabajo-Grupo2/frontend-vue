@@ -55,25 +55,47 @@ export default {
 </script>
 <template>
     <div class="row">
-        <div class="col-6 bg-secondary">
+        <div class="col-md-6 details" >
             <h5>{{ offer.description }}</h5>
-            <p>Duracion: {{ offer.duration }}</p>
-            <p>Persona de contacto: {{ offer.responsibleName }}</p>
-            <p>Nombre de la empresa: {{ company.companyName }}</p>
-            <p>Direccion: {{ company.direccion }}</p>
-            <p>Telefono de contacto: {{ company.telefono }}</p>
-            <p>Pagina web: {{ company.web }}</p>
+            <p><span>Duracion: </span>{{ offer.duration }}</p>
+            <p><span>Persona de contacto: </span>{{ offer.responsibleName }}</p>
+            <p><span>Nombre de la empresa: </span>{{ company.companyName }}</p>
+            <p><span>Direccion: </span>{{ company.direccion }}</p>
+            <p><span>Telefono de contacto: </span>{{ company.telefono }}</p>
+            <p><span>Pagina web: </span>{{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
                 @click="singUp">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
-            @click="this.$router.push('/users-list/'+ offer.id)">Ver
+                @click="this.$router.push('/users-list/' + offer.id)">Ver
                 candidatos</button>
         </div>
     </div>
 </template>
 <style scoped>
+.details {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.details h5 {
+    margin-bottom: 10px;
+}
+
+.details p {
+    margin-bottom: 5px;
+}
+.details span{
+    font-weight: bold;
+}
+
 .apuntarse {
-    margin-right: 5px;
+    margin-top: 10px;
+    background-color: #448694;
+}
+.apuntarse:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .btn {
