@@ -2,7 +2,7 @@
 import OffertCart from '@/components/OffertCart.vue'
 import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 
 export default {
     data() {
@@ -32,7 +32,7 @@ export default {
         }
     },
     methods:{
-        
+        ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async nextPage(){
             const apiService = new APIService(this.user.token)
             try {
@@ -54,13 +54,15 @@ export default {
             }
         },
         async searchByCIF(){
+       
             const apiService = new APIService(this.user.token)
             try {
-                const responseCIF = await apiService.getOfferByCIF(this.searchByCIF)
+                const responseCIF = await apiService.getOfferByCIF(this.searchCIF)
                 console.log(responseCIF)
-                this.offers = responseCIF.data
+                this.offers.data = responseCIF.data
+                console.log(this.offers.data)
             } catch (error) {
-                
+                this.addMsgArray('danger',error)
             }
         }
     }
