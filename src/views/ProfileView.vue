@@ -1,6 +1,6 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import APIService from '../axios/axios.js'
 
 export default {
@@ -29,6 +29,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(useStore, ['cleanUser']),
         edit() {
             if (this.user.rol === 'COMP') {
                 this.$router.push('/company-mod/' + Number(this.usuario.id))
@@ -40,10 +41,13 @@ export default {
             const apiService = new APIService(this.user.token)
             try {
                 if (this.user.rol === 'COMP') {
-                    await apiService.deleteCompany(this.usuario.id)
+                    await apiService.deleteCompany(this.usuario.CIF)
                 } else if (this.user.rol === 'STU') {
                     await apiService.deleteStudent(this.usuario.id)
                 }
+                localStorage.clear()
+                this.cleanUser()
+                this.$router.push('/')
             } catch (error) {
                 alert(error)
             }
@@ -83,10 +87,6 @@ export default {
                     <div v-if="user.rol === 'STU'" class="col-md-6">
                         <p><strong>Dirección:</strong> {{ this.usuario.address }} </p>
                         <p><strong>Curriculum Link:</strong> {{ this.usuario.cv_link }} </p>
-                    </div>
-                    <div v-if="user.rol === 'STU'" class="col-6">
-                        <button class="btn btn-info">Editar Perfil</button>
-                        <button class="btn btn-danger mt-2">Eliminar Perfil</button>
                     </div>
                     <div class="col-6">
                         <button class="btn btn-info" @click="edit">Editar Perfil</button>
