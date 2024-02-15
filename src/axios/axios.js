@@ -1,6 +1,23 @@
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
+// const DEBUG = true
 
+// axios.interceptors.request.use((config) => {
+//     if (DEBUG) {
+//         console.info('Request: ', config)
+//     }
+
+//     const token = localStorage.token
+//     if (token) {
+//         config.headers['Authorization'] = 'Bearer ' + localStorage.token
+//     }
+//     return config
+// }, (error) => {
+//     if (DEBUG) {
+//         console.error('Request error: ', error)
+//     }
+//     return Promise.reject(error)
+// })
 
 export default class APIService {
     constructor(token) {
