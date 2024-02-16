@@ -79,4 +79,7 @@ export default class APIService {
     deshabiliti(id){
         return this.apiClient.put('/offersDeactivate/'+ id)
     }
+    getStudentCycle(id){
+        return this.apiClient.get('/studentCicles/'+ id)
+    }
 }
