@@ -314,6 +314,7 @@ body {
   line-height: 24px;
   display: block;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .formbold-checkbox-label {
