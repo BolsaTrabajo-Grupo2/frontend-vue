@@ -46,6 +46,9 @@ export default {
                 'Por favor, introduce una URL válida para el CV.'
             ),
             aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.'),
+            cycle: yup.string().test('minLength', 'Debe seleccionar al menos un ciclo', function (value) {
+                return value.length >= 2;
+            })
         });
         return {
             validationSchema,
@@ -97,127 +100,127 @@ export default {
 </script>
 
 <template>
-        <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
-            <fieldset>
-                <legend>Registrarse</legend>
+    <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
+        <fieldset>
+            <legend>Registrarse</legend>
 
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Nombre</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="nombre" placeholder="nombre" class="form-control" type="text"
-                                v-model="student.name" />
-                            <ErrorMessage name="nombre" class="error" />
-                        </div>
+            <div class="form-group">
+                <label class="col-md-8 control-label">Nombre</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="nombre" placeholder="nombre" class="form-control" type="text" v-model="student.name" />
+                        <ErrorMessage name="nombre" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Apellido</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname" />
-                            <ErrorMessage name="apellidos" class="error" />
-                        </div>
+            <div class="form-group">
+                <label class="col-md-8 control-label">Apellido</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
+                            v-model="student.surname" />
+                        <ErrorMessage name="apellidos" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-8 control-label">E-Mail</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="email" placeholder="email" class="form-control" type="email"
-                                v-model="student.email" />
-                            <ErrorMessage name="email" class="error" />
-                        </div>
+            <div class="form-group">
+                <label class="col-md-8 control-label">E-Mail</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="email" placeholder="email" class="form-control" type="email" v-model="student.email" />
+                        <ErrorMessage name="email" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Contraseña</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
-                                v-model="student.password" />
-                            <ErrorMessage name="contraseña" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Contraseña</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
+                            v-model="student.password" />
+                        <ErrorMessage name="contraseña" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Repetir Contraseña</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="repetirContraseña" placeholder="repetir contraseña" class="form-control"
-                                type="password" />
-                            <ErrorMessage name="repetirContraseña" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Repetir Contraseña</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="repetirContraseña" placeholder="repetir contraseña" class="form-control"
+                            type="password" />
+                        <ErrorMessage name="repetirContraseña" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
-                    <label class="col-md-8 control-label">Ciclo</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <select name="cycle" v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
-                                <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
-                            </select>
-                            <input type="date" v-model="cycleField.date" class="form-control" />
-                            <button @click="removeCycleField(index)">Eliminar</button>
-                        </div>
+            <!-- Text input-->
+            <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
+                <label class="col-md-8 control-label">Ciclo</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field as="select" name="cycle" v-model="cycleField.selectedCycle" class="form-control"
+                            @change="addCycleField(index)">
+                            <option value="">Seleccionar ciclo</option>
+                            <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
+                        </Field>
+                        <input type="date" v-model="cycleField.date" class="form-control" />
+                        <button @click="removeCycleField(index)">Eliminar</button>
+                        <ErrorMessage name="cycle" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Dirección</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address" />
-                            <ErrorMessage name="direccion" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Dirección</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="direccion" placeholder="direccion" class="form-control" type="text"
+                            v-model="student.address" />
+                        <ErrorMessage name="direccion" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Link Curriculum</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
-                        </div>
-                        <ErrorMessage name="cv" class="error" />
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Link Curriculum</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
                     </div>
+                    <ErrorMessage name="cv" class="error" />
                 </div>
+            </div>
 
-                <!-- Text area -->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Términos y Condiciones</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
-                            <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
-                        </div>
-                        <ErrorMessage name="aceptar" class="error" />
+            <!-- Text area -->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Términos y Condiciones</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field class="form-check-input" name="aceptar" type="checkbox" :value="false" />
+                        <label class="form-check-label" for="aceptar">Acepto los términos y condiciones</label>
                     </div>
+                    <ErrorMessage name="aceptar" class="error" />
                 </div>
+            </div>
 
-                <!-- Button -->
-                <div class="form-group">
-                    <label class="col-md-8 control-label"></label>
-                    <div class="col-md-8">
-                        <button type="submit" class="btn btn-warning">Registrarse <span
-                                class="glyphicon glyphicon-send"></span></button>
-                    </div>
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-8 control-label"></label>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-warning">Registrarse <span
+                            class="glyphicon glyphicon-send"></span></button>
                 </div>
-            </fieldset>
-        </Form>
+            </div>
+        </fieldset>
+    </Form>
 </template>
 
 <style scoped>
@@ -226,8 +229,10 @@ export default {
     margin: auto;
     padding: 20px;
     border-radius: 10px;
-    background-color: #f8f9fa; /* Color de fondo */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    background-color: #f8f9fa;
+    /* Color de fondo */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    /* Sombra */
 }
 
 .form-group {
@@ -279,5 +284,4 @@ label {
     background-color: #e0a800;
     border-color: #d39e00;
 }
-
 </style>
