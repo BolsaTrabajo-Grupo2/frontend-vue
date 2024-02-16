@@ -46,7 +46,6 @@ export default {
                 'Por favor, introduce una URL válida para el CV.'
             ),
             aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.'),
-            cycle: yup.array().min(1, 'Debes seleccionar al menos un ciclo.')
         });
         return {
             validationSchema,
@@ -98,7 +97,6 @@ export default {
 </script>
 
 <template>
-    <div class="container">
         <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
             <fieldset>
                 <legend>Registrarse</legend>
@@ -173,7 +171,6 @@ export default {
                             <button @click="removeCycleField(index)">Eliminar</button>
                         </div>
                     </div>
-                    <ErrorMessage name="cycle" class="error" />
                 </div>
 
                 <!-- Text input-->
@@ -221,7 +218,6 @@ export default {
                 </div>
             </fieldset>
         </Form>
-    </div>
 </template>
 
 <style scoped>

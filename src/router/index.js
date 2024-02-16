@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useStore } from '@/stores/store';
+import { useStore } from '@/stores/store'
 import StudentForm from '@/views/StudentForm.vue'
 import HomeView from '@/views/Home.vue'
 import LoginForm from '@/views/LoginForm.vue'
@@ -10,6 +10,7 @@ import ListOffer from '@/views/ListOffer.vue'
 import UsersListVue from '@/views/UsersList.vue'
 import OfferForm from '@/views/OfferForm.vue'
 import OfferDetails from '@/components/OfferDetails.vue'
+import ProfileViewVue from '@/views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,8 +18,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true }
+      component: HomeView
     },
     {
       path: '/',
@@ -28,8 +28,7 @@ const router = createRouter({
     {
       path: '/student-add',
       name: 'student-add',
-      component: StudentForm,
-      meta: { requiresAuth: true }
+      component: StudentForm
     },
     {
       path: '/student-mod/:id',
@@ -41,8 +40,7 @@ const router = createRouter({
     {
       path: '/company-add',
       name: 'company-add',
-      component: CompanyForm,
-      meta: { requiresAuth: true }
+      component: CompanyForm
     },
     {
       path: '/company-mod/:id',
@@ -58,9 +56,10 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/users-list',
+      path: '/users-list/:id',
       name: 'users-list',
       component: UsersListVue,
+      props: true,
       meta: { requiresAuth: true }
     },
     {
@@ -73,22 +72,27 @@ const router = createRouter({
       path: '/show-details/offer/:id',
       name: 'shoe-details',
       props: true,
-      component: OfferDetails
+      component: OfferDetails,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileViewVue,
+      meta: { requiresAuth: true }
     }
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  const store = useStore()
+  const isAuthenticated = store.user && Object.values(store.user).length !== 0
 
-// router.beforeEach((to, from, next) => {
-//   const store = useStore();
-//   console.log("Usuario en el store:", store.user);
-//   const isAuthenticated = store.user;
-
-//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-//     router.push('/'); 
-//   } else {
-//     next(); 
-//   }
-// });
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/')
+  } else {
+    next()
+  }
+})
 
 export default router

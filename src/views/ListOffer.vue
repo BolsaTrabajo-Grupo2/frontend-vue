@@ -2,66 +2,78 @@
 import OffertCart from '@/components/OffertCart.vue'
 import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 
 export default {
     data() {
         return {
-            offers: [], // Inicializar como una matriz vacía
-            currentPage: 1,
-            pageSize: 10,
-            totalRecords: 0,
-            paginationLinks: {
-                prev: null,
-                next: null
-            }
+            offers: {
+                data: [],
+                prev: []
+            },
+            searchCP: ''
         }
     },
     computed: {
         ...mapState(useStore, {
             user: 'user'
         }),
-        totalPages() {
-            return Math.ceil(this.totalRecords / this.pageSize);
-        },
-        paginatedOffers() {
-            const start = (this.currentPage - 1) * this.pageSize;
-            const end = start + this.pageSize;
-            return this.offers.slice(start, end);
-        }
     },
     components: {
         OffertCart,
     },
     async mounted() {
-        await this.fetchOffers();
-        this.currentPage = 1;
+        const apiService = new APIService(this.user.token)
+        try {
+            const response = await apiService.getOffers()
+            this.offers = response.data
+        } catch (error) {
+
+        }
     },
     methods: {
-        async fetchOffers() {
-            const apiService = new APIService(this.user.token);
-            try {
-                const response = await apiService.getOffers({
-                    page: this.currentPage
-                });
-                this.offers = response.data.data;
-                this.totalRecords = response.data.total_records;
-                this.paginationLinks = response.data.links;
-            } catch (error) {
-                alert(error);
-            }
-        },
+        ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async nextPage() {
-            if (this.paginationLinks.next) {
-                this.currentPage++;
-                await this.fetchOffers();
+            const apiService = new APIService(this.user.token)
+            try {
+                let page = this.offers.current_page + 1
+                const responseNext = await apiService.getOffersPage(page)
+                this.offers = responseNext.data
+            } catch (error) {
+
             }
         },
         async prevPage() {
-            if (this.paginationLinks.prev) {
-                this.currentPage--;
-                await this.fetchOffers();
+            const apiService = new APIService(this.user.token)
+            try {
+                let page = this.offers.current_page - 1
+                const responseNext = await apiService.getOffersPage(page)
+                this.offers = responseNext.data
+            } catch (error) {
+
             }
+        },
+        async searchByCIF() {
+
+            const apiService = new APIService(this.user.token)
+            try {
+                if (this.searchCP != '') {
+                    const responseCIF = await apiService.getOfferByCP(this.searchCP)
+                    this.offers = responseCIF.data
+                } else {
+                    const response = await apiService.getOffers()
+                    this.offers = response.data
+                }
+
+            } catch (error) {
+                this.addMsgArray('danger', error)
+            }
+        },
+        orderByDurationLargo() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => offer1.duration.localeCompare(offer2.duration))
+        },
+        orderByDurationCorto() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => offer2.duration.localeCompare(offer1.duration))
         }
     }
 }
@@ -69,14 +81,33 @@ export default {
 
 <template>
     <div class="container">
-        <h1>Listado de ofertas</h1>
         <div class="row">
-            <offert-cart v-for="offer in paginatedOffers" :offer="offer" :key="offer.CIF"></offert-cart>
-        </div>
-        <div>
-            <button @click="prevPage" :disabled="!paginationLinks.prev">Anterior</button>
-            <span>Página {{ currentPage }} de {{ totalPages }}</span>
-            <button @click="nextPage" :disabled="!paginationLinks.next">Siguiente</button>
+            <h1>Listado de ofertas</h1>
+            <form @submit.prevent="searchByCIF" class="cif">
+                <input type="text" v-model="searchCP" placeholder="Buscar por CP...">
+                <button type="submit" class="buscar">Buscar</button>
+            </form>
+            <div class="order-buttons row justify-content-md-center">
+                <div class="col-md-6">
+                    <button @click="orderByDurationLargo" class="btn btn-success btn-block mb-2">Ordenar por contrato más
+                        largo</button>
+                </div>
+                <div class="col-md-6">
+                    <button @click="orderByDurationCorto" class="btn btn-danger btn-block">Ordenar por contrato más
+                        corto</button>
+                </div>
+            </div>
+            <div class="row" v-if="this.offers.data.length > 0">
+                <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
+                <div class="paginas">
+                    <button @click="prevPage" :disabled="this.offers.links.prev[0] == null">Anterior</button>
+                    <span>Página {{ this.offers.current_page }} de {{ this.offers.total_pages }}</span>
+                    <button @click="nextPage" :disabled="this.offers.links.next[0] == null">Siguiente</button>
+                </div>
+            </div>
+            <div v-else class="row">
+                <h3>No tienen ofertas para ver</h3>
+            </div>
         </div>
     </div>
 </template>
@@ -84,5 +115,56 @@ export default {
 <style scoped>
 .container {
     text-align: center;
+    max-width: 70%;
+}
+
+.cif {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.cif input[type="text"] {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.cif .buscar {
+    padding: 8px 20px;
+    background-color: #f984ea;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cif .buscar:hover {
+    background-color: #cc10b3;
+}
+
+.paginas {
+    margin-top: 10px;
+}
+
+.paginas button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 5px;
+}
+
+.paginas button:hover {
+    background-color: #0056b3;
+}
+
+.paginas button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 </style>

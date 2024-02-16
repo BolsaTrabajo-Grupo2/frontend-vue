@@ -44,6 +44,9 @@ export const useStore = defineStore('store', {
     clearErrorMessages(index) {
       this.messages.splice(index, 1)
     },
+    cleanUser(){
+      this.user = null
+    }
   },
 
   getters: {

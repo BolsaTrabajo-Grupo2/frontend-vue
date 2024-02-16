@@ -56,7 +56,6 @@ export default {
         ...mapActions(useStore, ['addUser', 'addMsgArray']),
         async logIng() {
             try {
-                await this.$refs.form.validate();
                 const response = await axios.post(SERVER + '/login', this.user)
                 localStorage.setItem('user', JSON.stringify(response.data))
                 this.addUser(response.data)
@@ -75,7 +74,7 @@ export default {
                 const authWindow = window.open('http://127.0.0.1/auth/github');
 
             } catch (error) {
-                console.error('Error durante la autenticación con GitHub:', error);
+                this.addMsgArray('danger','Error al autenticarse por github, pruebe mas tarde o de otra manera')
             }
         },
         async google() {
@@ -84,7 +83,20 @@ export default {
                 const authWindow = window.open('http://localhost/auth/google');
 
             } catch (error) {
-                console.error('Error durante la autenticación con GitHub:', error);
+                this.addMsgArray('danger','Error al autenticarse por google, pruebe mas tarde o de otra manera')
+            }
+        },
+        async recover(){
+            if(this.user.email == ''){
+                this.addMsgArray('danger','Para poder enviar el email necesitas introducir el email')
+            }else{
+                try {
+                    const response = await axios.get(SERVER + '/sendEmail/'+ this.user.email)
+                    console.log(response)
+                    this.addMsgArray('success','Email para recuperar la contraseña enviado con exito, revise su correo')
+                } catch (error) {
+                    this.addMsgArray('danger','Eres un administrador no puedes recuperar contraseña')
+                }
             }
         }
     }
@@ -101,9 +113,11 @@ export default {
         <button class="btn" type="submit">Log in</button>
         <h3>¿No tienes cuenta?</h3>
         <button class="btn" @click="register()"> Registrate </button>
+        <h3>¿Te has olvidado de la contraseña?</h3>
+        <button class="btn" @click="recover()"> Pulsa aqui para cambiarla </button>
         <h6>Más opciones</h6>
         <div class="social">
-            <button class="google fb btn" @click="gitHub()">Git Hub</button>
+            <button class="github btn" @click="gitHub()">Git Hub</button>
             <button class="google fb btn" @click="google()">Google+</button>
         </div>
     </form>
