@@ -101,7 +101,6 @@ export default {
 </script>
 
 <template>
-    <div class="container">
         <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
         <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
             <fieldset>
@@ -214,7 +213,6 @@ export default {
                 </div>
             </fieldset>
         </Form>
-    </div>
 </template>
 <style>
 .container {

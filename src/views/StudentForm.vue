@@ -97,7 +97,6 @@ export default {
 </script>
 
 <template>
-    <div class="container">
         <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
             <fieldset>
                 <legend>Registrarse</legend>
@@ -219,7 +218,6 @@ export default {
                 </div>
             </fieldset>
         </Form>
-    </div>
 </template>
 
 <style scoped>

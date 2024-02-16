@@ -73,7 +73,7 @@ export default {
 </script>
 <template>
     <div class="row">
-        <div class="col-md-6 details">
+        <div class="details">
             <h5>{{ offer.description }}</h5>
             <p><span>Duracion: </span>{{ offer.duration }}</p>
             <p><span>Persona de contacto: </span>{{ offer.responsibleName }}</p>

@@ -58,7 +58,6 @@ export default {
 </script>
 
 <template>
-    <div class="container mt-5">
         <div class="card">
             <div class="card-header">
                 <h2 class="text-center">Perfil de Usuario</h2>
@@ -95,7 +94,6 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <style scoped></style>

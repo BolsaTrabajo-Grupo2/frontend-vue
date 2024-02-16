@@ -11,7 +11,7 @@ export default {
                 data: [],
                 prev: []
             },
-            searchCIF: ''
+            searchCP: ''
         }
     },
     computed: {
@@ -57,13 +57,23 @@ export default {
 
             const apiService = new APIService(this.user.token)
             try {
-                const responseCIF = await apiService.getOfferByCIF(this.searchCIF)
-                console.log(responseCIF)
-                this.offers.data = responseCIF.data
-                console.log(this.offers.data)
+                if (this.searchCP != '') {
+                    const responseCIF = await apiService.getOfferByCP(this.searchCP)
+                    this.offers = responseCIF.data
+                } else {
+                    const response = await apiService.getOffers()
+                    this.offers = response.data
+                }
+
             } catch (error) {
                 this.addMsgArray('danger', error)
             }
+        },
+        orderByDurationLargo() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => offer1.duration.localeCompare(offer2.duration))
+        },
+        orderByDurationCorto() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => offer2.duration.localeCompare(offer1.duration))
         }
     }
 }
@@ -71,21 +81,33 @@ export default {
 
 <template>
     <div class="container">
-        <h1>Listado de ofertas</h1>
-        <form @submit.prevent="searchByCIF" class="cif">
-            <input type="text" v-model="searchCIF" placeholder="Buscar por CIF...">
-            <button type="submit" class="buscar">Buscar</button>
-        </form>
-        <div class="row" v-if="this.offers.data.length > 0">
-            <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
-            <div class="paginas">
-                <button @click="prevPage" :disabled="this.offers.links.prev[0] == null">Anterior</button>
-                <span>Página {{ this.offers.current_page }} de {{ this.offers.total_pages }}</span>
-                <button @click="nextPage" :disabled="this.offers.links.next[0] == null">Siguiente</button>
+        <div class="row">
+            <h1>Listado de ofertas</h1>
+            <form @submit.prevent="searchByCIF" class="cif">
+                <input type="text" v-model="searchCP" placeholder="Buscar por CP...">
+                <button type="submit" class="buscar">Buscar</button>
+            </form>
+            <div class="order-buttons row justify-content-md-center">
+                <div class="col-md-6">
+                    <button @click="orderByDurationLargo" class="btn btn-success btn-block mb-2">Ordenar por contrato más
+                        largo</button>
+                </div>
+                <div class="col-md-6">
+                    <button @click="orderByDurationCorto" class="btn btn-danger btn-block">Ordenar por contrato más
+                        corto</button>
+                </div>
             </div>
-        </div>
-        <div v-else class="row">
-            <h3>No tienen ofertas para ver</h3>
+            <div class="row" v-if="this.offers.data.length > 0">
+                <offert-cart v-for="offer in this.offers.data" :offer="offer" :key="offer.CIF"></offert-cart>
+                <div class="paginas">
+                    <button @click="prevPage" :disabled="this.offers.links.prev[0] == null">Anterior</button>
+                    <span>Página {{ this.offers.current_page }} de {{ this.offers.total_pages }}</span>
+                    <button @click="nextPage" :disabled="this.offers.links.next[0] == null">Siguiente</button>
+                </div>
+            </div>
+            <div v-else class="row">
+                <h3>No tienen ofertas para ver</h3>
+            </div>
         </div>
     </div>
 </template>
@@ -93,6 +115,7 @@ export default {
 <style scoped>
 .container {
     text-align: center;
+    max-width: 70%;
 }
 
 .cif {
