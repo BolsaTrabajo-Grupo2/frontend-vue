@@ -39,7 +39,7 @@ export default {
 }
 </script>
 <template>
-    <div class="col-sm-12 col-md-4 cart">
+    <div class="col-sm-12 col-md-6 col-lg-4 cart">
         <h5>{{ offer.description }}</h5>
         <p class="duracion">Duracion:  {{ offer.duration }}</p>
         <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn" @click="singUp">Apuntarse</button>

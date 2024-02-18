@@ -88,6 +88,7 @@ export default {
       const apiService = new APIService(this.user.token)
       try {
         const response = apiService.modCompany(this.company)
+        this.$router.push('/profile')
         this.addMsgArray('sucess','Empresa modificada con exito')
       } catch (error) {
         this.addMsgArray('danger', 'Error: ' + error)

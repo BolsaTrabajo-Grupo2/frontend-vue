@@ -32,7 +32,6 @@ export default {
 <template>
   <div class="container">
     <nav>
-      <h1>Bolsa Batoi</h1>
       <app-menu v-if="isAuthenticated"></app-menu>
       <app-message v-for="(message, index) in messages" :key="message.id" :message="message" :index="index"></app-message>
     </nav>
@@ -49,7 +48,7 @@ nav {
 }
 .container{
   max-width: 90%;
-  max-height: 100%;
+  height: 100%;
 }
 </style>
  

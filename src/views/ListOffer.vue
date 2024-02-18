@@ -89,11 +89,11 @@ export default {
             </form>
             <div class="order-buttons row justify-content-md-center">
                 <div class="col-md-6">
-                    <button @click="orderByDurationLargo" class="btn btn-success btn-block mb-2">Ordenar por contrato más
+                    <button @click="orderByDurationLargo" class="largo btn btn-block mb-2">Ordenar por contrato más
                         largo</button>
                 </div>
                 <div class="col-md-6">
-                    <button @click="orderByDurationCorto" class="btn btn-danger btn-block">Ordenar por contrato más
+                    <button @click="orderByDurationCorto" class="corto btn btn-block">Ordenar por contrato más
                         corto</button>
                 </div>
             </div>
@@ -142,6 +142,23 @@ export default {
 
 .cif .buscar:hover {
     background-color: #cc10b3;
+}
+
+.order-buttons .btn {
+    transition: transform 0.3s ease;
+    padding: 8px 20px;
+    background-color: #f97c52;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 5px;
+    margin-bottom: 10px;
+}
+
+.order-buttons .btn:hover {
+    transform: scale(1.05);
 }
 
 .paginas {
