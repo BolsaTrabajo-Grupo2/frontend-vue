@@ -43,6 +43,7 @@ export default {
         return {
             validationSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
+            cycleError: "",
             student: {},
             passwordStudent: '',
         }
