@@ -64,6 +64,7 @@ export default {
             if (this.validateCycleField()) {
                 try {
                     await axios.post(SERVER + '/registerStudent', this.student);
+                    this.$router.push('/')
                     this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
                 } catch (error) {
                     this.addMsgArray('danger', 'Error al añadir el registro: ' + error);
