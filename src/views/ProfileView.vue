@@ -45,9 +45,9 @@ export default {
                 } else if (this.user.rol === 'STU') {
                     await apiService.deleteStudent(this.usuario.id)
                 }
+                this.$router.push('/')
                 localStorage.clear()
                 this.cleanUser()
-                this.$router.push('/')
             } catch (error) {
                 alert(error)
             }
