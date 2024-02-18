@@ -80,22 +80,49 @@ export default {
         ...mapActions(useStore, ['addMsgArray']),
 
         async editStudent() {
-            const apiService = new APIService(this.user.token)
-            this.student.cycle = this.cycleFields;
-            this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
-            apiService.modStudent(this.student)
-                .then()
-                .catch(response => {
-                    this.addMsgArray('danger', 'Error: ' + response.message)
-                });
+            if (this.validateCycleField()) {
+                const apiService = new APIService(this.user.token)
+                this.student.cycle = this.cycleFields;
+                this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
+                apiService.modStudent(this.student)
+                    .then()
+                    .catch(response => {
+                        this.addMsgArray('danger', 'Error: ' + response.message)
+                    });
+            }
+        },
+        validateCycleField() {
+            this.cycleError = ""
+            if (this.cycleFields.length < 2) {
+                this.cycleError = "Selecciona al menos un ciclo"
+                return false;
+            }
+
+            const selectedCycles = new Set();
+
+            for (const field of this.cycleFields) {
+                if (selectedCycles.has(field.selectedCycle)) {
+                    this.cycleError = "No puedes seleccionar el mismo ciclo dos veces"
+                    return false;
+                }
+                selectedCycles.add(field.selectedCycle);
+            }
+
+            return true;
         },
         addCycleField(index) {
+            this.cycleError = ""
             if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
                 this.cycleFields.push({ selectedCycle: '', date: '' });
             }
         },
         removeCycleField(index) {
-            this.cycleFields.splice(index, 1);
+            this.cycleError = ""
+            if (this.cycleFields.length > 1) {
+                this.cycleFields.splice(index, 1);
+            } else {
+                this.cycleError = "Debes dejar al menos un ciclo seleccionado"
+            }
         },
     }
 }
