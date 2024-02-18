@@ -96,12 +96,16 @@ export default {
 
             return true;
         },
-        addCycleField(index) {
-            this.cycleError = ""
-            if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
+        addCycleField() {
+            this.cycleError = "";
+            const lastCycle = this.cycleFields[this.cycleFields.length - 1];
+            if (lastCycle.selectedCycle !== '') {
                 this.cycleFields.push({ selectedCycle: '', date: '' });
+            } else {
+                this.cycleError = "Selecciona un ciclo antes de añadir uno nuevo";
             }
         },
+
         removeCycleField(index) {
             this.cycleError = ""
             if (this.cycleFields.length > 1) {
@@ -190,17 +194,18 @@ export default {
                 <label class="col-md-8 control-label">Ciclo</label>
                 <div class="col-md-8 inputGroupContainer">
                     <div class="input-group">
-                        <select name="cycle" v-model="cycleField.selectedCycle" class="form-control"
-                            @change="addCycleField(index)">
+                        <select name="cycle" v-model="cycleField.selectedCycle" class="form-control">
                             <option value="">Seleccionar ciclo</option>
                             <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
                         </select>
                         <input type="date" v-model="cycleField.date" class="form-control" />
-                        <button @click="removeCycleField(index)">Eliminar</button>
+                        <button type="button" @click="removeCycleField(index)">Eliminar</button>
                     </div>
                 </div>
             </div>
-            <span class="error">{{ cycleError }}</span>
+            <span class="error">{{ cycleError }}</span><br>
+            <button type="button" @click="addCycleField">Añadir ciclo</button>
+
 
             <!-- Text input-->
             <div class="form-group">
