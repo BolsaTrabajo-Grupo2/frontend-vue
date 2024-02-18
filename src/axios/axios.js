@@ -37,8 +37,8 @@ export default class APIService {
     getOffersPage(page) {
         return this.apiClient.get('/offers?page='+page)
     }
-    getOfferByCIF(cif){
-        return this.apiClient.get('/offerByCIF/'+cif)
+    getOfferByCP(cif){
+        return this.apiClient.get('/offerByCP/'+cif)
     }
     modCompany(company) {
         return this.apiClient.put('/user/company/update/' + company.id, company)
@@ -78,5 +78,8 @@ export default class APIService {
     }
     deshabiliti(id){
         return this.apiClient.put('/offersDeactivate/'+ id)
+    }
+    getStudentCycle(id){
+        return this.apiClient.get('/studentCicles/'+ id)
     }
 }

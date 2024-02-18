@@ -1,12 +1,12 @@
 <script>
 import { useStore } from '@/stores/store';
 import { mapState, mapActions } from 'pinia';
+import APIService from '../axios/axios.js'
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
 import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import APIService from '../axios/axios.js'
 
 
 setLocale({
@@ -60,17 +60,18 @@ export default {
         ErrorMessage
     },
     async mounted() {
-
+        const apiService = new APIService(this.user.token);
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
                 this.addMsgArray('danger', 'Error: ' + response.message)
             });
-        await axios.get(SERVER + '/studentCicles/' + this.id)
-            .then(response => this.student.cycle = response.data)
-            .catch(response => {
-                this.addMsgArray('danger', 'Error: ' + response.message)
-            });
+        try {
+            const response = await apiService.getStudentCycle(this.id);
+            this.student.cycle = response.data
+        } catch (error) {
+            this.addMsgArray('danger', 'Error: ' + response.message)
+        }
         this.cycleFields = this.student.cycle
         this.passwordStudent = this.student.password
         this.student.password = ''
@@ -83,7 +84,7 @@ export default {
             this.student.cycle = this.cycleFields;
             this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
             apiService.modStudent(this.student)
-                .then()
+                .then(this.$router.push('/profile'))
                 .catch(response => {
                     this.addMsgArray('danger', 'Error: ' + response.message)
                 });
@@ -101,120 +102,117 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
-        <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
-            <fieldset>
-                <legend>Modificar perfil</legend>
+    <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
+    <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
+        <fieldset>
+            <legend>Modificar perfil</legend>
 
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Nombre</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="nombre" placeholder="nombre" class="form-control" type="text"
-                                v-model="student.name" />
-                            <ErrorMessage name="nombre" class="error" />
-                        </div>
+            <div class="form-group">
+                <label class="col-md-8 control-label">Nombre</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="nombre" placeholder="nombre" class="form-control" type="text" v-model="student.name" />
+                        <ErrorMessage name="nombre" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Apellido</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
-                                v-model="student.surname" />
-                            <ErrorMessage name="apellidos" class="error" />
-                        </div>
+            <div class="form-group">
+                <label class="col-md-8 control-label">Apellido</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="apellidos" placeholder="apellido" class="form-control" type="text"
+                            v-model="student.surname" />
+                        <ErrorMessage name="apellidos" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Contraseña</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
-                                v-model="student.password" />
-                            <ErrorMessage name="contraseña" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Contraseña</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="contraseña" placeholder="contraseña" class="form-control" type="password"
+                            v-model="student.password" />
+                        <ErrorMessage name="contraseña" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Repetir Contraseña</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="repetirContraseña" placeholder="repetir password" class="form-control"
-                                type="password" />
-                            <ErrorMessage name="repetirContraseña" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Repetir Contraseña</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="repetirContraseña" placeholder="repetir password" class="form-control"
+                            type="password" />
+                        <ErrorMessage name="repetirContraseña" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
-                    <label class="col-md-8 control-label">Ciclo</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
-                                <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
-                            </select>
-                            <input type="date" v-model="cycleField.date" class="form-control" />
-                            <button @click="removeCycleField(index)">Eliminar</button>
-                        </div>
+            <!-- Text input-->
+            <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
+                <label class="col-md-8 control-label">Ciclo</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
+                            <option value="">Seleccionar ciclo</option>
+                            <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
+                        </select>
+                        <input type="date" v-model="cycleField.date" class="form-control" />
+                        <button @click="removeCycleField(index)">Eliminar</button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Dirección</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="direccion" placeholder="direccion" class="form-control" type="text"
-                                v-model="student.address" />
-                            <ErrorMessage name="direccion" class="error" />
-                        </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Dirección</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="direccion" placeholder="direccion" class="form-control" type="text"
+                            v-model="student.address" />
+                        <ErrorMessage name="direccion" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-8 control-label">Link Curriculum</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
-                        </div>
-                        <ErrorMessage name="cv" class="error" />
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-8 control-label">Link Curriculum</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field name="cv" placeholder="cv" class="form-control" type="text" v-model="student.cv_link" />
+                    </div>
+                    <ErrorMessage name="cv" class="error" />
+                </div>
+            </div>
+
+            <div class="form-group" :hidden="this.user.rol != 'RESP'">
+                <label class="col-md-8 control-label">Observaciones</label>
+                <div class="col-md-8 inputGroupContainer">
+                    <div class="input-group">
+                        <Field type="textarea" name="observaciones" placeholder="observaciones" class="form-control"
+                            v-model="student.observation" />
+                        <ErrorMessage name="direccion" class="error" />
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group" :hidden="this.user.rol != 'RESP'">
-                    <label class="col-md-8 control-label">Observaciones</label>
-                    <div class="col-md-8 inputGroupContainer">
-                        <div class="input-group">
-                            <Field type="textarea" name="observaciones" placeholder="observaciones" class="form-control"
-                                v-model="student.observation" />
-                            <ErrorMessage name="direccion" class="error" />
-                        </div>
-                    </div>
+
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-8 control-label"></label>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-warning">Modificar<span
+                            class="glyphicon glyphicon-send"></span></button>
                 </div>
-
-
-
-                <!-- Button -->
-                <div class="form-group">
-                    <label class="col-md-8 control-label"></label>
-                    <div class="col-md-8">
-                        <button type="submit" class="btn btn-warning">Modificar<span
-                                class="glyphicon glyphicon-send"></span></button>
-                    </div>
-                </div>
-            </fieldset>
-        </Form>
-    </div>
+            </div>
+        </fieldset>
+    </Form>
 </template>
 <style>
 .container {

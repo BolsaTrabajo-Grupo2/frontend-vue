@@ -73,22 +73,22 @@ export default {
 </script>
 <template>
     <div class="row">
-        <div class="col-md-6 details">
+        <div class="details col-12">
             <h5>{{ offer.description }}</h5>
             <p><span>Duracion: </span>{{ offer.duration }}</p>
             <p><span>Persona de contacto: </span>{{ offer.responsibleName }}</p>
             <p><span>Nombre de la empresa: </span>{{ company.companyName }}</p>
             <p><span>Direccion: </span>{{ company.direccion }}</p>
             <p><span>Telefono de contacto: </span>{{ company.telefono }}</p>
-            <p><span>Pagina web: </span>{{ company.web }}</p>
+            <p style="word-wrap: break-word;"><span>Pagina web: </span>{{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
                 @click="singUp">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
                 @click="this.$router.push('/users-list/' + offer.id)">Ver
                 candidatos</button>
-            <button v-if="this.user.rol == 'COMP'" class="apuntarse btn btn-success"
+            <button v-if="this.user.rol == 'COMP'" class="eliminar btn btn-success"
                 @click="softDelete">Eliminar</button>
-            <button v-if="this.user.rol == 'COMP'" class="apuntarse btn btn-success"
+            <button v-if="this.user.rol == 'COMP'" class="deshablitar btn btn-success"
                 @click="deshablitar">Deshabilitar</button>
         </div>
     </div>
@@ -99,6 +99,7 @@ export default {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
 }
 
 .details h5 {
@@ -114,8 +115,13 @@ export default {
 }
 
 .apuntarse {
-    margin-top: 10px;
-    background-color: #448694;
+    background-color: #7fc7d5;
+}
+.eliminar{
+    background-color: #e52222;
+}
+.deshablitar{
+    background-color: #c131ae;
 }
 
 .apuntarse:hover {
@@ -123,6 +129,9 @@ export default {
 }
 
 .btn {
+    margin-top: 10px;
+    margin-right: 10px;
     margin-bottom: 10px;
+    border: none;
 }
 </style>

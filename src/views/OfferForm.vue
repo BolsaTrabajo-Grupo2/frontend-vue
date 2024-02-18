@@ -48,7 +48,6 @@ export default {
 </script>
 <template>
     <h1>Formulario nueva oferta</h1>
-    <div class="container">
         <Form :initial-values="offert" :validation-schema="validationSchema" @submit="addNewOffert()">
             <div class="form-group">
                 <label for="description">Descripcion del puesto de trabajo ofertado</label><br>
@@ -85,6 +84,5 @@ export default {
             <br>
             <button type="submit" class="btn btn-primary">Guardar</button>
         </Form>
-    </div>
 </template>
 <style></style>

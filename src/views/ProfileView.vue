@@ -58,44 +58,46 @@ export default {
 </script>
 
 <template>
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">Perfil de Usuario</h2>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div v-if="user.rol === 'COMP'" class="col-md-6">
-                        <p><strong>CIF:</strong> {{ this.usuario.CIF }} </p>
-                        <p><strong>Nombre de la empresa:</strong> {{ this.usuario.company_name }} </p>
-                        <p><strong>Dirección:</strong> {{ this.usuario.address }} </p>
-                        <p><strong>Código Postal:</strong> {{ this.usuario.CP }} </p>
-                        <p><strong>Teléfono:</strong> {{ this.usuario.phone }} </p>
-                        <p><strong>Web:</strong> {{ this.usuario.web }} </p>
-                    </div>
-                    <div v-if="user.rol === 'COMP'" class="col-md-6">
-                        <h5>Responsable:</h5>
-                        <p><strong>Nombre:</strong> {{ this.usuario.name }} </p>
-                        <p><strong>Apellido:</strong> {{ this.usuario.surname }} </p>
-                        <p><strong>Email:</strong> {{ this.usuario.email }} </p>
-                    </div>
-                    <div v-if="user.rol === 'STU'" class="col-md-6">
-                        <p><strong>Nombre:</strong> {{ this.usuario.name }} </p>
-                        <p><strong>Apellido:</strong> {{ this.usuario.surname }} </p>
-                        <p><strong>Email:</strong> {{ this.usuario.email }} </p>
-                    </div>
-                    <div v-if="user.rol === 'STU'" class="col-md-6">
-                        <p><strong>Dirección:</strong> {{ this.usuario.address }} </p>
-                        <p><strong>Curriculum Link:</strong> {{ this.usuario.cv_link }} </p>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-info" @click="edit">Editar Perfil</button>
-                        <button class="btn btn-danger mt-2" @click="eliminar">Eliminar Perfil</button>
-                    </div>
+    <div class="card container">
+        <div class="card-header">
+            <h2 class="text-center">Perfil de Usuario</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div v-if="user.rol === 'COMP'" class="col-md-6">
+                    <p><strong>CIF:</strong> {{ this.usuario.CIF }} </p>
+                    <p><strong>Nombre de la empresa:</strong> {{ this.usuario.company_name }} </p>
+                    <p><strong>Dirección:</strong> {{ this.usuario.address }} </p>
+                    <p><strong>Código Postal:</strong> {{ this.usuario.CP }} </p>
+                    <p><strong>Teléfono:</strong> {{ this.usuario.phone }} </p>
+                    <p><strong>Web:</strong> {{ this.usuario.web }} </p>
+                </div>
+                <div v-if="user.rol === 'COMP'" class="col-md-6">
+                    <h5>Responsable:</h5>
+                    <p><strong>Nombre:</strong> {{ this.usuario.name }} </p>
+                    <p><strong>Apellido:</strong> {{ this.usuario.surname }} </p>
+                    <p><strong>Email:</strong> {{ this.usuario.email }} </p>
+                </div>
+                <div v-if="user.rol === 'STU'" class="col-md-6">
+                    <p><strong>Nombre:</strong> {{ this.usuario.name }} </p>
+                    <p><strong>Apellido:</strong> {{ this.usuario.surname }} </p>
+                    <p><strong>Email:</strong> {{ this.usuario.email }} </p>
+                </div>
+                <div v-if="user.rol === 'STU'" class="col-md-6">
+                    <p><strong>Dirección:</strong> {{ this.usuario.address }} </p>
+                    <p><strong>Curriculum Link:</strong> {{ this.usuario.cv_link }} </p>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-info" @click="edit">Editar Perfil</button>
+                    <button class="btn btn-danger mt-2" @click="eliminar">Eliminar Perfil</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+    max-width: 70%;
+}
+</style>
