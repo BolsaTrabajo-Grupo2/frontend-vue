@@ -85,7 +85,7 @@ export default {
                 this.student.cycle = this.cycleFields;
                 this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
                 apiService.modStudent(this.student)
-                    .then()
+                    .then(this.$router.push('/profile'))
                     .catch(response => {
                         this.addMsgArray('danger', 'Error: ' + response.message)
                     });
