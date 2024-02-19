@@ -62,6 +62,7 @@ export default {
         ...mapActions(useStore, ['addMsgArray']),
         async addStudent() {
             if (this.validateCycleField()) {
+                this.student.cycle = this.cycleFields
                 try {
                     await axios.post(SERVER + '/registerStudent', this.student);
                     this.$router.push('/')
@@ -80,7 +81,7 @@ export default {
         },
         validateCycleField() {
             this.cycleError = ""
-            if (this.cycleFields.length < 2) {
+            if (this.cycleFields.length < 1 || this.cycleFields[0].selectedCycle == "") {
                 this.cycleError = "Selecciona al menos un ciclo"
                 return false;
             }
@@ -94,7 +95,6 @@ export default {
                 }
                 selectedCycles.add(field.selectedCycle);
             }
-
             return true;
         },
         addCycleField() {
