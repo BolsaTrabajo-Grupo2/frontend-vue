@@ -109,10 +109,12 @@ export default {
 
         removeCycleField(index) {
             this.cycleError = ""
-            if (this.cycleFields.length > 1) {
-                this.cycleFields.splice(index, 1);
-            } else {
+            if (this.cycleFields.length == 1 && this.cycleFields[0].selectedCycle == "") {
                 this.cycleError = "Debes dejar al menos un ciclo seleccionado"
+            } else if (this.cycleFields.length == 1 && this.cycleFields[0].selectedCycle != "") {
+                this.cycleFields[0].selectedCycle = ""
+            } else {
+                this.cycleFields.splice(index, 1)
             }
         },
 

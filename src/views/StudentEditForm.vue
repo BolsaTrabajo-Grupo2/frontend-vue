@@ -82,6 +82,7 @@ export default {
 
         async editStudent() {
             if (this.validateCycleField()) {
+                this.student.cycle = this.cycleFields
                 const apiService = new APIService(this.user.token)
                 this.student.cycle = this.cycleFields;
                 this.student.password = this.student.password == '' ? this.passwordStudent : this.student.password;
@@ -122,10 +123,12 @@ export default {
         },
         removeCycleField(index) {
             this.cycleError = ""
-            if (this.cycleFields.length > 1) {
-                this.cycleFields.splice(index, 1);
-            } else {
+            if (this.cycleFields.length == 1 && this.cycleFields[0].selectedCycle == "") {
                 this.cycleError = "Debes dejar al menos un ciclo seleccionado"
+            } else if (this.cycleFields.length == 1 && this.cycleFields[0].selectedCycle != "") {
+                this.cycleFields[0].selectedCycle = ""
+            } else {
+                this.cycleFields.splice(index, 1)
             }
         },
     }
