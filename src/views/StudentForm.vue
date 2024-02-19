@@ -134,22 +134,22 @@ export default {
 <template>
     <div class="formbold-main-wrapper">
         <div class="formbold-form-wrapper">
-            <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
+            <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
                 <div class="formbold-form-title">
-                    <h2 class="">Añadir Empresa</h2>
+                    <h2 class="">Añadir Estudiante</h2>
                 </div>
 
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="name" class="formbold-form-label"> Nombre: </label>
-                        <Field name="name" type="text" v-model="student.name" class="formbold-form-input" /><br />
-                        <ErrorMessage name="name" class="validate-error" />
+                        <label for="nombre" class="formbold-form-label"> Nombre: </label>
+                        <Field name="nombre" type="text" v-model="student.name" class="formbold-form-input" /><br />
+                        <ErrorMessage name="nombre" class="validate-error" />
                     </div>
 
                     <div>
-                        <label for="surname" class="formbold-form-label"> Apellidos: </label>
-                        <Field name="surname" type="text" v-model="student.surname" class="formbold-form-input" /><br />
-                        <ErrorMessage name="surname" class="validate-error" />
+                        <label for="apellidos" class="formbold-form-label"> Apellidos: </label>
+                        <Field name="apellidos" type="text" v-model="student.surname" class="formbold-form-input" /><br />
+                        <ErrorMessage name="apellidos" class="validate-error" />
                     </div>
                 </div>
 
@@ -161,22 +161,22 @@ export default {
 
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="password" class="formbold-form-label"> Contraseña: </label>
-                        <Field name="password" type="text" v-model="student.password" class="formbold-form-input" /><br />
-                        <ErrorMessage name="password" class="validate-error" />
+                        <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
+                        <Field name="contraseña" type="password" v-model="student.password" class="formbold-form-input" /><br />
+                        <ErrorMessage name="contraseña" class="validate-error" />
                     </div>
 
                     <div>
-                        <label for="confirmPassword" class="formbold-form-label"> Repetir Contraseña: </label>
-                        <Field name="confirmPassword" type="text" class="formbold-form-input" /><br />
-                        <ErrorMessage name="confirmPassword" class="validate-error" />
+                        <label for="repetirContraseña" class="formbold-form-label"> Repetir Contraseña: </label>
+                        <Field name="repetirContraseña" type="password" class="formbold-form-input" /><br />
+                        <ErrorMessage name="repetirContraseña" class="validate-error" />
                     </div>
                 </div>
 
                 <div class="formbold-mb-3">
-                    <label for="address" class="formbold-form-label"> Dirección: </label>
-                    <Field name="address" type="text" v-model="student.address" class="formbold-form-input" /><br />
-                    <ErrorMessage name="address" class="validate-error" />
+                    <label for="direccion" class="formbold-form-label"> Dirección: </label>
+                    <Field name="direccion" type="text" v-model="student.address" class="formbold-form-input" /><br />
+                    <ErrorMessage name="direccion" class="validate-error" />
                 </div>
 
                 <div class="formbold-mb-3">
@@ -209,7 +209,7 @@ export default {
                 <div class="formbold-checkbox-wrapper">
                     <label for="supportCheckbox" class="formbold-checkbox-label">
                         <div class="formbold-relative">
-                            <Field type="checkbox" class="formbold-input-checkbox" id="supportCheckbox" name="accept"
+                            <Field type="checkbox" class="formbold-input-checkbox" id="supportCheckbox" name="aceptar"
                                 :value="false" />
                             <div class="formbold-checkbox-inner">
                                 <span class="formbold-opacity-0">
@@ -224,7 +224,7 @@ export default {
                         </div>
                         Acepto los términos y condiciones
                     </label>
-                    <ErrorMessage name="accept" class="validate-error" />
+                    <ErrorMessage name="aceptar" class="validate-error" />
                 </div>
 
                 <button type="submit" class="formbold-btn">Añadir</button>
