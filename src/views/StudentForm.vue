@@ -1,29 +1,29 @@
 <script>
 import { useStore } from '@/stores/store';
 import { mapState, mapActions } from 'pinia';
-import axios from 'axios'
-const SERVER = import.meta.env.VITE_URL_API
-import * as yup from 'yup'
-import { setLocale } from 'yup'
-import { Form, Field, ErrorMessage } from 'vee-validate'
+import axios from 'axios';
+const SERVER = import.meta.env.VITE_URL_API;
+import * as yup from 'yup';
+import { setLocale } from 'yup';
+import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate';
 
 setLocale({
     mixed: {
-        required: 'El campo ${path} no puede estar vacio'
+        required: 'El campo ${path} no puede estar vacío'
     },
     string: {
         min: 'Debe tener al menos ${min} caracteres',
-        max: 'Deebe tener menos de ${max} caracteres',
+        max: 'Debe tener menos de ${max} caracteres',
         email: 'El campo ${path} debe ser un correo electrónico válido'
     },
+});
 
-})
 export default {
     data() {
-        let validationSchema = yup.object({
-            confirmPassword: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
-            name: yup.string().required().max(250),
-            surname: yup.string().required().max(250),
+        const validationSchema = yup.object({
+            repetirContraseña: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes repetir la contraseña'),
+            nombre: yup.string().required().max(250),
+            apellidos: yup.string().required().max(250),
             email: yup.string()
                 .required()
                 .email()
@@ -37,24 +37,85 @@ export default {
                         return true;
                     }
                 }),
-            password: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
+            contraseña: yup.string().test('password-check', 'La contraseña no cumple con los requisitos', function (value) {
                 return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
             }),
-            address: yup.string().required(),
+            direccion: yup.string().required(),
             cv: yup.string().matches(
                 /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
                 'Por favor, introduce una URL válida para el CV.'
             ),
-            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
+            aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.'),
         });
+
         return {
             validationSchema,
             cycleFields: [{ selectedCycle: '', date: '' }],
+            cycleError: "",
             student: {
                 rol: 'STU',
-                cycle: []
+                cycle: [],
             },
-        }
+        };
+    },
+    methods: {
+        ...mapActions(useStore, ['addMsgArray']),
+        async addStudent() {
+            if (this.validateCycleField()) {
+                try {
+                    await axios.post(SERVER + '/registerStudent', this.student);
+                    this.$router.push('/')
+                    this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
+                } catch (error) {
+                    this.addMsgArray('danger', 'Error al añadir el registro: ' + error);
+                    if (error.response.status === 429) {
+                        setTimeout(() => {
+                            this.addStudent();
+                        }, 5000);
+                    } else {
+                        this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message);
+                    }
+                }
+            }
+        },
+        validateCycleField() {
+            this.cycleError = ""
+            if (this.cycleFields.length < 2) {
+                this.cycleError = "Selecciona al menos un ciclo"
+                return false;
+            }
+
+            const selectedCycles = new Set();
+
+            for (const field of this.cycleFields) {
+                if (selectedCycles.has(field.selectedCycle)) {
+                    this.cycleError = "No puedes seleccionar el mismo ciclo dos veces"
+                    return false;
+                }
+                selectedCycles.add(field.selectedCycle);
+            }
+
+            return true;
+        },
+        addCycleField() {
+            this.cycleError = "";
+            const lastCycle = this.cycleFields[this.cycleFields.length - 1];
+            if (lastCycle.selectedCycle !== '') {
+                this.cycleFields.push({ selectedCycle: '', date: '' });
+            } else {
+                this.cycleError = "Selecciona un ciclo antes de añadir uno nuevo";
+            }
+        },
+
+        removeCycleField(index) {
+            this.cycleError = ""
+            if (this.cycleFields.length > 1) {
+                this.cycleFields.splice(index, 1);
+            } else {
+                this.cycleError = "Debes dejar al menos un ciclo seleccionado"
+            }
+        },
+
     },
     computed: {
         ...mapState(useStore, {
@@ -64,57 +125,31 @@ export default {
     components: {
         Form,
         Field,
-        ErrorMessage
+        ErrorMessage,
+        FieldArray
     },
-    methods: {
-        ...mapActions(useStore, ['addMsgArray']),
-        async addStudent() {
-            this.student.cycle = this.cycleFields;
-            try {
-                await axios.post(SERVER + '/registerStudent', this.student);
-                this.addMsgArray('success', 'Compruebe su correo para activar su cuenta')
-            } catch (error) {
-                this.addMsgArray('danger', 'Error al añadir el registro: ' + error)
-                if (error.response.status === 429) {
-                    setTimeout(() => {
-                        this.addStudent();
-                    }, 5000);
-                } else {
-                    this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message)
-                }
-            }
-        },
-        addCycleField(index) {
-            if (index === this.cycleFields.length - 1 && this.cycleFields[index].selectedCycle) {
-                this.cycleFields.push({ selectedCycle: '', date: '' });
-            }
-        },
-        removeCycleField(index) {
-            this.cycleFields.splice(index, 1);
-        },
-    }
-}
+};
 </script>
 
 <template>
     <div class="formbold-main-wrapper">
         <div class="formbold-form-wrapper">
-            <Form :initial-values="student" :validation-schema="mySchema" @submit="addStudent()">
+            <Form :initial-values="student" :validation-schema="validationSchema" @submit="addStudent()">
                 <div class="formbold-form-title">
-                    <h2 class="">Añadir Empresa</h2>
+                    <h2 class="">Añadir Estudiante</h2>
                 </div>
 
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="name" class="formbold-form-label"> Nombre: </label>
-                        <Field name="name" type="text" v-model="student.name" class="formbold-form-input" /><br />
-                        <ErrorMessage name="name" class="validate-error" />
+                        <label for="nombre" class="formbold-form-label"> Nombre: </label>
+                        <Field name="nombre" type="text" v-model="student.name" class="formbold-form-input" /><br />
+                        <ErrorMessage name="nombre" class="validate-error" />
                     </div>
 
                     <div>
-                        <label for="surname" class="formbold-form-label"> Apellidos: </label>
-                        <Field name="surname" type="text" v-model="student.surname" class="formbold-form-input" /><br />
-                        <ErrorMessage name="surname" class="validate-error" />
+                        <label for="apellidos" class="formbold-form-label"> Apellidos: </label>
+                        <Field name="apellidos" type="text" v-model="student.surname" class="formbold-form-input" /><br />
+                        <ErrorMessage name="apellidos" class="validate-error" />
                     </div>
                 </div>
 
@@ -126,22 +161,22 @@ export default {
 
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="password" class="formbold-form-label"> Contraseña: </label>
-                        <Field name="password" type="text" v-model="student.password" class="formbold-form-input" /><br />
-                        <ErrorMessage name="password" class="validate-error" />
+                        <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
+                        <Field name="contraseña" type="password" v-model="student.password" class="formbold-form-input" /><br />
+                        <ErrorMessage name="contraseña" class="validate-error" />
                     </div>
 
                     <div>
-                        <label for="confirmPassword" class="formbold-form-label"> Repetir Contraseña: </label>
-                        <Field name="confirmPassword" type="text" class="formbold-form-input" /><br />
-                        <ErrorMessage name="confirmPassword" class="validate-error" />
+                        <label for="repetirContraseña" class="formbold-form-label"> Repetir Contraseña: </label>
+                        <Field name="repetirContraseña" type="password" class="formbold-form-input" /><br />
+                        <ErrorMessage name="repetirContraseña" class="validate-error" />
                     </div>
                 </div>
 
                 <div class="formbold-mb-3">
-                    <label for="address" class="formbold-form-label"> Dirección: </label>
-                    <Field name="address" type="text" v-model="student.address" class="formbold-form-input" /><br />
-                    <ErrorMessage name="address" class="validate-error" />
+                    <label for="direccion" class="formbold-form-label"> Dirección: </label>
+                    <Field name="direccion" type="text" v-model="student.address" class="formbold-form-input" /><br />
+                    <ErrorMessage name="direccion" class="validate-error" />
                 </div>
 
                 <div class="formbold-mb-3">
@@ -151,23 +186,30 @@ export default {
                 </div>
 
                 <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
-                    <label class="col-md-4 control-label">Ciclo</label>
-                    <div class="col-md-4 inputGroupContainer">
-                        <div class="input-group">
-                            <select v-model="cycleField.selectedCycle" class="form-control" @change="addCycleField(index)">
+                    <label class="formbold-form-label">Ciclo</label>
+
+                    <div class="formbold-input-flex">
+                        <div>
+                            <select name="cycle" v-model="cycleField.selectedCycle" class="formbold-form-input">
                                 <option value="">Seleccionar ciclo</option>
                                 <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
                             </select>
-                            <input type="date" v-model="cycleField.date" class="form-control" />
-                            <button @click="removeCycleField(index)">Eliminar</button>
+                        </div>
+                        <div class="date-field-container">
+                            <input type="date" v-model="cycleField.date" class="formbold-form-input" />
+                            <button type="button" @click="removeCycleField(index)"
+                                class="formbold-delete-button">Eliminar</button>
                         </div>
                     </div>
+
                 </div>
+                <span class="validate-error">{{ cycleError }}</span><br>
+                <button type="button" @click="addCycleField" class="formbold-add-button">Añadir ciclo</button>
 
                 <div class="formbold-checkbox-wrapper">
                     <label for="supportCheckbox" class="formbold-checkbox-label">
                         <div class="formbold-relative">
-                            <Field type="checkbox" class="formbold-input-checkbox" id="supportCheckbox" name="accept"
+                            <Field type="checkbox" class="formbold-input-checkbox" id="supportCheckbox" name="aceptar"
                                 :value="false" />
                             <div class="formbold-checkbox-inner">
                                 <span class="formbold-opacity-0">
@@ -182,7 +224,7 @@ export default {
                         </div>
                         Acepto los términos y condiciones
                     </label>
-                    <ErrorMessage name="accept" class="validate-error" />
+                    <ErrorMessage name="aceptar" class="validate-error" />
                 </div>
 
                 <button type="submit" class="formbold-btn">Añadir</button>
@@ -279,7 +321,7 @@ body {
     border: 1px solid #dde3ec;
     background: #ffffff;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 15px;
     color: #536387;
     outline: none;
     resize: none;
@@ -290,12 +332,17 @@ body {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
 
+.formbold-checkbox-wrapper {
+    margin-top: 15px;
+}
+
 .formbold-form-label {
     color: #536387;
     font-size: 14px;
     line-height: 24px;
     display: block;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .formbold-checkbox-label {
@@ -352,7 +399,98 @@ body {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
 
-.validate-error {
-    color: red;
+.form-group {
+    margin-bottom: 15px;
 }
-</style>
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group select,
+.input-group input[type="date"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    font-weight: 500;
+    font-size: 16px;
+    color: #536387;
+    outline: none;
+}
+
+.input-group select:focus,
+.input-group input[type="date"]:focus {
+    border-color: #6a64f1;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6a64f1;
+    color: white;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: #524bd4;
+}
+
+.formbold-btn {
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #6a64f1;
+    color: white;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+.formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-delete-button {
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 8px 15px;
+    border: 1px solid #6a64f1;
+    background-color: transparent;
+    color: #6a64f1;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.formbold-delete-button:hover {
+    background-color: #eae7ff;
+}
+.formbold-add-button {
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    background-color: #6a64f1;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+
+}
+
+.formbold-add-button:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+.date-field-container {
+    display: flex;
+    align-items: center;
+}
+
+.validate-error {
+    margin-top: 5px;
+    color: red;
+}</style>

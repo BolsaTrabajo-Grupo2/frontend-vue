@@ -146,13 +146,13 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
-            <Field name="contraseña" type="text" v-model="company.contraseña" class="formbold-form-input" /><br />
+            <Field name="contraseña" type="password" v-model="company.contraseña" class="formbold-form-input" /><br />
             <ErrorMessage name="contraseña" class="validate-error" />
           </div>
 
           <div>
             <label for="repetirContraseña" class="formbold-form-label"> Repetir Contraseña: </label>
-            <Field name="repetirContraseña" type="text" class="formbold-form-input" /><br />
+            <Field name="repetirContraseña" type="password" class="formbold-form-input" /><br />
             <ErrorMessage name="repetirContraseña" class="validate-error" />
           </div>
         </div>
