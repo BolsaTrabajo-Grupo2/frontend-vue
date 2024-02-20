@@ -69,11 +69,19 @@ export default {
                 this.addMsgArray('danger', error)
             }
         },
-        orderByDurationLargo() {
-            this.offers.data = this.offers.data.sort((offer1, offer2) => offer1.duration.localeCompare(offer2.duration))
+        orderByNew() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => {
+                const date1 = new Date(offer1.created_at);
+                const date2 = new Date(offer2.created_at);
+                return date2 - date1;
+            });
         },
-        orderByDurationCorto() {
-            this.offers.data = this.offers.data.sort((offer1, offer2) => offer2.duration.localeCompare(offer1.duration))
+        orderByOld() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => {
+                const date1 = new Date(offer1.created_at);
+                const date2 = new Date(offer2.created_at);
+                return date1 - date2;
+            });
         }
     }
 }
@@ -84,17 +92,15 @@ export default {
         <div class="row">
             <h1>Listado de ofertas</h1>
             <form @submit.prevent="searchByCIF" class="cif">
-                <input type="text" v-model="searchCP" placeholder="Buscar por CP...">
+                <input type="number" v-model="searchCP" placeholder="Buscar por CP...">
                 <button type="submit" class="buscar">Buscar</button>
             </form>
             <div class="order-buttons row justify-content-md-center">
                 <div class="col-md-6">
-                    <button @click="orderByDurationLargo" class="largo btn btn-block mb-2">Ordenar por contrato más
-                        largo</button>
+                    <button @click="orderByNew" class="largo btn btn-block mb-2">Ordenar por mas nuevas</button>
                 </div>
                 <div class="col-md-6">
-                    <button @click="orderByDurationCorto" class="corto btn btn-block">Ordenar por contrato más
-                        corto</button>
+                    <button @click="orderByOld" class="corto btn btn-block">Ordenar por mas antiguas</button>
                 </div>
             </div>
             <div class="row" v-if="this.offers.data.length > 0">
