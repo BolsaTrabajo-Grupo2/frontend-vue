@@ -1,7 +1,7 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
-import { setLocale,  } from 'yup'
+import { setLocale, } from 'yup'
 import axios from 'axios'
 import { mapActions } from 'pinia'
 import { useStore } from '@/stores/store'
@@ -92,11 +92,20 @@ export default {
     ...mapActions(useStore, ['addMsgArray']),
     async addCompany() {
       this.company.rol = 'COMP'
-
-      await axios
-        .post(SERVER + '/registerCompany', this.company)
-        .then(this.addMsgArray('succes','Empresa registrada con exito'))
-        .catch((response) => this.addMsgArray('danger', 'Error al añadir el registro: ' + response.message))
+      try {
+        await axios.post(SERVER + '/registerCompany', this.company);
+        this.$router.push('/')
+        this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al añadir el registro: ' + error);
+        if (error.response.status === 429) {
+          setTimeout(() => {
+            this.addStudent();
+          }, 5000);
+        } else {
+          this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message);
+        }
+      }
     }
   }
 }
@@ -113,13 +122,13 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="nombre" class="formbold-form-label"> Nombre: </label>
-            <Field name="nombre" type="text" v-model="company.nombre" class="formbold-form-input" /><br />
+            <Field name="nombre" type="text" v-model="company.name" class="formbold-form-input" /><br />
             <ErrorMessage name="nombre" class="validate-error" />
           </div>
 
           <div>
             <label for="apellidos" class="formbold-form-label"> Apellidos: </label>
-            <Field name="apellidos" type="text" v-model="company.apellidos" class="formbold-form-input" /><br />
+            <Field name="apellidos" type="text" v-model="company.surname" class="formbold-form-input" /><br />
             <ErrorMessage name="apellidos" class="validate-error" />
           </div>
         </div>
@@ -127,7 +136,7 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="tlf" class="formbold-form-label"> Teléfono: </label>
-            <Field name="tlf" type="text" v-model="company.tlf" class="formbold-form-input" /><br />
+            <Field name="tlf" type="text" v-model="company.phone" class="formbold-form-input" /><br />
             <ErrorMessage name="tlf" class="validate-error" />
           </div>
 
@@ -141,7 +150,7 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
-            <Field name="contraseña" type="password" v-model="company.contraseña" class="formbold-form-input" /><br />
+            <Field name="contraseña" type="password" v-model="company.password" class="formbold-form-input" /><br />
             <ErrorMessage name="contraseña" class="validate-error" />
           </div>
 
@@ -168,7 +177,7 @@ export default {
 
         <div class="formbold-mb-3">
           <label for="direccion" class="formbold-form-label"> Dirección: </label>
-          <Field name="direccion" type="text" v-model="company.direccion" class="formbold-form-input" /><br />
+          <Field name="direccion" type="text" v-model="company.address" class="formbold-form-input" /><br />
           <ErrorMessage name="direccion" class="validate-error" />
         </div>
 
@@ -377,5 +386,4 @@ body {
 .validate-error {
   color: red;
 }
-
 </style>

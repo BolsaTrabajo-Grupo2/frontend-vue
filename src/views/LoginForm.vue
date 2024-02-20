@@ -67,7 +67,7 @@ export default {
                 }
 
             } catch (error) {
-                this.addMsgArray('danger', 'Error: datos incorrectos pr favor revise que la contarseña sea la correcta')
+                this.addMsgArray('danger', 'Error: datos incorrectos por favor revise que la contarseña sea la correcta')
             }
         },
 

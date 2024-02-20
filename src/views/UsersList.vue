@@ -38,8 +38,8 @@ export default {
 
 <template>
     <div class="container">
-        <h1 class="titulo">Todos los Usuarios</h1>
-        <table class="table table-striped">
+        <h1 class="titulo">Usuarios que han aplicado</h1>
+        <table class="table table-striped" v-if="this.students.length > 0">
             <thead>
                 <tr>
                     <th scope="col">Nombre</th>
@@ -51,6 +51,7 @@ export default {
                 <user-li class="user" v-for="student in this.students" :student="student" :key="student.id"></user-li>
             </tbody>
         </table>
+        <h3 v-if="this.students.length == 0">Aun no han aplicado alumnos a esta oferta</h3>
     </div>
 </template>
 

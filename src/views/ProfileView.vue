@@ -88,7 +88,7 @@ export default {
                     <p><strong>Curriculum Link:</strong> {{ this.usuario.cv_link }} </p>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-info" @click="edit">Editar Perfil</button>
+                    <button class="btn btn-info mt-2" @click="edit">Editar Perfil</button>
                     <button class="btn btn-danger mt-2" @click="eliminar">Eliminar Perfil</button>
                 </div>
             </div>
@@ -99,5 +99,8 @@ export default {
 <style scoped>
 .container {
     max-width: 70%;
+}
+.btn{
+    margin-right: 15px;
 }
 </style>

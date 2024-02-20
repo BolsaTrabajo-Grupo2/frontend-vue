@@ -199,7 +199,7 @@ export default {
                 </div>
             </div>
             <span class="error">{{ cycleError }}</span><br>
-            <button type="button" @click="addCycleField">Añadir ciclo</button>
+            <button type="button" @click="addCycleField" class="btn añadir">Añadir ciclo</button>
 
             <!-- Text input-->
             <div class="form-group">
@@ -308,5 +308,9 @@ label {
 .btn-warning:hover {
     background-color: #e0a800;
     border-color: #d39e00;
+}
+.añadir{
+    background-color: #007bff;
+    color: white;
 }
 </style>

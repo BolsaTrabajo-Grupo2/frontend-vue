@@ -60,7 +60,7 @@ export default {
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
       direccion: yup.string().required().max(250),
       tlf: yup.string().required().length(9),
-      web: yup.string().url().max(100),
+      web: yup.string().url().max(250),
       nombreEmpresa: yup.string().required()
 
     })
@@ -85,7 +85,7 @@ export default {
       this.company.rol = 'COMP'
       const apiService = new APIService(this.user.token)
       try {
-        const response = apiService.modCompany(this.company)
+        const response = await apiService.modCompany(this.company)
         this.$router.push('/profile')
         this.addMsgArray('sucess','Empresa modificada con exito')
       } catch (error) {
@@ -118,7 +118,7 @@ export default {
 <template>
   <div class="formbold-main-wrapper">
     <div class="formbold-form-wrapper">
-      <Form @submit="addCompany" :validation-schema="mySchema">
+      <Form @submit="editCompany()" :validation-schema="mySchema">
         <div class="formbold-form-title">
           <h2 class="">Editar Empresa</h2>
         </div>
@@ -126,13 +126,13 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="nombre" class="formbold-form-label"> Nombre: </label>
-            <Field name="nombre" type="text" v-model="company.nombre" class="formbold-form-input" /><br />
+            <Field name="nombre" type="text" v-model="company.name" class="formbold-form-input" /><br />
             <ErrorMessage name="nombre" class="validate-error" />
           </div>
 
           <div>
             <label for="apellidos" class="formbold-form-label"> Apellidos: </label>
-            <Field name="apellidos" type="text" v-model="company.apellidos" class="formbold-form-input" /><br />
+            <Field name="apellidos" type="text" v-model="company.surname" class="formbold-form-input" /><br />
             <ErrorMessage name="apellidos" class="validate-error" />
           </div>
         </div>
@@ -140,7 +140,7 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="tlf" class="formbold-form-label"> Teléfono: </label>
-            <Field name="tlf" type="text" v-model="company.tlf" class="formbold-form-input" /><br />
+            <Field name="tlf" type="text" v-model="company.phone" class="formbold-form-input" /><br />
             <ErrorMessage name="tlf" class="validate-error" />
           </div>
 
@@ -154,7 +154,7 @@ export default {
         <div class="formbold-input-flex">
           <div>
             <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
-            <Field name="contraseña" type="password" v-model="company.contraseña" class="formbold-form-input" /><br />
+            <Field name="contraseña" type="password" v-model="company.password" class="formbold-form-input" /><br />
             <ErrorMessage name="contraseña" class="validate-error" />
           </div>
 
@@ -181,7 +181,7 @@ export default {
 
         <div class="formbold-mb-3">
           <label for="direccion" class="formbold-form-label"> Dirección: </label>
-          <Field name="direccion" type="text" v-model="company.direccion" class="formbold-form-input" /><br />
+          <Field name="direccion" type="text" v-model="company.address" class="formbold-form-input" /><br />
           <ErrorMessage name="direccion" class="validate-error" />
         </div>
 
