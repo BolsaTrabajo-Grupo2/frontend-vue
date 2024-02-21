@@ -26,6 +26,10 @@ jobs:
         
       - name: Deploy to Server
         run: |
-          rsync -avz --delete ./dist/ bolsa_user@34.224.164.71:/var/www/bolsa-trabajo/html/dist
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 34.224.164.71 >> ~/.ssh/known_hosts
+          rsync -avz --delete ./dist/ bolsa_user@34.224.164.71:/var/www/bolsa-trabajo/html/
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
