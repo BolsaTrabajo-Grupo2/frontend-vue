@@ -26,6 +26,6 @@ jobs:
         
       - name: Deploy to Server
         run: |
-          rsync -avz --delete ./dist/ bolsa_user@34.224.164.71:/var/www/bolsa-trabajo/html/
+          rsync -avz --delete ./dist/ bolsa_user@34.224.164.71:/var/www/bolsa-trabajo/html/dist
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
