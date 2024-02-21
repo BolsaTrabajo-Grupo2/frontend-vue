@@ -16,14 +16,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12.22.9'
+          node-version: '20.7.0'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Build Vue.js Application
         run: npm run build
-
+        
       - name: Deploy to Server
         run: |
           rsync -avz --delete ./dist/ bolsa_user@34.224.164.71:/var/www/bolsa-trabajo/html/
