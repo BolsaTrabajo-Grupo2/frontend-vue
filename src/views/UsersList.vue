@@ -24,7 +24,7 @@ export default {
             console.log(response.data)
             this.students = response.data
         } catch (error) {
-
+            this.addMsgArray('danger','No se ha podido recuperar las usuarios apuntados a la oferta')
         }
     },
     components: {
@@ -37,19 +37,51 @@ export default {
 </script>
 
 <template>
-    <h1>Todos los Usuarios</h1>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            <user-li v-for="student in this.students" :student="student" :key="student.id"></user-li>
-        </tbody>
-    </table>
+    <div class="container">
+        <h1 class="titulo">Usuarios que han aplicado</h1>
+        <table class="table table-striped" v-if="this.students.length > 0">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <user-li class="user" v-for="student in this.students" :student="student" :key="student.id"></user-li>
+            </tbody>
+        </table>
+        <h3 v-if="this.students.length == 0">Aun no han aplicado alumnos a esta oferta</h3>
+    </div>
 </template>
 
-<style scoped></style>
+<style>
+.container {
+    align-items: center;
+    height: 100%;
+}
+
+.titulo {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(21, 103, 157);
+    margin-bottom: 20px;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+</style>

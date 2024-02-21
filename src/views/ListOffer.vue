@@ -28,7 +28,7 @@ export default {
             const response = await apiService.getOffers()
             this.offers = response.data
         } catch (error) {
-
+            this.addMsgArray('danger','No se pueden obtener las ofertas, por favor vuelva a intentarlo')
         }
     },
     methods: {
@@ -40,7 +40,7 @@ export default {
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                this.addMsgArray('danger','Problema al cambiar de pagina, por favor vuelva a intentarlo')
             }
         },
         async prevPage() {
@@ -50,7 +50,7 @@ export default {
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                this.addMsgArray('danger','Problema al cambiar de pagina, por favor vuelva a intentarlo')
             }
         },
         async searchByCIF() {
@@ -66,14 +66,22 @@ export default {
                 }
 
             } catch (error) {
-                this.addMsgArray('danger', error)
+                this.addMsgArray('danger','No se ha podido buscar por CIF, vuelva a intentarlo')
             }
         },
-        orderByDurationLargo() {
-            this.offers.data = this.offers.data.sort((offer1, offer2) => offer1.duration.localeCompare(offer2.duration))
+        orderByNew() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => {
+                const date1 = new Date(offer1.created_at);
+                const date2 = new Date(offer2.created_at);
+                return date2 - date1;
+            });
         },
-        orderByDurationCorto() {
-            this.offers.data = this.offers.data.sort((offer1, offer2) => offer2.duration.localeCompare(offer1.duration))
+        orderByOld() {
+            this.offers.data = this.offers.data.sort((offer1, offer2) => {
+                const date1 = new Date(offer1.created_at);
+                const date2 = new Date(offer2.created_at);
+                return date1 - date2;
+            });
         }
     }
 }
@@ -84,17 +92,15 @@ export default {
         <div class="row">
             <h1>Listado de ofertas</h1>
             <form @submit.prevent="searchByCIF" class="cif">
-                <input type="text" v-model="searchCP" placeholder="Buscar por CP...">
+                <input type="number" v-model="searchCP" placeholder="Buscar por CP...">
                 <button type="submit" class="buscar">Buscar</button>
             </form>
             <div class="order-buttons row justify-content-md-center">
                 <div class="col-md-6">
-                    <button @click="orderByDurationLargo" class="btn btn-success btn-block mb-2">Ordenar por contrato más
-                        largo</button>
+                    <button @click="orderByNew" class="largo btn btn-block mb-2">Ordenar por mas nuevas</button>
                 </div>
                 <div class="col-md-6">
-                    <button @click="orderByDurationCorto" class="btn btn-danger btn-block">Ordenar por contrato más
-                        corto</button>
+                    <button @click="orderByOld" class="corto btn btn-block">Ordenar por mas antiguas</button>
                 </div>
             </div>
             <div class="row" v-if="this.offers.data.length > 0">
@@ -142,6 +148,23 @@ export default {
 
 .cif .buscar:hover {
     background-color: #cc10b3;
+}
+
+.order-buttons .btn {
+    transition: transform 0.3s ease;
+    padding: 8px 20px;
+    background-color: #f97c52;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 5px;
+    margin-bottom: 10px;
+}
+
+.order-buttons .btn:hover {
+    transform: scale(1.05);
 }
 
 .paginas {

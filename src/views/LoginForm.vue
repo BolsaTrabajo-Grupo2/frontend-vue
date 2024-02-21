@@ -57,11 +57,17 @@ export default {
         async logIng() {
             try {
                 const response = await axios.post(SERVER + '/login', this.user)
-                localStorage.setItem('user', JSON.stringify(response.data))
-                this.addUser(response.data)
-                this.$router.push('/listOffers')
+                if (response.data.accept === 1) {
+                    localStorage.setItem('user', JSON.stringify(response.data))
+                    this.addUser(response.data)
+                    this.$router.push('/listOffers')
+                } else {
+                    this.$router.push('/')
+                    this.addMsgArray('danger', 'Error: no ha activado su cuenta, activela para iniciar sesión.')
+                }
+
             } catch (error) {
-                this.addMsgArray('danger', 'Error: datos incorrectos pr favor revise que la contarseña sea la correcta')
+                this.addMsgArray('danger', 'Error: datos incorrectos por favor revise que la contarseña sea la correcta')
             }
         },
 
@@ -74,7 +80,7 @@ export default {
                 const authWindow = window.open('http://127.0.0.1/auth/github');
 
             } catch (error) {
-                this.addMsgArray('danger','Error al autenticarse por github, pruebe mas tarde o de otra manera')
+                this.addMsgArray('danger', 'Error al autenticarse por github, pruebe mas tarde o de otra manera')
             }
         },
         async google() {
@@ -83,19 +89,19 @@ export default {
                 const authWindow = window.open('http://localhost/auth/google');
 
             } catch (error) {
-                this.addMsgArray('danger','Error al autenticarse por google, pruebe mas tarde o de otra manera')
+                this.addMsgArray('danger', 'Error al autenticarse por google, pruebe mas tarde o de otra manera')
             }
         },
-        async recover(){
-            if(this.user.email == ''){
-                this.addMsgArray('danger','Para poder enviar el email necesitas introducir el email')
-            }else{
+        async recover() {
+            if (this.user.email == '') {
+                this.addMsgArray('danger', 'Para poder enviar el email necesitas introducir el email')
+            } else {
                 try {
-                    const response = await axios.get(SERVER + '/sendEmail/'+ this.user.email)
+                    const response = await axios.get(SERVER + '/sendEmail/' + this.user.email)
                     console.log(response)
-                    this.addMsgArray('success','Email para recuperar la contraseña enviado con exito, revise su correo')
+                    this.addMsgArray('success', 'Email para recuperar la contraseña enviado con exito, revise su correo')
                 } catch (error) {
-                    this.addMsgArray('danger','Eres un administrador no puedes recuperar contraseña')
+                    this.addMsgArray('danger', 'Eres un administrador no puedes recuperar contraseña')
                 }
             }
         }

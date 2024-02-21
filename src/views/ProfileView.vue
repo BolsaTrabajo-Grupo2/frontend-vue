@@ -25,11 +25,11 @@ export default {
                 this.usuario = responseComapny.data
             }
         } catch (error) {
-            alert(error);
+            this.addMsgArray('danger','No se ha podido recuperar los datos intentelo mas tarde')
         }
     },
     methods: {
-        ...mapActions(useStore, ['cleanUser']),
+        ...mapActions(useStore, ['cleanUser','addMsgArray']),
         edit() {
             if (this.user.rol === 'COMP') {
                 this.$router.push('/company-mod/' + Number(this.usuario.id))
@@ -45,11 +45,11 @@ export default {
                 } else if (this.user.rol === 'STU') {
                     await apiService.deleteStudent(this.usuario.id)
                 }
+                this.$router.push('/')
                 localStorage.clear()
                 this.cleanUser()
-                this.$router.push('/')
             } catch (error) {
-                alert(error)
+                this.addMsgArray('danger','Problemas al intentar eliminar el perfil, vuelva a intentarlo')
             }
 
         }
@@ -88,7 +88,7 @@ export default {
                     <p><strong>Curriculum Link:</strong> {{ this.usuario.cv_link }} </p>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-info" @click="edit">Editar Perfil</button>
+                    <button class="btn btn-info mt-2" @click="edit">Editar Perfil</button>
                     <button class="btn btn-danger mt-2" @click="eliminar">Eliminar Perfil</button>
                 </div>
             </div>
@@ -99,5 +99,8 @@ export default {
 <style scoped>
 .container {
     max-width: 70%;
+}
+.btn{
+    margin-right: 15px;
 }
 </style>

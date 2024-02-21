@@ -1,7 +1,7 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
-import { setLocale,  } from 'yup'
+import { setLocale, } from 'yup'
 import axios from 'axios'
 import { mapActions } from 'pinia'
 import { useStore } from '@/stores/store'
@@ -20,9 +20,9 @@ yup.addMethod(yup.string, 'url', function () {
   })
 })
 
-yup.addMethod(yup.string, 'password', function () {
+yup.addMethod(yup.string, 'contraseña', function () {
   return this.test({
-    name: 'password',
+    name: 'contraseña',
     message:
       'La contraseña ha de contener al menos 8 carácteres, entre ellos una mayúscula y un número',
     test: (value) => {
@@ -44,7 +44,7 @@ yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está re
         const response = await axios.get(`${SERVER}/checkCIF/${value}`);
         return !response.data;
       } catch (error) {
-        console.error('Error al verificar el CIF:', error);
+        this.addMsgArray('danger','Error al intentar comprobar el CIF')
         return false;
       }
     },
@@ -65,23 +65,21 @@ setLocale({
 export default {
   data() {
     const mySchema = yup.object({
-      name: yup.string().required(),
-      surname: yup.string().required(),
+      nombre: yup.string().required(),
+      apellidos: yup.string().required(),
       email: yup.string().required().email(),
-      password: yup.string().required().password(),
-      confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
+      contraseña: yup.string().required().contraseña(),
+      repetirContraseña: yup.string().oneOf([yup.ref('contraseña'), null], 'Las contraseñas deben coincidir').required('Debes confirmar la contraseña'),
       CIF: yup.string().required().matches(/^[A-Za-z]\d{8}$/, 'El CIF debe comenzar con una letra seguida de 8 números').uniqueCIF(),
       CP: yup.string().required().matches(/^\d{5}$/, 'El código postal debe tener 5 dígitos'),
-      address: yup.string().required().max(250),
-      phone: yup.string().required().length(9),
+      direccion: yup.string().required().max(250),
+      tlf: yup.string().required().length(9),
       web: yup.string().url().max(100),
-      companyName: yup.string().required(),
+      nombreEmpresa: yup.string().required(),
       aceptar: yup.boolean().required('Debes aceptar los términos y condiciones para continuar.')
     })
     return {
       company: {},
-      titulo: 'Añadir Empresa',
-      boton: 'Añadir',
       mySchema
     }
   },
@@ -94,11 +92,20 @@ export default {
     ...mapActions(useStore, ['addMsgArray']),
     async addCompany() {
       this.company.rol = 'COMP'
-
-      await axios
-        .post(SERVER + '/registerCompany', this.company)
-        .then(this.addMsgArray('succes','Empresa registrada con exito'))
-        .catch((response) => this.addMsgArray('danger', 'Error al añadir el registro: ' + response.message))
+      try {
+        await axios.post(SERVER + '/registerCompany', this.company);
+        this.$router.push('/')
+        this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al intentar registrar una compañia, por favor revise los datos y vuelva a intentralo ');
+        if (error.response.status === 429) {
+          setTimeout(() => {
+            this.addStudent();
+          }, 5000);
+        } else {
+          this.addMsgArray('danger', 'Error al intentar registrar una compañia, por favor revise los datos y vuelva a intentralo ');
+        }
+      }
     }
   }
 }
@@ -109,32 +116,28 @@ export default {
     <div class="formbold-form-wrapper">
       <Form @submit="addCompany" :validation-schema="mySchema">
         <div class="formbold-form-title">
-          <h2 class="">{{ titulo }}</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt.
-          </p>
+          <h2 class="">Añadir Empresa</h2>
         </div>
 
         <div class="formbold-input-flex">
           <div>
-            <label for="name" class="formbold-form-label"> Nombre: </label>
-            <Field name="name" type="text" v-model="company.name" class="formbold-form-input" /><br />
-            <ErrorMessage name="name" class="validate-error" />
+            <label for="nombre" class="formbold-form-label"> Nombre: </label>
+            <Field name="nombre" type="text" v-model="company.name" class="formbold-form-input" /><br />
+            <ErrorMessage name="nombre" class="validate-error" />
           </div>
 
           <div>
-            <label for="surname" class="formbold-form-label"> Apellidos: </label>
-            <Field name="surname" type="text" v-model="company.surname" class="formbold-form-input" /><br />
-            <ErrorMessage name="surname" class="validate-error" />
+            <label for="apellidos" class="formbold-form-label"> Apellidos: </label>
+            <Field name="apellidos" type="text" v-model="company.surname" class="formbold-form-input" /><br />
+            <ErrorMessage name="apellidos" class="validate-error" />
           </div>
         </div>
 
         <div class="formbold-input-flex">
           <div>
-            <label for="phone" class="formbold-form-label"> Teléfono: </label>
-            <Field name="phone" type="text" v-model="company.phone" class="formbold-form-input" /><br />
-            <ErrorMessage name="phone" class="validate-error" />
+            <label for="tlf" class="formbold-form-label"> Teléfono: </label>
+            <Field name="tlf" type="text" v-model="company.phone" class="formbold-form-input" /><br />
+            <ErrorMessage name="tlf" class="validate-error" />
           </div>
 
           <div>
@@ -146,15 +149,15 @@ export default {
 
         <div class="formbold-input-flex">
           <div>
-            <label for="password" class="formbold-form-label"> Contraseña: </label>
-            <Field name="password" type="text" v-model="company.password" class="formbold-form-input" /><br />
-            <ErrorMessage name="password" class="validate-error" />
+            <label for="contraseña" class="formbold-form-label"> Contraseña: </label>
+            <Field name="contraseña" type="password" v-model="company.password" class="formbold-form-input" /><br />
+            <ErrorMessage name="contraseña" class="validate-error" />
           </div>
 
           <div>
-            <label for="confirmPassword" class="formbold-form-label"> Repetir Contraseña: </label>
-            <Field name="confirmPassword" type="text" class="formbold-form-input" /><br />
-            <ErrorMessage name="confirmPassword" class="validate-error" />
+            <label for="repetirContraseña" class="formbold-form-label"> Repetir Contraseña: </label>
+            <Field name="repetirContraseña" type="password" class="formbold-form-input" /><br />
+            <ErrorMessage name="repetirContraseña" class="validate-error" />
           </div>
         </div>
 
@@ -166,16 +169,16 @@ export default {
           </div>
 
           <div>
-            <label for="companyName" class="formbold-form-label"> Nombre Empresa: </label>
-            <Field name="companyName" type="text" v-model="company.company_name" class="formbold-form-input" /><br />
-            <ErrorMessage name="companyName" class="validate-error" />
+            <label for="nombreEmpresa" class="formbold-form-label"> Nombre Empresa: </label>
+            <Field name="nombreEmpresa" type="text" v-model="company.company_name" class="formbold-form-input" /><br />
+            <ErrorMessage name="nombreEmpresa" class="validate-error" />
           </div>
         </div>
 
         <div class="formbold-mb-3">
-          <label for="address" class="formbold-form-label"> Dirección: </label>
-          <Field name="address" type="text" v-model="company.address" class="formbold-form-input" /><br />
-          <ErrorMessage name="address" class="validate-error" />
+          <label for="direccion" class="formbold-form-label"> Dirección: </label>
+          <Field name="direccion" type="text" v-model="company.address" class="formbold-form-input" /><br />
+          <ErrorMessage name="direccion" class="validate-error" />
         </div>
 
         <div class="formbold-input-flex">
@@ -193,30 +196,24 @@ export default {
         </div>
 
         <div class="formbold-checkbox-wrapper">
-        <label for="supportCheckbox" class="formbold-checkbox-label">
-          <div class="formbold-relative">
-            <Field class="formbold-input-checkbox" name="aceptar" type="checkbox" :value="false" />
-            <div class="formbold-checkbox-inner">
-              <span class="formbold-opacity-0">
-                <svg
-                  width="11"
-                  height="8"
-                  viewBox="0 0 11 8"
-                  fill="none"
-                  class="formbold-stroke-current"
-                >
-                  <path
-                    d="M10.0915 0.951972L10.0867 0.946075L10.0813 0.940568C9.90076 0.753564 9.61034 0.753146 9.42927 0.939309L4.16201 6.22962L1.58507 3.63469C1.40401 3.44841 1.11351 3.44879 0.932892 3.63584C0.755703 3.81933 0.755703 4.10875 0.932892 4.29224L0.932878 4.29225L0.934851 4.29424L3.58046 6.95832C3.73676 7.11955 3.94983 7.2 4.1473 7.2C4.36196 7.2 4.55963 7.11773 4.71406 6.9584L10.0468 1.60234C10.2436 1.4199 10.2421 1.1339 10.0915 0.951972ZM4.2327 6.30081L4.2317 6.2998C4.23206 6.30015 4.23237 6.30049 4.23269 6.30082L4.2327 6.30081Z"
-                    stroke-width="0.4"
-                  ></path>
-                </svg>
-              </span>
+          <label for="supportCheckbox" class="formbold-checkbox-label">
+            <div class="formbold-relative">
+              <Field type="checkbox" class="formbold-input-checkbox" id="supportCheckbox" name="aceptar" :value="false" />
+              <div class="formbold-checkbox-inner">
+                <span class="formbold-opacity-0">
+                  <svg width="11" height="8" viewBox="0 0 11 8" fill="none" class="formbold-stroke-current">
+                    <path
+                      d="M10.0915 0.951972L10.0867 0.946075L10.0813 0.940568C9.90076 0.753564 9.61034 0.753146 9.42927 0.939309L4.16201 6.22962L1.58507 3.63469C1.40401 3.44841 1.11351 3.44879 0.932892 3.63584C0.755703 3.81933 0.755703 4.10875 0.932892 4.29224L0.932878 4.29225L0.934851 4.29424L3.58046 6.95832C3.73676 7.11955 3.94983 7.2 4.1473 7.2C4.36196 7.2 4.55963 7.11773 4.71406 6.9584L10.0468 1.60234C10.2436 1.4199 10.2421 1.1339 10.0915 0.951972ZM4.2327 6.30081L4.2317 6.2998C4.23206 6.30015 4.23237 6.30049 4.23269 6.30082L4.2327 6.30081Z"
+                      stroke-width="0.4"></path>
+                  </svg>
+                </span>
+              </div>
             </div>
-          </div>
-          Acepto los términos y condiciones
-        </label>
-        <ErrorMessage name="aceptar" class="validate-error" />
-      </div>
+            Acepto los términos y condiciones
+          </label>
+          <ErrorMessage name="aceptar" class="validate-error" />
+        </div>
+
 
         <button type="submit" class="formbold-btn">Añadir</button>
       </Form>
@@ -329,6 +326,7 @@ body {
   line-height: 24px;
   display: block;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .formbold-checkbox-label {
@@ -388,5 +386,4 @@ body {
 .validate-error {
   color: red;
 }
-
 </style>
