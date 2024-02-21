@@ -23,16 +23,16 @@ export default {
                 const response = await apiService.singup(Number(this.offer.id));
                 if (response.status === 200) {
                     if (response.data.error === "Ya has aplicado a esta oferta") {
-                        this.addMsgArray('Danger', 'Ya estás apuntado a la oferta');
+                        this.addMsgArray('danger', 'Ya estás apuntado a la oferta')
                     } else {
-                        this.addMsgArray('Success', 'Te has apuntado con éxito a la oferta');
+                        this.addMsgArray('success', 'Te has apuntado con éxito a la oferta')
                         this.$router.push('/listOffers');
                     }
                 } else {
-                    console.error('Código de estado no manejado:', response.status);
+                    this.addMsgArray('danger', 'Error al intentar aplicar a la oferta por favor intentelo mas tarde')
                 }
             } catch (error) {
-                this.addMsgArray('Danger', 'Ya estas apuntado a la oferta')
+                this.addMsgArray('danger', 'Ya estas apuntado a la oferta')
             }
         }
     }

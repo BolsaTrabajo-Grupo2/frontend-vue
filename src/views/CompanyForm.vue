@@ -44,7 +44,7 @@ yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está re
         const response = await axios.get(`${SERVER}/checkCIF/${value}`);
         return !response.data;
       } catch (error) {
-        console.error('Error al verificar el CIF:', error);
+        this.addMsgArray('danger','Error al intentar comprobar el CIF')
         return false;
       }
     },
@@ -97,13 +97,13 @@ export default {
         this.$router.push('/')
         this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
       } catch (error) {
-        this.addMsgArray('danger', 'Error al añadir el registro: ' + error);
+        this.addMsgArray('danger', 'Error al intentar registrar una compañia, por favor revise los datos y vuelva a intentralo ');
         if (error.response.status === 429) {
           setTimeout(() => {
             this.addStudent();
           }, 5000);
         } else {
-          this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message);
+          this.addMsgArray('danger', 'Error al intentar registrar una compañia, por favor revise los datos y vuelva a intentralo ');
         }
       }
     }

@@ -28,7 +28,7 @@ export default {
             const response = await apiService.getOffers()
             this.offers = response.data
         } catch (error) {
-
+            this.addMsgArray('danger','No se pueden obtener las ofertas, por favor vuelva a intentarlo')
         }
     },
     methods: {
@@ -40,7 +40,7 @@ export default {
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                this.addMsgArray('danger','Problema al cambiar de pagina, por favor vuelva a intentarlo')
             }
         },
         async prevPage() {
@@ -50,7 +50,7 @@ export default {
                 const responseNext = await apiService.getOffersPage(page)
                 this.offers = responseNext.data
             } catch (error) {
-
+                this.addMsgArray('danger','Problema al cambiar de pagina, por favor vuelva a intentarlo')
             }
         },
         async searchByCIF() {
@@ -66,7 +66,7 @@ export default {
                 }
 
             } catch (error) {
-                this.addMsgArray('danger', error)
+                this.addMsgArray('danger','No se ha podido buscar por CIF, vuelva a intentarlo')
             }
         },
         orderByNew() {

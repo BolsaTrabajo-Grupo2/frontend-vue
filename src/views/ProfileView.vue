@@ -25,11 +25,11 @@ export default {
                 this.usuario = responseComapny.data
             }
         } catch (error) {
-            alert(error);
+            this.addMsgArray('danger','No se ha podido recuperar los datos intentelo mas tarde')
         }
     },
     methods: {
-        ...mapActions(useStore, ['cleanUser']),
+        ...mapActions(useStore, ['cleanUser','addMsgArray']),
         edit() {
             if (this.user.rol === 'COMP') {
                 this.$router.push('/company-mod/' + Number(this.usuario.id))
@@ -49,7 +49,7 @@ export default {
                 localStorage.clear()
                 this.cleanUser()
             } catch (error) {
-                alert(error)
+                this.addMsgArray('danger','Problemas al intentar eliminar el perfil, vuelva a intentarlo')
             }
 
         }

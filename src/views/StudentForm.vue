@@ -68,13 +68,13 @@ export default {
                     this.$router.push('/')
                     this.addMsgArray('success', 'Compruebe su correo para activar su cuenta');
                 } catch (error) {
-                    this.addMsgArray('danger', 'Error al añadir el registro: ' + error);
+                    this.addMsgArray('danger', 'Hay un problema al intentar registrar, por favor intente ' );
                     if (error.response.status === 429) {
                         setTimeout(() => {
                             this.addStudent();
                         }, 5000);
                     } else {
-                        this.addMsgArray('danger', 'Error: no se ha añadido el registro. ' + error.message);
+                        this.addMsgArray('danger', 'Hay un problema al intentar registrar, por favor intente ' );
                     }
                 }
             }

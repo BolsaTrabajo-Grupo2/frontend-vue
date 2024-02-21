@@ -65,13 +65,13 @@ export default {
         await axios.get(SERVER + '/student/' + this.id)
             .then(response => this.student = response.data)
             .catch(response => {
-                this.addMsgArray('danger', 'Error: ' + response.message)
+                this.addMsgArray('danger', 'No se ha podido obtener al estudiante')
             });
         try {
             const response = await apiService.getStudentCycle(this.id);
             this.student.cycle = response.data
         } catch (error) {
-            this.addMsgArray('danger', 'Error: ' + response.message)
+            this.addMsgArray('danger', 'No se ha podido obtener los ciclos del estudiante')
         }
         this.cycleFields = this.student.cycle
         this.passwordStudent = this.student.password
@@ -89,7 +89,7 @@ export default {
                 apiService.modStudent(this.student)
                     .then(this.$router.push('/profile'))
                     .catch(response => {
-                        this.addMsgArray('danger', 'Error: ' + response.message)
+                        this.addMsgArray('danger', 'Error al redirigir')
                     });
             }
         },

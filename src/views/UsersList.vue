@@ -24,7 +24,7 @@ export default {
             console.log(response.data)
             this.students = response.data
         } catch (error) {
-
+            this.addMsgArray('danger','No se ha podido recuperar las usuarios apuntados a la oferta')
         }
     },
     components: {

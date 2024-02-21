@@ -19,7 +19,7 @@ yup.addMethod(yup.string, 'uniqueCIF', function (message = 'Este CIF ya está re
         const response = await axios.get(`${SERVER}/checkCIF/${value}`);
         return !response.data;
       } catch (error) {
-        console.error('Error al verificar el CIF:', error);
+        this.addMsgArray('danger','Error al intentar validar el CIF, vuelva a intentarlo')
         return false;
       }
     },
@@ -89,7 +89,7 @@ export default {
         this.$router.push('/profile')
         this.addMsgArray('sucess','Empresa modificada con exito')
       } catch (error) {
-        this.addMsgArray('danger', 'Error: ' + error)
+        this.addMsgArray('danger', 'Error al intentar modificar la empresa')
       }
     },
 

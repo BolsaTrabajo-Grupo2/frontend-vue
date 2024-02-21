@@ -41,7 +41,7 @@ export default {
                 this.addMsgArray('sucess', 'Oferta añadida con exito')
                 this.$router.push('/listOffers')
             }catch (error){
-                this.addMsgArray('danger', 'Error: ' + error)
+                this.addMsgArray('danger', 'No se ha podido añadir la oferta, vuelva a intentarlo' )
             }
         }
     }
