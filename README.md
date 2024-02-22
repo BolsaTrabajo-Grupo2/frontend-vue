@@ -16,11 +16,11 @@ El proyecto se despliega en una máquina virtual utilizando Apache como servidor
 - Apache
 
 ## Tabla de Contenidos
-1. Configuración de Desarrollo
-2. Despliegue en Producción
-3. Contribuición
-4. Licencia
-5. Autores
+1. [Configuración de Desarrollo](#configuración-de-desarrollo)
+2. [Despliegue en Producción](#despliegue-en-producción)
+3. [Contribución](#contribución)
+4. [Licencia](#licencia)
+5. [Autores](#autores)
 
 ## Configuración de Desarrollo
 1. Clona el repositorio del proyecto:
