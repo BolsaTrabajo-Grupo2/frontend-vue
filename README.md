@@ -6,6 +6,14 @@ Este es un proyecto realizado para ayudar a los estudiantes de Batoi para encont
 Utiliza Vue.js como framework de desarrollo frontend.
 El proyecto se despliega en una máquina virtual utilizando Apache como servidor web.
 
+## Tabla de Contenidos
+1. [Tecnologías utilizadas](#tecnologias-utilizadas)
+2. [Configuración de Desarrollo](#configuración-de-desarrollo)
+3. [Despliegue en Producción](#despliegue-en-producción)
+4. [Contribución](#contribución)
+5. [Licencia](#licencia)
+6. [Autores](#autores)
+   
 ## Tecnologías Utilizadas
 - JavaScript
 - Vue
@@ -14,13 +22,6 @@ El proyecto se despliega en una máquina virtual utilizando Apache como servidor
 - PHP
 - Laravel
 - Apache
-
-## Tabla de Contenidos
-1. [Configuración de Desarrollo](#configuración-de-desarrollo)
-2. [Despliegue en Producción](#despliegue-en-producción)
-3. [Contribución](#contribución)
-4. [Licencia](#licencia)
-5. [Autores](#autores)
 
 ## Configuración de Desarrollo
 1. Clona el repositorio del proyecto:
