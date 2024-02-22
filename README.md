@@ -15,6 +15,13 @@ El proyecto se despliega en una máquina virtual utilizando Apache como servidor
 - Laravel
 - Apache
 
+## Tabla de Contenidos
+1. Configuración de Desarrollo
+2. Despliegue en Producción
+3. Contribuición
+4. Licencia
+5. Autores
+
 ## Configuración de Desarrollo
 1. Clona el repositorio del proyecto:
     git clone https://github.com/BolsaTrabajo-Grupo2/frontend-vue.git
