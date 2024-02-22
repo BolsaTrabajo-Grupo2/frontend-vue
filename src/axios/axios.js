@@ -14,15 +14,17 @@ export default class APIService {
     }
 
     setupInterceptors(token) {
-        this.apiClient.interceptors.request.use(
-            (config) => {
-                if (token) {
-                    config.headers['Authorization'] = `Bearer ` + token;
-                }
-                return config;
+        this.apiClient.interceptors.response.use(
+            (response) => {
+                return response;
             },
             (error) => {
-                return Promise.reject(error);
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        console.log('Token de autorización caducado. Redirigiendo a la página de inicio de sesión...');
+                        this.$route.push('/')
+                    }
+                }
             }
         );
     }
@@ -35,10 +37,10 @@ export default class APIService {
         return this.apiClient.get('/offers')
     }
     getOffersPage(page) {
-        return this.apiClient.get('/offers?page='+page)
+        return this.apiClient.get('/offers?page=' + page)
     }
-    getOfferByCP(cif){
-        return this.apiClient.get('/offerByCP/'+cif)
+    getOfferByCP(cif) {
+        return this.apiClient.get('/offerByCP/' + cif)
     }
     modCompany(company) {
         return this.apiClient.put('/user/company/update/' + company.id, company)
@@ -48,38 +50,38 @@ export default class APIService {
         return this.apiClient.post('/offers', offert)
     }
 
-    showOffer(id){
+    showOffer(id) {
         return this.apiClient.get('/offers/' + id)
     }
-    
-    getCompany(cif){
-        return this.apiClient.get('/companyCIF/'+ cif)
+
+    getCompany(cif) {
+        return this.apiClient.get('/companyCIF/' + cif)
     }
     singup(idOffer) {
         return this.apiClient.post(`/apply/${idOffer}`);
     }
-    getUsersOffer(idOffer){
-        return this.apiClient.get('/userOffert/'+ idOffer)
+    getUsersOffer(idOffer) {
+        return this.apiClient.get('/userOffert/' + idOffer)
     }
-    getStudent(email){
+    getStudent(email) {
         return this.apiClient.get('/studentEmail/' + email)
     }
-    getCompanyEmail(email){
-        return this.apiClient.get('/companyEmail/'+ email)
+    getCompanyEmail(email) {
+        return this.apiClient.get('/companyEmail/' + email)
     }
-    deleteCompany(CIF){
-        return this.apiClient.delete('/companyDelete/'+ CIF)
+    deleteCompany(CIF) {
+        return this.apiClient.delete('/companyDelete/' + CIF)
     }
-    deleteStudent(id){
-        return this.apiClient.delete('/studentDelete/'+ id)
+    deleteStudent(id) {
+        return this.apiClient.delete('/studentDelete/' + id)
     }
-    softDelet(id){
-        return this.apiClient.delete('/offersDelete/'+ id)
+    softDelet(id) {
+        return this.apiClient.delete('/offersDelete/' + id)
     }
-    deshabiliti(id){
-        return this.apiClient.put('/offersDeactivate/'+ id)
+    deshabiliti(id) {
+        return this.apiClient.put('/offersDeactivate/' + id)
     }
-    getStudentCycle(id){
-        return this.apiClient.get('/studentCicles/'+ id)
+    getStudentCycle(id) {
+        return this.apiClient.get('/studentCicles/' + id)
     }
 }

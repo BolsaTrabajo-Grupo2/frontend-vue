@@ -22,10 +22,13 @@ export default {
         const apiService = new APIService(this.user.token)
         try {
             const response = await apiService.showOffer(Number(this.id));
-            this.offer = response.data.data
+            if(this.user.rol == 'COMP'){
+                this.offer = response.data.data
+            }else{
+                this.offer = response.data.data
+            }
             const responseComapny = await apiService.getCompany(this.offer.CIF)
             this.company = responseComapny.data.data
-            console.log(responseComapny.data.data)
         } catch (error) {
            this.addMsgArray('danger','No se puede conetar con el servidor')
         }
@@ -82,7 +85,7 @@ export default {
             <p><span>Telefono de contacto: </span>{{ company.telefono }}</p>
             <p style="word-wrap: break-word;"><span>Pagina web: </span>{{ company.web }}</p>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn btn-success"
-                @click="singUp">Apuntarse</button>
+                @click="singUp" :disabled="this.offer.aplicado">Apuntarse</button>
             <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn btn-success"
                 @click="this.$router.push('/users-list/' + offer.id)">Ver
                 candidatos</button>

@@ -23,7 +23,7 @@ export default {
     <RouterLink to="/listOffers" class="col-sm-12 col-md-2 links">Listado de Ofertas</RouterLink>
     <RouterLink v-if="this.user.rol === 'COMP'" to="/offer-add" class="col-sm-12 col-md-2 links">Añadir Oferta
     </RouterLink>
-    <RouterLink to="/profile" class="col-sm-12 col-md-2 links">Perfil</RouterLink>
+    <RouterLink v-if="this.user.rol === 'COMP' || this.user.rol =='STU'" to="/profile" class="col-sm-12 col-md-2 links">Perfil</RouterLink>
     <RouterLink to="/" @click="logOut" class="col-sm-12 col-md-2 links cerrar">Cerrar Sesión</RouterLink>
     <p class="col-sm-12 col-md-2 nombre">Hola, {{ user.name }}</p>
   </nav>

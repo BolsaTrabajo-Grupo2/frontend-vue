@@ -42,7 +42,7 @@ export default {
     <div class="col-sm-12 col-md-6 col-lg-4 cart">
         <h5>{{ offer.description }}</h5>
         <p class="duracion">Duracion:  {{ offer.duration }}</p>
-        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn" @click="singUp">Apuntarse</button>
+        <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'STU'" class="apuntarse btn" @click="singUp" :disabled="this.offer.aplicado">Apuntarse</button>
         <button v-if="offer.inscriptionMethod == 1 && this.user.rol == 'COMP'" class="apuntarse btn" @click="this.$router.push('/users-list/'+ offer.id)">Ver candidatos</button>
         <button class="details btn" @click="showDetails">Detalles</button>
     </div>    
