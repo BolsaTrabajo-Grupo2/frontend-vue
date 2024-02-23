@@ -86,7 +86,7 @@ export default {
         async google() {
             try {
 
-                const authWindow = window.open('http://localhost/auth/google');
+                const authWindow = window.open('https://bolsa-trabajo-backend.projecte02.ddaw.es/auth/google');
 
             } catch (error) {
                 this.addMsgArray('danger', 'Error al autenticarse por google, pruebe mas tarde o de otra manera')
