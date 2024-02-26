@@ -49,7 +49,7 @@ export default {
             };
             this.user = user
             localStorage.setItem('user', JSON.stringify(user))
-            window.location.href = 'https://bolsa-trabajo.projecte02.ddaw.es/listOffers';
+            this.$router.push('/listOffers')
         }
     },
     methods: {
