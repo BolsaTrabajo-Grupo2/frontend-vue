@@ -506,5 +506,8 @@ body {
     margin-bottom: 15px;
   }
 }
+.formbold-delete-button-container {
+    margin-top: 15px;
+  }
 
 </style>
