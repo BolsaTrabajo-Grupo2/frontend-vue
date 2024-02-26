@@ -29,6 +29,10 @@ export default class APIService {
         );
     }
 
+    getStudent(id){
+        return this.apiClient.get('/student/' + id)
+    }
+
     modStudent(student) {
         return this.apiClient.put('/user/student/update/' + student.id, student)
     }
@@ -63,7 +67,7 @@ export default class APIService {
     getUsersOffer(idOffer) {
         return this.apiClient.get('/userOffert/' + idOffer)
     }
-    getStudent(email) {
+    getStudentEmail(email) {
         return this.apiClient.get('/studentEmail/' + email)
     }
     getCompanyEmail(email) {

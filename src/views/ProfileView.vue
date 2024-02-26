@@ -21,15 +21,15 @@ export default {
                 const responseComapny = await apiService.getCompanyEmail(this.user.email)
                 this.usuario = responseComapny.data
             } else if (this.user.rol === 'STU') {
-                const responseComapny = await apiService.getStudent(this.user.email)
+                const responseComapny = await apiService.getStudentEmail(this.user.email)
                 this.usuario = responseComapny.data
             }
         } catch (error) {
-            this.addMsgArray('danger','No se ha podido recuperar los datos intentelo mas tarde')
+            this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
         }
     },
     methods: {
-        ...mapActions(useStore, ['cleanUser','addMsgArray']),
+        ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
         edit() {
             if (this.user.rol === 'COMP') {
                 this.$router.push('/company-mod/' + Number(this.usuario.id))
@@ -40,16 +40,19 @@ export default {
         async eliminar() {
             const apiService = new APIService(this.user.token)
             try {
-                if (this.user.rol === 'COMP') {
-                    await apiService.deleteCompany(this.usuario.CIF)
-                } else if (this.user.rol === 'STU') {
-                    await apiService.deleteStudent(this.usuario.id)
+                if (confirm("¿Seguro que quieres eliminar tu perfil?")) {
+                    if (this.user.rol === 'COMP') {
+                        await apiService.deleteCompany(this.usuario.CIF)
+                    } else if (this.user.rol === 'STU') {
+                        await apiService.deleteStudent(this.usuario.id)
+                    }
+                    this.$router.push('/')
+                    localStorage.clear()
+                    this.cleanUser()
                 }
-                this.$router.push('/')
-                localStorage.clear()
-                this.cleanUser()
+
             } catch (error) {
-                this.addMsgArray('danger','Problemas al intentar eliminar el perfil, vuelva a intentarlo')
+                this.addMsgArray('danger', 'Problemas al intentar eliminar el perfil, vuelva a intentarlo')
             }
 
         }
@@ -100,7 +103,8 @@ export default {
 .container {
     max-width: 70%;
 }
-.btn{
+
+.btn {
     margin-right: 15px;
 }
 </style>

@@ -495,4 +495,19 @@ body {
 .validate-error {
     margin-top: 5px;
     color: red;
-}</style>
+}
+@media (max-width: 767px) {
+  .formbold-input-flex {
+    flex-direction: column;
+  }
+
+  .formbold-input-flex>div {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+.formbold-delete-button-container {
+    margin-top: 15px;
+  }
+
+</style>

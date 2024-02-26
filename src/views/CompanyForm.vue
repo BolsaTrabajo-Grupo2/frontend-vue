@@ -386,4 +386,14 @@ body {
 .validate-error {
   color: red;
 }
+@media (max-width: 767px) {
+  .formbold-input-flex {
+    flex-direction: column;
+  }
+
+  .formbold-input-flex>div {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
 </style>
