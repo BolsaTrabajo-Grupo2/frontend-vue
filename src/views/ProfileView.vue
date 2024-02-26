@@ -21,7 +21,7 @@ export default {
                 const responseComapny = await apiService.getCompanyEmail(this.user.email)
                 this.usuario = responseComapny.data
             } else if (this.user.rol === 'STU') {
-                const responseComapny = await apiService.getStudent(this.user.email)
+                const responseComapny = await apiService.getStudentEmail(this.user.email)
                 this.usuario = responseComapny.data
             }
         } catch (error) {

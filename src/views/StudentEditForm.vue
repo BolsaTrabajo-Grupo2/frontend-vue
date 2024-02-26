@@ -2,8 +2,6 @@
 import { useStore } from '@/stores/store';
 import { mapState, mapActions } from 'pinia';
 import APIService from '../axios/axios.js'
-import axios from 'axios'
-const SERVER = import.meta.env.VITE_URL_API
 import * as yup from 'yup'
 import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
@@ -62,11 +60,13 @@ export default {
     },
     async mounted() {
         const apiService = new APIService(this.user.token);
-        await axios.get(SERVER + '/student/' + this.id)
-            .then(response => this.student = response.data)
-            .catch(response => {
-                this.addMsgArray('danger', 'No se ha podido obtener al estudiante')
-            });
+        try {
+            const responseComapny = await apiService.getStudent(this.id)
+            this.student = responseComapny.data
+        } catch (error) {
+            this.addMsgArray('danger', 'No se ha podido obtener los datos')
+        }
+
         try {
             const response = await apiService.getStudentCycle(this.id);
             this.student.cycle = response.data
@@ -136,7 +136,7 @@ export default {
 
 <template>
     <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
-    <Form :initial-values="student" :validation-schema="validationSchema" @submit="editStudent()">
+    <Form :validation-schema="validationSchema" @submit="editStudent()">
         <fieldset>
             <legend>Modificar perfil</legend>
 
@@ -309,7 +309,8 @@ label {
     background-color: #e0a800;
     border-color: #d39e00;
 }
-.añadir{
+
+.añadir {
     background-color: #007bff;
     color: white;
 }
