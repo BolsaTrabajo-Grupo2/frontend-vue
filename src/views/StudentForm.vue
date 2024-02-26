@@ -510,5 +510,9 @@ body {
 .formbold-delete-button-container {
     margin-top: 15px;
   }
+  .formbold-btn-wrapper {
+  margin-top: 25px;
+  text-align: center;
+}
 
 </style>
