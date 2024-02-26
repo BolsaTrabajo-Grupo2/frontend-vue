@@ -375,20 +375,13 @@ body {
 }
 
 @media (max-width: 767px) {
-  .formbold-main-wrapper {
-    padding: 20px;
+  .formbold-input-flex {
+    flex-direction: column;
   }
 
-  .formbold-form-wrapper {
-    padding: 20px;
-  }
-
-  .formbold-form-title h2 {
-    font-size: 24px;
-  }
-
-  .formbold-btn {
-    width: 100%;
+  .formbold-input-flex>div {
+    width: 100%; 
+    margin-bottom: 15px;
   }
 }
 </style>
