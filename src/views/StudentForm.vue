@@ -190,18 +190,19 @@ export default {
                 <div class="form-group" v-for="(cycleField, index) in cycleFields" :key="index">
                     <label class="formbold-form-label">Ciclo</label>
 
-                    <div class="formbold-input-flex">
-                        <div>
-                            <select name="cycle" v-model="cycleField.selectedCycle" class="formbold-form-input">
-                                <option value="">Seleccionar ciclo</option>
-                                <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
-                            </select>
-                        </div>
-                        <div class="date-field-container">
-                            <input type="date" v-model="cycleField.date" class="formbold-form-input" />
-                            <button type="button" @click="removeCycleField(index)"
-                                class="formbold-delete-button">Eliminar</button>
-                        </div>
+                <div class="formbold-input-flex">
+                    <div>
+                        <select name="cycle" v-model="cycleField.selectedCycle" class="formbold-form-input">
+                            <option value="">Seleccionar ciclo</option>
+                            <option v-for="cycle in cycles" :key="cycle.id" :value="cycle.id">{{ cycle.title }}</option>
+                        </select>
+                    </div>
+                <div class="date-field-container">
+                    <input type="date" v-model="cycleField.date" class="formbold-form-input" />
+                </div>
+                <div class="formbold-delete-button-container">
+                        <button type="button" @click="removeCycleField(index)" class="formbold-delete-button">Eliminar</button>
+                </div>
                     </div>
 
                 </div>
@@ -509,5 +510,9 @@ body {
 .formbold-delete-button-container {
     margin-top: 15px;
   }
+  .formbold-btn-wrapper {
+  margin-top: 25px;
+  text-align: center;
+}
 
 </style>
