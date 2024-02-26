@@ -49,7 +49,7 @@ export default {
             };
             this.user = user
             localStorage.setItem('user', JSON.stringify(user))
-            this.$router.push('/listOffers')
+            window.location.href = '/listOffers';
         }
     },
     methods: {
