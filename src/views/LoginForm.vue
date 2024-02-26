@@ -48,8 +48,8 @@ export default {
                 rol: urlParams.get('rol')
             };
             this.user = user
-            localStorage.setItem('user', JSON.stringify(user));
-            window.location.href = '/listOffers';
+            localStorage.setItem('user', JSON.stringify(user))
+            this.$router.push('/listOffers')
         }
     },
     methods: {
@@ -77,7 +77,7 @@ export default {
         async gitHub() {
             try {
 
-                const authWindow = window.open('http://127.0.0.1/auth/github');
+                const authWindow = window.open('https://bolsa-trabajo-backend.projecte02.ddaw.es/auth/github');
 
             } catch (error) {
                 this.addMsgArray('danger', 'Error al autenticarse por github, pruebe mas tarde o de otra manera')
@@ -86,7 +86,7 @@ export default {
         async google() {
             try {
 
-                const authWindow = window.open('http://localhost/auth/google');
+                const authWindow = window.open('https://bolsa-trabajo-backend.projecte02.ddaw.es/auth/google');
 
             } catch (error) {
                 this.addMsgArray('danger', 'Error al autenticarse por google, pruebe mas tarde o de otra manera')
