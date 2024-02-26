@@ -97,10 +97,10 @@ export default {
             </form>
             <div class="order-buttons row justify-content-md-center">
                 <div class="col-md-6">
-                    <button @click="orderByNew" class="largo btn btn-block mb-2">Ordenar por mas nuevas</button>
+                    <button @click="orderByNew" class="largo btn btn-block mb-2">Ordenar por más nuevas</button>
                 </div>
                 <div class="col-md-6">
-                    <button @click="orderByOld" class="corto btn btn-block">Ordenar por mas antiguas</button>
+                    <button @click="orderByOld" class="corto btn btn-block">Ordenar por más antiguas</button>
                 </div>
             </div>
             <div class="row" v-if="this.offers.data.length > 0">
