@@ -46,10 +46,11 @@ export default {
                     } else if (this.user.rol === 'STU') {
                         await apiService.deleteStudent(this.usuario.id)
                     }
+                    this.$router.push('/')
+                    localStorage.clear()
+                    this.cleanUser()
                 }
-                this.$router.push('/')
-                localStorage.clear()
-                this.cleanUser()
+
             } catch (error) {
                 this.addMsgArray('danger', 'Problemas al intentar eliminar el perfil, vuelva a intentarlo')
             }
