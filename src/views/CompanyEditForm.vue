@@ -373,4 +373,22 @@ body {
 .validate-error {
   color: red;
 }
+
+@media (max-width: 767px) {
+  .formbold-main-wrapper {
+    padding: 20px;
+  }
+
+  .formbold-form-wrapper {
+    padding: 20px;
+  }
+
+  .formbold-form-title h2 {
+    font-size: 24px;
+  }
+
+  .formbold-btn {
+    width: 100%;
+  }
+}
 </style>
