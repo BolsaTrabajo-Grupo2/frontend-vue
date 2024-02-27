@@ -33,6 +33,7 @@ export const useStore = defineStore('store', {
     },
     addUser(usuario){
       this.user = usuario
+      localStorage.setItem('user',JSON.stringify(usuario))
     },
     addMsgArray(type, text) {
       this.messages.push({

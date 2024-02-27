@@ -48,8 +48,9 @@ export default {
                 rol: urlParams.get('rol')
             };
             this.user = user
+            
             localStorage.setItem('user', JSON.stringify(user))
-            this.$router.push('/listOffers')
+            window.location.href = '/listOffers';
         }
     },
     methods: {
